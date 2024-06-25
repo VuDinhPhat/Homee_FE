@@ -1,0 +1,146 @@
+import React, { useEffect, useState } from "react";
+import Rccar from "../../assets/rccar.jpg";
+import LoginBG from "../../assets/Lgbg.png";
+import LogoF from "../../assets/logoF.png";
+import { useNavigate } from "react-router-dom";
+import apiUserInstance from "../../service/api-user";
+import Logo2 from "../../assets/logo2.png";
+
+const LoginPage = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+  }
+
+  function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(";");
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  useEffect(() => {
+    var username = getCookie("username");
+    if (username !== "") {
+      navigate("/statistics");
+    }
+  }, []);
+
+  const handleInputChange = (e, inputType) => {
+    const value = e.target.value;
+
+    if (inputType === "username") {
+      setUsername(value);
+    } else if (inputType === "password") {
+      setPassword(value);
+    }
+  };
+
+  const handleLogin = async () => {
+    apiUserInstance
+      .get("/login?email=" + username + "&password=" + password)
+      .then((response) => {
+        if (response.data.data != null) {
+          setCookie("username", response.data.data.name, 1);
+          navigate("/statistics");
+        } else {
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  return (
+    <div className="relative">
+      <img
+        src={LoginBG}
+        alt="Background"
+        className="absolute inset-0 object-cover w-full h-full"
+      />
+      <div className="flex justify-center items-center min-h-screen relative z-10">
+        <div className="bg-gray-100 bg-opacity-80 flex flex-col justify-center items-center w-full max-w-md mx-auto p-8 rounded-lg shadow-lg">
+          <div className="flex items-center justify-center mb-6">
+            <img className="w-[380px]" src={Logo2} alt="Logo" />
+          </div>
+          <h1 className="text-2xl font-semibold mb-4">Đăng Nhập</h1>
+          <div className="mb-4 w-full">
+            <label htmlFor="username" className="block text-gray-600">
+              Email
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+              autoComplete="off"
+              value={username}
+              onChange={(e) => handleInputChange(e, "username")}
+            />
+          </div>
+          <div className="mb-4 w-full">
+            <label htmlFor="password" className="block text-gray-600">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+              autoComplete="off"
+              value={password}
+              onChange={(e) => handleInputChange(e, "password")}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleLogin();
+                }
+              }}
+            />
+          </div>
+          <div className="mb-3 text-blue-500 flex justify-center">
+            Forgot Password? Please contact the administrator.
+          </div>
+          <div className="flex justify-center items-center mt-4">
+          <p className="text-gray-600">
+            Chưa có tài khoản?{" "}
+            <span
+              className="text-blue-500 cursor-pointer"
+              onClick={() => navigate("/register")}
+            >
+              Đăng ký tại đây
+            </span>
+          </p>
+        </div>
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
+            onClick={handleLogin}
+          >
+            Login
+          </button>
+          <div className="flex justify-center items-end mt-4">
+            <p className="text-center">Copyright&copy; 2024 Homee Competition</p>
+          </div>
+        </div> 
+      </div>
+    </div>
+  );
+}; 
+
+export default LoginPage;
