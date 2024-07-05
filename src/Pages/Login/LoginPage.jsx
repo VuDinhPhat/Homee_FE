@@ -5,6 +5,8 @@ import LogoF from "../../assets/logoF.png";
 import { useNavigate } from "react-router-dom";
 import apiUserInstance from "../../service/api-user";
 import Logo2 from "../../assets/logo2.png";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -37,7 +39,7 @@ const LoginPage = () => {
   useEffect(() => {
     var username = getCookie("username");
     if (username !== "") {
-      navigate("/statistics");
+      navigate("/usermain");
     }
   }, []);
 
@@ -51,19 +53,58 @@ const LoginPage = () => {
     }
   };
 
+  const notify = () => {
+    toast("Login fail !");
+  };
+
+  const api = axios.create({
+    baseURL: "https://localhost:44388/api/Users",
+    headers: {
+      Authorization: `Bearer ${getCookie("token")}`,
+    },
+  });
+
   const handleLogin = async () => {
-    apiUserInstance
-      .get("/login?email=" + username + "&password=" + password)
-      .then((response) => {
-        if (response.data.data != null) {
-          setCookie("username", response.data.data.name, 1);
-          navigate("/statistics");
-        } else {
+    try {
+      const response = await axios.post(
+        "https://localhost:44388/api/Users/Login",
+        {
+          id: 0,
+          email: username,
+          firstName: "string",
+          lastName: "string",
+          password: password,
+          phone: "string",
+          address: "string",
+          dob: "2024-07-05",
+          gender: "string",
+          avatar: "string",
+          roleId: 0,
+          status: "string",
+          money: 0,
+          discount: 0,
         }
-      })
-      .catch((error) => {
-        console.error(error);
+      );
+
+      api.get("/" + response.data.userResponse.id).then((response) => {
+        setCookie(
+          "usernamereal",
+          response.data.payload.firstName + response.data.payload.lastName,
+          10
+        );
+
+        console.log(
+          response.data.payload.firstName + response.data.payload.lastName
+        );
       });
+
+      console.log(response.data.token);
+      localStorage.setItem("token", "nice");
+      setCookie("username", response.data.userResponse.id, 10);
+      setCookie("token", response.data.token, 10);
+
+      navigate("/usermain");
+    } catch {}
   };
 
   return (
@@ -117,16 +158,16 @@ const LoginPage = () => {
             Forgot Password? Please contact the administrator.
           </div>
           <div className="flex justify-center items-center mt-4">
-          <p className="text-gray-600">
-            Chưa có tài khoản?{" "}
-            <span
-              className="text-blue-500 cursor-pointer"
-              onClick={() => navigate("/register")}
-            >
-              Đăng ký tại đây
-            </span>
-          </p>
-        </div>
+            <p className="text-gray-600">
+              Chưa có tài khoản?{" "}
+              <span
+                className="text-blue-500 cursor-pointer"
+                onClick={() => navigate("/register")}
+              >
+                Đăng ký tại đây
+              </span>
+            </p>
+          </div>
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
@@ -135,12 +176,14 @@ const LoginPage = () => {
             Login
           </button>
           <div className="flex justify-center items-end mt-4">
-            <p className="text-center">Copyright&copy; 2024 Homee Competition</p>
+            <p className="text-center">
+              Copyright&copy; 2024 Homee Competition
+            </p>
           </div>
-        </div> 
+        </div>
       </div>
     </div>
   );
-}; 
+};
 
 export default LoginPage;
