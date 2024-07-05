@@ -2,30 +2,23 @@ import React, { useEffect, useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../assets/logo.png";
-import hutieumuc from "../assets/hutieumuc.jpg";
-import garan from "../assets/garan.jpg";
-import Pizza from "../assets/pizza.jpg";
-import comboxao from "../assets/comboxao.jpg";
-
-import Footer from "../Pages/Footer/Footer";
-import Detail from "../Pages/Detail/Detail";
+import Logo from "../../assets/logo.png";
+import hutieumuc from "../../assets/hutieumuc.jpg";
+import garan from "../../assets/garan.jpg";
+import Pizza from "../../assets/pizza.jpg";
+import comboxao from "../../assets/comboxao.jpg";
 import { Text } from "recharts";
 import { BorderBottom, BorderColor } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
-import "./Dashboardview.css";
+import "./UserMainPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import apiFoodInstance from "../service/api-food";
-
 import axios from "axios";
-
-const Dashboardview = () => {
+const UserMainPage = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [listFood, setListFood] = useState([]);
-
   const toggleCart = () => {
     setIsOpen(!isOpen);
   };
@@ -41,11 +34,36 @@ const Dashboardview = () => {
     document.cookie = cname + "=" + cvalue + "; " + expires;
   }
 
+  function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(";");
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
   const handleLogout = async () => {
     setCookie("username", "", 0);
     setCookie("usernamereal", "", 0);
     navigate("/");
+    setUsername(getCookie("usernamereal"));
   };
+
+  const api = axios.create({
+    baseURL: "https://localhost:44388/api/Chefs",
+    headers: {
+      Authorization: `Bearer ${getCookie("token")}`,
+    },
+  });
+
+  const handleProfile = async () => {};
 
   const handleLogIn = async () => {
     navigate("/login");
@@ -59,6 +77,8 @@ const Dashboardview = () => {
     setCookie("chefid", data, 10);
     navigate("/detail");
   };
+
+  const BackMainPage = async () => {};
 
   function getCookie(cname) {
     var name = cname + "=";
@@ -75,19 +95,13 @@ const Dashboardview = () => {
     return "";
   }
 
-  const api = axios.create({
-    baseURL: "https://localhost:44388/api/Chefs",
-    headers: {
-      Authorization: `Bearer ${getCookie("token")}`,
-    },
-  });
-
   useEffect(() => {
     setUsername(getCookie("usernamereal"));
-
+    if (getCookie("username") == "") {
+      navigate("/");
+    }
     api.get("?pageIndex=1&pageSize=8").then((response) => {
       setListFood(response.data.payload);
-      console.log(response.data.payload);
     });
   }, []);
 
@@ -95,7 +109,7 @@ const Dashboardview = () => {
     if (getCookie("username") !== "") {
       return (
         <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
-          <div>
+          <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
           <div className="flex items-center rounded-[5px]"></div>
@@ -116,7 +130,10 @@ const Dashboardview = () => {
               </div>
               {open && (
                 <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
-                  <p className="cursor-pointer hover:text-[blue] font-semibold">
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleProfile}
+                  >
                     Profile
                   </p>
                   <p
@@ -161,7 +178,7 @@ const Dashboardview = () => {
                 onClick={handleRegister}
                 className="cursor-pointer flex items-center justify-center relative"
               >
-                / Đăng ký
+                /Đăng ký
                 <img src="" alt="" />
               </div>
             </div>
@@ -363,7 +380,7 @@ const Dashboardview = () => {
             >
               <div className="card mb-4">
                 <span className="promo-badge">Promo</span>
-                <img className="card-img-top" src={Pizza} alt={promo.name} />
+                <img className="card-img-top" src={Pizza} />
                 <div className="card-body">
                   <h5 className="card-title">Bếp nhà: {promo.name}</h5>
                   <p className="card-text">
@@ -451,4 +468,4 @@ const Dashboardview = () => {
   );
 };
 
-export default Dashboardview;
+export default UserMainPage;

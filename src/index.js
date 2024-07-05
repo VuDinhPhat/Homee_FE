@@ -17,10 +17,11 @@ import Competitions from "./components/Competitions/Competitions";
 import Coachs from "./components/Coachs/Coachs";
 import Cars from "./components/Cars/Cars";
 import Brackets from "./components/Brackets/Brackets";
-import RegisterPage from"./Pages/Register/RegisPage";
+import RegisterPage from "./Pages/Register/RegisPage";
 import Footer from "./Pages/Footer/Footer";
 import Detail from "./Pages/Detail/Detail";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import UserMainPage from "./Pages/UserMain/UserMainPage";
+import "bootstrap/dist/css/bootstrap.min.css";
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -40,6 +41,11 @@ const router = createBrowserRouter([
   },
 
   {
+    path: "/usermain",
+    element: <UserMainPage />,
+  },
+
+  {
     path: "/",
     element: <App />,
     children: [
@@ -47,7 +53,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <Main />,
       },
-     
+
       {
         path: "/statistics",
         element: <Statistics />,
