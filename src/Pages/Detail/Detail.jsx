@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
@@ -11,23 +12,26 @@ import axios from "axios";
 import { CiClock1 } from "react-icons/ci";
 import Cookies from "js-cookie";
 
+
 const Detail = () => {
-  //var n;
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
+  const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
   const [chef, setChef] = useState({});
   const [foodList, setFoodList] = useState([]);
   const [cartList, setCartList] = useState([]);
   const yellowColor = "#fde047";
+
   const todayPromotionRef = useRef(null);
   const mrcDealRef = useRef(null);
   const overflowingPromotionRef = useRef(null);
   const interestingFoodsRef = useRef(null);
 
   const scrollToRef = (ref) => {
-    ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const toggleCart = () => {
@@ -42,23 +46,28 @@ const Detail = () => {
   function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-    var expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
+    var expires = 'expires=' + d.toUTCString();
+    document.cookie = cname + '=' + cvalue + '; ' + expires;
   }
 
+  const handlePayMent = async () => {
+    navigate('/payment');
+  }
   const handleLogout = async () => {
+
     setCookie("username", "", 0);
     setCookie("usernamereal", "", 0);
     navigate("/Detail");
     setUsername(getCookie("usernamereal"));
+
   };
 
   const handleLogIn = async () => {
-    navigate("/login");
+    navigate('/login');
   };
 
   const handleRegister = async () => {
-    navigate("/register");
+    navigate('/register');
   };
 
   const addFood = async (data) => {
@@ -79,18 +88,18 @@ const Detail = () => {
   };
 
   function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(";");
+    var name = cname + '=';
+    var ca = document.cookie.split(';');
     for (var i = 0; i < ca.length; i++) {
       var c = ca[i];
-      while (c.charAt(0) === " ") {
+      while (c.charAt(0) === ' ') {
         c = c.substring(1);
       }
       if (c.indexOf(name) === 0) {
         return c.substring(name.length, c.length);
       }
     }
-    return "";
+    return '';
   }
 
   const apiFood = axios.create({
@@ -129,10 +138,11 @@ const Detail = () => {
       const parsedData = JSON.parse(cookieData);
       setCartList(parsedData);
     }
+
   }, []);
 
-  let renderData = () => {
-    if (getCookie("username") !== "") {
+  const renderData = () => {
+    if (getCookie('username') !== '') {
       return (
         <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
           <div>
@@ -153,23 +163,15 @@ const Detail = () => {
             >
               <BsBagHeart height={150} width={150} />
             </div>
-            <div
-              className="flex items-center gap-[10px] relative"
-              onClick={showDropDown}
-            >
+            <div className="flex items-center gap-[10px] relative" onClick={showDropDown}>
               <p>{username}</p>
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
               {open && (
                 <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
-                  <p className="cursor-pointer hover:text-[blue] font-semibold">
-                    Profile
-                  </p>
-                  <p
-                    className="cursor-pointer hover:text-[blue] font-semibold"
-                    onClick={handleLogout}
-                  >
+                  <p className="cursor-pointer hover:text-[blue] font-semibold">Profile</p>
+                  <p className="cursor-pointer hover:text-[blue] font-semibold" onClick={handleLogout}>
                     Log out
                   </p>
                 </div>
@@ -186,28 +188,16 @@ const Detail = () => {
           </div>
           <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
-            <div
-              className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
-              onClick={toggleCart}
-            >
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]" onClick={toggleCart}>
               <BsBagHeart height={150} width={150} />
             </div>
-            <div
-              className="flex items-center gap-[10px] relative"
-              onClick={showDropDown}
-            >
+            <div className="flex items-center gap-[10px] relative" onClick={showDropDown}>
               <p>{username}</p>
-              <div
-                onClick={handleLogIn}
-                className="cursor-pointer flex items-center justify-center relative"
-              >
+              <div onClick={handleLogIn} className="cursor-pointer flex items-center justify-center relative">
                 Đăng nhập
                 <img src="" alt="" />
               </div>
-              <div
-                onClick={handleRegister}
-                className="cursor-pointer flex items-center justify-center relative"
-              >
+              <div onClick={handleRegister} className="cursor-pointer flex items-center justify-center relative">
                 /Đăng ký
                 <img src="" alt="" />
               </div>
@@ -220,11 +210,10 @@ const Detail = () => {
 
   return (
     <div className="relative pb-[100px]">
-      {" "}
-      {/* Adjust padding-bottom */}
       <div className="flex items-center justify-center">{renderData()}</div>
       {isOpen && (
         <div className="fixed inset-0 flex justify-end z-30">
+
           <div className="h-full w-[30%] shadow-lg px-6 py-4 bg-white overflow-y-auto relative">
             <button
               className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
@@ -284,20 +273,24 @@ const Detail = () => {
                 <div className="flex justify-between items-center">
                   <h3 className="text-xl font-semibold">Tổng</h3>
                   <h3 className="text-xl font-semibold">150.000</h3>
+
                 </div>
                 <p className="text-sm text-gray-500 mt-2">
                   Phí giao hàng sẽ được thêm vào khi bạn thanh toán đơn hàng
                 </p>
               </div>
+
               <div className="flex justify-center mt-6">
                 <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition duration-300">
                   Thanh toán
                 </button>
+
               </div>
             </div>
           </div>
         </div>
       )}
+
       <Container>
         <div className="flex items-center justify-between mt-5">
           <div>
@@ -441,6 +434,7 @@ const Detail = () => {
           </div>
         </div>
       </Container>
+
     </div>
   );
 };

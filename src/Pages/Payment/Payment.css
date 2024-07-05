@@ -1,0 +1,46 @@
+.container {
+    margin-top: 20px;
+  }
+  
+  .card {
+    margin-bottom: 20px;
+  }
+  
+  .map-placeholder {
+    background-color: #e9ecef;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #6c757d;
+  }
+  
+  .order-summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .order-summary-item-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .order-summary-item-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+  
+  .order-summary-item-quantity button {
+    margin: 0 5px;
+  }
+  
+  .order-summary-total {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  

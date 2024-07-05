@@ -1,3 +1,4 @@
+
 import axios from "axios";
 
 const apiFoodInstance = axios.create({
@@ -5,3 +6,4 @@ const apiFoodInstance = axios.create({
 });
 
 export default apiFoodInstance;
+

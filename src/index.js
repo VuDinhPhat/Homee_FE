@@ -20,8 +20,10 @@ import Brackets from "./components/Brackets/Brackets";
 import RegisterPage from "./Pages/Register/RegisPage";
 import Footer from "./Pages/Footer/Footer";
 import Detail from "./Pages/Detail/Detail";
+
 import UserMainPage from "./Pages/UserMain/UserMainPage";
 import "bootstrap/dist/css/bootstrap.min.css";
+
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -38,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/detail",
     element: <Detail />,
+  },
+  {
+    path: "/payment",
+    element: <Payment />,
   },
 
   {
