@@ -21,6 +21,7 @@ import RegisterPage from"./Pages/Register/RegisPage";
 import Footer from "./Pages/Footer/Footer";
 import Detail from "./Pages/Detail/Detail";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Payment from "./Pages/Payment/Payment";
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "/detail",
     element: <Detail />,
+  },
+  {
+    path: "/payment",
+    element: <Payment />,
   },
 
   {

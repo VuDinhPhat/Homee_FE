@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiUserInstance = axios.create({
-  baseURL: "http://localhost:8080/api/user-management",
+  baseURL: "https://localhost:44388/api/Users",
 });
 
 export default apiUserInstance;
