@@ -20,9 +20,10 @@ import Brackets from "./components/Brackets/Brackets";
 import RegisterPage from "./Pages/Register/RegisPage";
 import Footer from "./Pages/Footer/Footer";
 import Detail from "./Pages/Detail/Detail";
-
+import Payment from"./Pages/Payment/Payment"
 import UserMainPage from "./Pages/UserMain/UserMainPage";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Profile from "./Pages/Profile/Profile";
 
 const router = createBrowserRouter([
   {
@@ -50,7 +51,10 @@ const router = createBrowserRouter([
     path: "/usermain",
     element: <UserMainPage />,
   },
-
+  {
+    path: "/profile",
+    element: <Profile />,
+  },
   {
     path: "/",
     element: <App />,

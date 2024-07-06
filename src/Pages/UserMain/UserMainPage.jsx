@@ -48,7 +48,7 @@ const UserMainPage = () => {
     }
     return "";
   }
-
+  
   const handleLogout = async () => {
     setCookie("username", "", 0);
     setCookie("usernamereal", "", 0);
@@ -63,7 +63,7 @@ const UserMainPage = () => {
     },
   });
 
-  const handleProfile = async () => {};
+  const handleProfile = async () => {navigate("/profile");};
 
   const handleLogIn = async () => {
     navigate("/login");

@@ -60,6 +60,14 @@ const Dashboardview = () => {
     navigate("/detail");
   };
 
+
+const handleProfile = async () => {
+  setCookie("username", "", 0);
+  setCookie("usernamereal", "", 0);
+  navigate("/profile");
+};
+
+
   function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(";");
@@ -117,6 +125,7 @@ const Dashboardview = () => {
               {open && (
                 <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
                   <p className="cursor-pointer hover:text-[blue] font-semibold">
+                  onClick={handleProfile}
                     Profile
                   </p>
                   <p

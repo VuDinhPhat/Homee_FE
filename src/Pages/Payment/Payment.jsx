@@ -21,7 +21,7 @@ const Payment = () => {
 
   useEffect(() => {
     const storedAddress = getCookie('userAddress');
-    apiUserInstance.get("/{1}").then((response) => {
+    apiUserInstance.get("/1").then((response) => {
       const userData = response.data.payload;
       setListUser(userData);
       // Update form data with user's address if stored address not found
