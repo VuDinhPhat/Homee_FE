@@ -18,6 +18,10 @@ const Profile = () => {
     address: "",
     dob: "",
     gender: "",
+    password: ""
+    
+    
+    
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -50,6 +54,9 @@ const Profile = () => {
     },
   });
 
+
+ 
+
   useEffect(() => {
     setUsername(getCookie("usernamereal"));
     if (getCookie("username") === "") {
@@ -65,6 +72,8 @@ const Profile = () => {
         address: response.data.payload.address,
         dob: response.data.payload.dob,
         gender: response.data.payload.gender,
+        password: response.data.payload.password || ""
+
       });
     });
   }, []);
@@ -80,15 +89,33 @@ const Profile = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    api
-      .put("/" + getCookie("username"), formData)
-      .then((response) => {
-        setUser(response.data.payload);
-        setIsEditing(false);
-      })
-      .catch((error) => {
-        console.error("Update failed:", error);
-      });
+  
+
+ // Filter out fields that are null or undefined and keep only the ones you want to update
+ const filteredData = {
+  email: formData.email,
+  firstName: formData.firstName,
+  lastName: formData.lastName,
+  phone: formData.phone,
+  address: formData.address,
+  dob: formData.dob,
+  gender: formData.gender,
+  roleId: 1, // Default roleId to 1
+  password: formData.password
+
+};
+
+api
+  .put("/" + getCookie("username"), filteredData)
+  .then((response) => {
+    setUser(response.data.payload);
+    setIsEditing(false);
+  })
+  .catch((error) => {
+    console.error("Update failed:", error);
+    // Log detailed error information from server response
+    console.error("Server error response:", error.response);
+  });
   };
 
   const handleProfile = () => navigate("/profile");
