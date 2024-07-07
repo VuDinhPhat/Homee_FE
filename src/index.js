@@ -25,6 +25,9 @@ import UserMainPage from "./Pages/UserMain/UserMainPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Profile from "./Pages/Profile/Profile";
 import Order from "./Pages/Order/Order";
+import ChefMain from "./Pages/ChefMain/ChefMain";
+import ProfileChef from "./Pages/ProfileChef/ProfileChef";
+import OrderChef from "./Pages/OrderChef/OrderChef";
 
 const router = createBrowserRouter([
   {
@@ -53,12 +56,24 @@ const router = createBrowserRouter([
     element: <UserMainPage />,
   },
   {
+    path: "/chefmain",
+    element: <ChefMain />,
+  },
+  {
     path: "/profile",
     element: <Profile />,
   },
   {
+    path: "/profilechef",
+    element: <ProfileChef />,
+  },
+  {
     path: "/order",
     element: <Order />,
+  },
+  {
+    path: "/orderchef",
+    element: <OrderChef />,
   },
   {
     path: "/",

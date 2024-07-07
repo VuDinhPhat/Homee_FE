@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
+import hutieumuc from "../../assets/hutieumuc.jpg";
+import garan from "../../assets/garan.jpg";
+import Pizza from "../../assets/pizza.jpg";
+import comboxao from "../../assets/comboxao.jpg";
+import { Text } from "recharts";
+import { BorderBottom, BorderColor } from "@mui/icons-material";
+import { red } from "@mui/material/colors";
+import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Cookies from "js-cookie";
-
-const Order = () => {
+const OrderChef = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [user, setUser] = useState(null);
@@ -50,7 +58,7 @@ const Order = () => {
     };
 
     const api = axios.create({
-        baseURL: "https://localhost:44388/api/Users",
+        baseURL: "https://localhost:44388/api/Chefs",
         headers: {
             Authorization: `Bearer ${getCookie("token")}`,
         },
@@ -81,8 +89,9 @@ const Order = () => {
                 }
             }).then((orderResponse) => {
                 // Filter orders based on user ID
-                const userOrders = orderResponse.data.payload.filter(order => order.userId === response.data.payload.id);
+                const userOrders = orderResponse.data.payload.filter(order => order.chefIdId === response.data.payload.chefId);
                 setOrders(userOrders);
+
             }).catch((error) => {
                 console.error("Error fetching orders:", error);
             });
@@ -124,8 +133,6 @@ const Order = () => {
             });
     };
 
-
-
     const viewOrderDetail = async (orderId) => {
         try {
             const orderDetailResponse = await axios.get(`https://localhost:44388/api/OrderDetails`, {
@@ -144,7 +151,6 @@ const Order = () => {
             console.error("Error fetching order details:", error);
         }
     };
-
 
     const handleProfile = () => navigate("/profile");
     const handleLogIn = () => navigate("/login");
@@ -347,4 +353,5 @@ const Order = () => {
     );
 };
 
-export default Order;
+
+export default OrderChef;
