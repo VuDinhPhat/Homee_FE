@@ -10,11 +10,10 @@ import comboxao from "../../assets/comboxao.jpg";
 import { Text } from "recharts";
 import { BorderBottom, BorderColor } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
-import "./UserMainPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Cookies from "js-cookie";
-const UserMainPage = () => {
+const ChefMain = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -66,7 +65,7 @@ const UserMainPage = () => {
   });
 
   const handleProfile = async () => {
-    navigate("/profile");
+    navigate("/profilechef");
   };
 
   const handleLogIn = async () => {
@@ -90,7 +89,7 @@ const UserMainPage = () => {
 
 
   const handleOrder = async (data) => {
-    navigate("/order");
+    navigate("/orderchef");
   };
 
 
@@ -466,4 +465,4 @@ const UserMainPage = () => {
   );
 };
 
-export default UserMainPage;
+export default ChefMain;
