@@ -24,6 +24,7 @@ import Payment from"./Pages/Payment/Payment"
 import UserMainPage from "./Pages/UserMain/UserMainPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Profile from "./Pages/Profile/Profile";
+import Order from "./Pages/Order/Order";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <Profile />,
+  },
+  {
+    path: "/order",
+    element: <Order />,
   },
   {
     path: "/",

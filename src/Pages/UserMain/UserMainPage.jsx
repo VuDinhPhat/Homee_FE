@@ -88,6 +88,12 @@ const UserMainPage = () => {
     navigate("/detail");
   };
 
+
+  const handleOrder = async (data) => {
+    navigate("/order");
+  };
+
+
   const BackMainPage = async () => {};
 
   function getCookie(cname) {
@@ -151,6 +157,14 @@ const UserMainPage = () => {
                   >
                     Profile
                   </p>
+
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleOrder}
+                  >
+                    View Order
+                  </p>
+
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}

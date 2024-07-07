@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { BsBagHeart } from "react-icons/bs";
 import Logo from "../../assets/logo.png";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const Profile = () => {
   const navigate = useNavigate();
