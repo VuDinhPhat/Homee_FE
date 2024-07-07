@@ -16,7 +16,7 @@ import { red } from "@mui/material/colors";
 import "./Dashboardview.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import apiFoodInstance from "../service/api-food";
-
+import Cookies from "js-cookie";
 import axios from "axios";
 
 const Dashboardview = () => {
@@ -25,7 +25,7 @@ const Dashboardview = () => {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [listFood, setListFood] = useState([]);
-
+  const [cartList, setCartList] = useState([]);
   const toggleCart = () => {
     setIsOpen(!isOpen);
   };
@@ -60,13 +60,15 @@ const Dashboardview = () => {
     navigate("/detail");
   };
 
+  const handleProfile = async () => {
+    navigate("/profile");
+  };
 
-const handleProfile = async () => {
-  setCookie("username", "", 0);
-  setCookie("usernamereal", "", 0);
-  navigate("/profile");
-};
-
+  const HandlePayment = async () => {
+    if (getCookie("username") != "") {
+      navigate("/payment");
+    }
+  };
 
   function getCookie(cname) {
     var name = cname + "=";
@@ -91,6 +93,12 @@ const handleProfile = async () => {
   });
 
   useEffect(() => {
+    const cookieData = Cookies.get("ArrayFood");
+    if (cookieData) {
+      const parsedData = JSON.parse(cookieData);
+      setCartList(parsedData);
+    }
+
     setUsername(getCookie("usernamereal"));
 
     api.get("?pageIndex=1&pageSize=8").then((response) => {
@@ -124,8 +132,10 @@ const handleProfile = async () => {
               </div>
               {open && (
                 <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
-                  <p className="cursor-pointer hover:text-[blue] font-semibold">
-                  onClick={handleProfile}
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleProfile}
+                  >
                     Profile
                   </p>
                   <p
@@ -266,65 +276,29 @@ const handleProfile = async () => {
               <h2 className="text-lg font-semibold mb-4">Tên quán ăn</h2>
 
               {/* Item 1 */}
-              <div className="flex items-center justify-between border-b-2 border-gray-300 py-2">
-                <div className="flex items-center space-x-4">
-                  <button className="text-blue-600 text-2xl cursor-pointer">
-                    -
-                  </button>
-                  <span className="text-xl">1</span>
-                  <button className="text-blue-600 text-2xl cursor-pointer">
-                    +
-                  </button>
-                  <span className="text-lg">Combo gà rán kfc</span>
+              {cartList.map((product) => (
+                <div
+                  className="flex items-center justify-between border-b-2 border-gray-300 py-2"
+                  key={product.id}
+                >
+                  <div className="flex items-center space-x-4">
+                    <button className="text-blue-600 text-2xl cursor-pointer">
+                      -
+                    </button>
+                    <span className="text-xl">1</span>
+                    <button className="text-blue-600 text-2xl cursor-pointer">
+                      +
+                    </button>
+                    <span className="text-lg">{product.name}</span>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <span className="text-lg">{product.sellPrice}</span>
+                    <button className="text-red-600 border border-red-600 px-2 py-1 rounded">
+                      Remove
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <span className="text-lg">50.000</span>
-                  <button className="text-red-600 border border-red-600 px-2 py-1 rounded">
-                    Remove
-                  </button>
-                </div>
-              </div>
-
-              {/* Item 2 */}
-              <div className="flex items-center justify-between border-b-2 border-gray-300 py-2">
-                <div className="flex items-center space-x-4">
-                  <button className="text-blue-600 text-2xl cursor-pointer">
-                    -
-                  </button>
-                  <span className="text-xl">2</span>
-                  <button className="text-blue-600 text-2xl cursor-pointer">
-                    +
-                  </button>
-                  <span className="text-lg">Combo gà rán kfc</span>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <span className="text-lg">50.000</span>
-                  <button className="text-red-600 border border-red-600 px-2 py-1 rounded">
-                    Remove
-                  </button>
-                </div>
-              </div>
-
-              {/* Item 3 */}
-              <div className="flex items-center justify-between border-b-2 border-gray-300 py-2">
-                <div className="flex items-center space-x-4">
-                  <button className="text-blue-600 text-2xl cursor-pointer">
-                    -
-                  </button>
-                  <span className="text-xl">3</span>
-                  <button className="text-blue-600 text-2xl cursor-pointer">
-                    +
-                  </button>
-                  <span className="text-lg">Combo gà rán kfc</span>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <span className="text-lg">50.000</span>
-                  <button className="text-red-600 border border-red-600 px-2 py-1 rounded">
-                    Remove
-                  </button>
-                </div>
-              </div>
-
+              ))}
               {/* Total */}
               <div className="mt-6">
                 <div className="flex justify-between items-center">
@@ -336,7 +310,10 @@ const handleProfile = async () => {
                 </p>
               </div>
               <div className="flex justify-center mt-6">
-                <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition duration-300">
+                <button
+                  className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition duration-300"
+                  onClick={HandlePayment}
+                >
                   Thanh toán
                 </button>
               </div>
