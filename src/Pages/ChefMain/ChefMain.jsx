@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
-import hutieumuc from "../../assets/hutieumuc.jpg";
-import garan from "../../assets/garan.jpg";
-import Pizza from "../../assets/pizza.jpg";
-import comboxao from "../../assets/comboxao.jpg";
-import { Text } from "recharts";
-import { BorderBottom, BorderColor } from "@mui/icons-material";
-import { red } from "@mui/material/colors";
-import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Cookies from "js-cookie";
+
 const ChefMain = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
@@ -20,6 +12,24 @@ const ChefMain = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [listFood, setListFood] = useState([]);
   const [cartList, setCartList] = useState([]);
+  const [showAddFoodForm, setShowAddFoodForm] = useState(false);
+  const [showEditFoodForm, setShowEditFoodForm] = useState(false);
+  const chefId = getCookie("username");
+  const [foodData, setFoodData] = useState({
+    id: 0,
+    name: "",
+    image: "",
+    foodType: "",
+    price: 0,
+    sellPrice: 0,
+    sellCount: 0,
+    status: "",
+    categoryId: 0,
+    chefId: chefId ? parseInt(chefId) : 0
+  });
+
+  const [editingFoodData, setEditingFoodData] = useState(null);
+
   const toggleCart = () => {
     setIsOpen(!isOpen);
   };
@@ -54,11 +64,11 @@ const ChefMain = () => {
     setCookie("username", "", 0);
     setCookie("usernamereal", "", 0);
     navigate("/");
-    setUsername(getCookie("usernamereal"));
+    // setUsername(getCookie("usernamereal"));
   };
 
   const api = axios.create({
-    baseURL: "https://localhost:44388/api/Chefs",
+    baseURL: "https://localhost:44388/api/Foods",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -77,7 +87,7 @@ const ChefMain = () => {
   };
 
   const HandlePayment = async () => {
-    if (getCookie("username") != "") {
+    if (getCookie("username") !== "") {
       navigate("/payment");
     }
   };
@@ -87,32 +97,17 @@ const ChefMain = () => {
     navigate("/detail");
   };
 
-
-  const handleOrder = async (data) => {
+  const handleOrder = async () => {
     navigate("/orderchef");
   };
 
-
-  const BackMainPage = async () => {};
-
-  function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(";");
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) === " ") {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-  }
+  const BackMainPage = async () => {
+    navigate("/chefmain");
+  };
 
   useEffect(() => {
     setUsername(getCookie("usernamereal"));
-    if (getCookie("username") == "") {
+    if (getCookie("username") === "") {
       navigate("/");
     }
     const cookieData = Cookies.get("ArrayFood");
@@ -120,15 +115,76 @@ const ChefMain = () => {
       const parsedData = JSON.parse(cookieData);
       setCartList(parsedData);
     }
-    api.get("?pageIndex=1&pageSize=8").then((response) => {
-      setListFood(response.data.payload);
-    });
+    const chefId = getCookie("username");
+    api
+      .get(`/by-chef?chefId=${chefId}`)
+      .then((response) => {
+        setListFood(response.data.payload);
+      })
+      .catch((error) => {});
   }, []);
 
-  let renderData = () => {
-    if (getCookie("username") !== "") {
-      return (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[155px]">
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFoodData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleAddFood = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await api.post("/", foodData);
+      setListFood([...listFood, response.data]);
+      setShowAddFoodForm(false);
+    } catch (error) {
+      console.error("Error adding food item:", error);
+    }
+  };
+
+  const handleEditFood = (food) => {
+    setEditingFoodData(food);
+    setShowEditFoodForm(true);
+  };
+
+  const handleUpdateFood = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await api.put(`/${editingFoodData.id}`, editingFoodData);
+      setListFood((prevList) =>
+        prevList.map((food) =>
+          food.id === editingFoodData.id ? response.data : food
+        )
+      );
+      setShowEditFoodForm(false);
+      setEditingFoodData(null);
+    } catch (error) {
+      console.error("Error updating food item:", error);
+    }
+  };
+
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditingFoodData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleDeleteFood = async (id) => {
+    try {
+      await api.delete(`/${id}`);
+      setListFood((prevList) => prevList.filter((food) => food.id !== id));
+    } catch (error) {
+      console.error("Error deleting food item:", error);
+    }
+  };
+
+  return (
+    <div>
+      {getCookie("username") !== "" ? (
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -138,7 +194,9 @@ const ChefMain = () => {
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
               onClick={toggleCart}
             >
-              <BsBagHeart height={150} width={150} />
+              <div style={{ height: '30px', width: '30px' }}>
+                <BsBagHeart style={{ height: '100%', width: '100%' }} />
+              </div>
             </div>
             <div
               className="flex items-center gap-[10px] relative"
@@ -174,11 +232,8 @@ const ChefMain = () => {
               )}
             </div>
           </div>
-
         </div>
-      );
-    } else {
-      return (
+      ) : (
         <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
@@ -207,260 +262,369 @@ const ChefMain = () => {
                 onClick={handleRegister}
                 className="cursor-pointer flex items-center justify-center relative"
               >
-                /Đăng ký
+                Đăng ký
                 <img src="" alt="" />
               </div>
             </div>
           </div>
         </div>
-      );
-    }
-  };
-
-  const promotions = [
-    {
-      title: "Quán Cơm 2 Lúa",
-      rating: 4.1,
-      time: "15 phút",
-      distance: "1 km",
-      discount: "Ưu đãi đến 22K",
-      imageUrl: "https://via.placeholder.com/150",
-    },
-    {
-      title: "Cơm Chiên Gà Xối Mỡ Hương Ký",
-      rating: 4.6,
-      time: "15 phút",
-      distance: "1.2 km",
-      discount: "Ưu đãi đến 52K",
-      imageUrl: "https://via.placeholder.com/150",
-    },
-    {
-      title: "Cơm Rang - Bánh Mì Mahai Quận 09",
-      rating: 4.8,
-      time: "15 phút",
-      distance: "1.1 km",
-      discount: "Ưu đãi đến 46K",
-      imageUrl: "https://via.placeholder.com/150",
-    },
-    {
-      title: "Cơm Tấm Minh Mập - Lò Lu",
-      rating: 3.8,
-      time: "20 phút",
-      distance: "3.8 km",
-      discount: "Ưu đãi đến 46K",
-      imageUrl: "https://via.placeholder.com/150",
-    },
-  ];
-  const categories = [
-    { title: "Gà rán", imageUrl: "https://via.placeholder.com/150" },
-    { title: "Weekend Treats", imageUrl: "https://via.placeholder.com/150" },
-    { title: "Pizza", imageUrl: "https://via.placeholder.com/150" },
-    { title: "Hủ tiếu", imageUrl: "https://via.placeholder.com/150" },
-    { title: "Hiso Party", imageUrl: "https://via.placeholder.com/150" },
-    { title: "Cơm tấm", imageUrl: "https://via.placeholder.com/150" },
-    { title: "Cơm", imageUrl: "https://via.placeholder.com/150" },
-    { title: "Gà Rán - Burger", imageUrl: "https://via.placeholder.com/150" },
-    { title: "Cháo", imageUrl: "https://via.placeholder.com/150" },
-    { title: "Rau trộn", imageUrl: "https://via.placeholder.com/150" },
-    { title: "Mì Ý", imageUrl: "https://via.placeholder.com/150" },
-    { title: "Ăn Vặt", imageUrl: "https://via.placeholder.com/150" },
-  ];
-
-  return (
-    <div className="relative pb-[100px]">
-      {" "}
-      {/* Adjust padding-bottom */}
-      <div className="flex items-center justify-center">{renderData()}</div>
-      {isOpen && (
-        <div className="fixed inset-0 flex justify-end z-30">
-          <div className="h-full w-[30%] shadow-lg px-6 py-4 bg-white overflow-y-auto relative">
-            <button
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
-              onClick={toggleCart}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-            <div className="border-b-2 border-gray-300 pb-4 mb-4">
-              <h1 className="text-2xl font-semibold text-center">Giỏ hàng</h1>
-              <h5 className="text-sm text-center text-gray-500">
-                Thời gian giao: 15 phút (Cách bạn 1.5km)
-              </h5>
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold mb-4">Tên quán ăn</h2>
-
-              {/* Item 1 */}
-              {cartList.map((product) => (
-                <div
-                  className="flex items-center justify-between border-b-2 border-gray-300 py-2"
-                  key={product.id}
-                >
-                  <div className="flex items-center space-x-4">
-                    <button className="text-blue-600 text-2xl cursor-pointer">
-                      -
-                    </button>
-                    <span className="text-xl">1</span>
-                    <button className="text-blue-600 text-2xl cursor-pointer">
-                      +
-                    </button>
-                    <span className="text-lg">{product.name}</span>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <span className="text-lg">{product.sellPrice}</span>
-                    <button className="text-red-600 border border-red-600 px-2 py-1 rounded">
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-              {/* Total */}
-              <div className="mt-6">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-xl font-semibold">Tổng</h3>
-                  <h3 className="text-xl font-semibold">150.000</h3>
-                </div>
-                <p className="text-sm text-gray-500 mt-2">
-                  Phí giao hàng sẽ được thêm vào khi bạn thanh toán đơn hàng
-                </p>
-              </div>
-              <div className="flex justify-center mt-6">
-                <button
-                  className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition duration-300"
-                  onClick={HandlePayment}
-                >
-                  Thanh toán
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
       )}
-      <div className="container mt-5">
-        <form className="my-4">
-          <div className="form-group">
-            <label htmlFor="address">Địa chỉ giao hàng:</label>
+<div className="container mx-auto ">
+  <div className="px-[50px]">
+      <h1 className="text-center text-3xl my-4">Chef Main Page</h1>
+      <button
+        className="bg-blue-500 text-white py-2 px-4 rounded"
+        onClick={() => setShowAddFoodForm(!showAddFoodForm)}
+      >
+        {showAddFoodForm ? "Close Form" : "Add Food"}
+      </button>
+
+      {showAddFoodForm && (
+        <form
+          className="bg-white p-4 rounded shadow-md mt-4"
+          onSubmit={handleAddFood}
+        >
+          <div className="mb-4">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Name
+            </label>
             <input
               type="text"
-              className="form-control"
-              id="address"
-              placeholder="182 Lã Xuân Oai - 182 Lã Xuân Oai, P. Tăng Nhơn Phú A, Tp. Thủ Đức"
-              required
+              id="name"
+              name="name"
+              placeholder="Name"
+              value={foodData.name}
+              onChange={handleInputChange}
+              className="border p-2 w-full mb-2"
             />
           </div>
-          <button type="submit" className="btn btn-success btn-block">
-            Tìm kiếm
+          <div className="mb-4">
+            <label
+              htmlFor="image"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Image URL
+            </label>
+            <input
+              type="text"
+              id="image"
+              name="image"
+              placeholder="Image URL"
+              value={foodData.image}
+              onChange={handleInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="foodType"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Food Type
+            </label>
+            <input
+              type="text"
+              id="foodType"
+              name="foodType"
+              placeholder="Food Type"
+              value={foodData.foodType}
+              onChange={handleInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="price"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Price
+            </label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              placeholder="Price"
+              value={foodData.price}
+              onChange={handleInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="sellPrice"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Sell Price
+            </label>
+            <input
+              type="number"
+              id="sellPrice"
+              name="sellPrice"
+              placeholder="Sell Price"
+              value={foodData.sellPrice}
+              onChange={handleInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="sellCount"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Sell Count
+            </label>
+            <input
+              type="number"
+              id="sellCount"
+              name="sellCount"
+              placeholder="Sell Count"
+              value={foodData.sellCount}
+              onChange={handleInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="status"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Status
+            </label>
+            <input
+              type="text"
+              id="status"
+              name="status"
+              placeholder="Status"
+              value={foodData.status}
+              onChange={handleInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="categoryId"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Category ID
+            </label>
+            <input
+              type="number"
+              id="categoryId"
+              name="categoryId"
+              placeholder="Category ID"
+              value={foodData.categoryId}
+              onChange={handleInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+          >
+            Add Food
           </button>
         </form>
-        <h2>
-          Ưu đãi GrabFood tại 182 Lã Xuân Oai, P.Tăng Nhơn Phú A, Tp. Thủ Đức
-        </h2>
-        <div className="row">
-          {listFood.map((promo, index) => (
-            <div
-              className="col-md-3 cursor-pointer"
-              key={index}
-              onClick={() => handleDetail(promo.id)}
+      )}
+
+      {showEditFoodForm && (
+        <form
+          className="bg-white p-4 rounded shadow-md mt-4"
+          onSubmit={handleUpdateFood}
+        >
+          <div className="mb-4">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
             >
-              <div className="card mb-4">
-                <span className="promo-badge">Promo</span>
-                <img className="card-img-top" src={Pizza} />
-                <div className="card-body">
-                  <h5 className="card-title">Bếp nhà: {promo.name}</h5>
-                  <p className="card-text">
-                    <span>⭐ {promo.score}</span> • {} • địa chỉ :{" "}
-                    {promo.address}
-                    <br />
-                    {}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Name"
+              value={editingFoodData.name}
+              onChange={handleEditInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="image"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Image URL
+            </label>
+            <input
+              type="text"
+              id="image"
+              name="image"
+              placeholder="Image URL"
+              value={editingFoodData.image}
+              onChange={handleEditInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="foodType"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Food Type
+            </label>
+            <input
+              type="text"
+              id="foodType"
+              name="foodType"
+              placeholder="Food Type"
+              value={editingFoodData.foodType}
+              onChange={handleEditInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="price"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Price
+            </label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              placeholder="Price"
+              value={editingFoodData.price}
+              onChange={handleEditInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="sellPrice"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Sell Price
+            </label>
+            <input
+              type="number"
+              id="sellPrice"
+              name="sellPrice"
+              placeholder="Sell Price"
+              value={editingFoodData.sellPrice}
+              onChange={handleEditInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="sellCount"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Sell Count
+            </label>
+            <input
+              type="number"
+              id="sellCount"
+              name="sellCount"
+              placeholder="Sell Count"
+              value={editingFoodData.sellCount}
+              onChange={handleEditInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="status"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Status
+            </label>
+            <input
+              type="text"
+              id="status"
+              name="status"
+              placeholder="Status"
+              value={editingFoodData.status}
+              onChange={handleEditInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="categoryId"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Category ID
+            </label>
+            <input
+              type="number"
+              id="categoryId"
+              name="categoryId"
+              placeholder="Category ID"
+              value={editingFoodData.categoryId}
+              onChange={handleEditInputChange}
+              className="border p-2 w-full mb-2"
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+          >
+            Update Food
+          </button>
+          <button
+            type="button"
+            className="bg-red-500 text-white py-2 px-4 rounded ml-2"
+            onClick={() => setShowEditFoodForm(false)}
+          >
+            Cancel
+          </button>
+        </form>
+      )}
+
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+  {listFood.map((food) => (
+    <div key={food.id} className="bg-white shadow-md rounded-lg p-4 mb-4 relative">
+      <div className="mt-2">
+        <img src={food.image} alt={food.name} className="h-40 w-full object-cover" />
+      </div>
+      <div className="mt-4 text-left">
+      <p><strong>Name:</strong> {food.name}</p>
+        <p><strong>Type:</strong> {food.foodType}</p>
+        <p><strong>Price:</strong> {food.price}</p>
+        <p><strong>Sell Price:</strong> {food.sellPrice}</p>
+        <p><strong>Sell Count:</strong> {food.sellCount}</p>
+        <p><strong>Status:</strong> {food.status}</p>
+      
+      </div>
+      <div className="absolute bottom-0 left-0 w-full text-center mb-1">
+        <div className="mx-auto mt-2">
+          <button
+       
+            className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
+            onClick={() => handleEditFood(food)}
+          >
+            Edit
+          </button>
+          <button
+            className="bg-red-500 text-white py-1 px-2 rounded ml-2"
+            onClick={() => handleDeleteFood(food.id)}
+          >
+            Delete
+          </button>
         </div>
-        <button className="btn btn-outline-secondary btn-block">
-          See all promotions
-        </button>
       </div>
-      <div className="container mt-5">
-        <h2>There's something for everyone!</h2>
-        <div className="row">
-          {categories.map((category, index) => (
-            <div className="col-md-3 mb-4" key={index}>
-              <div className="card">
-                <img
-                  className="card-img-top"
-                  src={category.imageUrl}
-                  alt={category.title}
-                />
-                <div className="card-body text-center">
-                  <h5 className="card-title">{category.title}</h5>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="container mt-5">
-        <h2>Vì sao bạn nên Order trên Homee?</h2>
-        <ul>
-          <li>
-            <strong>Nhanh nhất</strong> - Homee cung cấp dịch vụ giao đồ ăn
-            nhanh nhất thị trường.
-          </li>
-          <li>
-            <strong>Dễ dàng nhất</strong> - Giờ đây, bạn chỉ cần thực hiện vài
-            cú nhấp chuột hoặc chạm nhẹ là đã có thể đặt đồ ăn. Hãy đặt đồ ăn
-            trực tuyến hoặc tải xuống siêu ứng dụng Grab của chúng tôi để có
-            trải nghiệm nhanh hơn và thú vị hơn.
-          </li>
-          <li>
-            <strong>Đáp ứng mọi nhu cầu</strong> - Từ món ăn đặc sản địa phương
-            đến các nhà hàng được ưa thích, nhiều lựa chọn đa dạng chắc chắn sẽ
-            luôn làm hài lòng khẩu vị của bạn.
-          </li>
-          <li>
-            <strong>Thanh toán dễ dàng</strong> - Giao và nhận đồ ăn thật dễ
-            dàng. Thanh toán bằng ZaloPay thậm chí còn dễ dàng hơn nữa.
-          </li>
-          <li>
-            <strong>Nhiều quà tặng hơn</strong> - Tích điểm HomeeRewards cho mỗi
-            đơn hàng của bạn và sử dụng điểm thưởng để đổi lấy nhiều ưu đãi hơn.
-          </li>
-        </ul>
-      </div>
-      <div className="container mt-5">
-        <h2>Những câu hỏi thường gặp</h2>
-        <h5>Homee là gì?</h5>
-        <p>
-          Lunch, Bún Cá Chấm Góc Đa - Vũ Thạnh for Dinner! We are here to
-          satisfy your hunger with a wide selection of merchant partners in
-          Vietnam. Homee là dịch vụ Giao đồ ăn nhanh nhất tại Việt Nam. Chúng
-          tôi đã sắp xếp tất cả các món ăn, nhà hàng và thực phẩm yêu thích của
-          bạn một cách hợp lý để giúp bạn tìm được đồ ăn dễ dàng và nhanh chóng
-          nhất có thể. Tìm và đặt món ăn yêu thích trên khắp Việt Nam - đặt đồ
-          ăn trực tuyến chỉ bằng vài thao tác, từ món Lifted Coffee & Brunch cho
-          bữa sáng, đến Maazi Indian - Nhà Hàng Ấn Độ cho bữa trưa, đến Bún Cá
-          Chấm Góc Đa – Vũ Thạnh cho bữa tối! Hãy để chúng tôi xua tan cơn đói
-          của bạn nhờ một loạt đối tác bán đồ ăn ở Việt Nam.
-        </p>
-        <button className="btn btn-outline-secondary btn-block">
-          Read More
-        </button>
-      </div>
+    </div>
+  ))}
+</div>
+
+</div>
+</div>
+
     </div>
   );
 };
