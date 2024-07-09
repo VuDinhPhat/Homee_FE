@@ -71,14 +71,17 @@ const OrderChef = () => {
     const viewOrderDetail = async (orderId) => {
         try {
             const orderDetailResponse = await axios.get(`https://localhost:44388/api/OrderDetails`, {
+              
+
                 headers: {
                     Authorization: `Bearer ${getCookie("token")}`
                 }
             });
+          
     
             // Filter order details based on orderId
             const userOrdersDetail = orderDetailResponse.data.payload.filter(order => order.orderId === orderId);
-    
+           
             // Update state to display order details
             setSelectedOrderDetails(userOrdersDetail);
             setOrderDetailVisible(true); // Show order details modal
@@ -299,13 +302,12 @@ const OrderChef = () => {
                             <thead>
                                 <tr>
                                     <th className="py-2 px-4 border">ID</th>
-                                    <th className="py-2 px-4 border">Order ID</th>
-                                    <th className="py-2 px-4 border">Product ID</th>
-                                    <th className="py-2 px-4 border">Product Name</th>
-                                    <th className="py-2 px-4 border">Product Price</th>
+                                    <th className="py-2 px-4 border">Order ID</th> 
+                                    <th className="py-2 px-4 border">Food ID</th>                                               
+                                    <th className="py-2 px-4 border">Price</th>
                                     <th className="py-2 px-4 border">Quantity</th>
-                                    <th className="py-2 px-4 border">Discount</th>
-                                    <th className="py-2 px-4 border">Total Price</th>
+                                    <th className="py-2 px-4 border">Status</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -313,12 +315,10 @@ const OrderChef = () => {
                                     <tr key={detail.id}>
                                         <td className="py-2 px-4 border">{detail.id}</td>
                                         <td className="py-2 px-4 border">{detail.orderId}</td>
-                                        <td className="py-2 px-4 border">{detail.productId}</td>
-                                        <td className="py-2 px-4 border">{detail.productName}</td>
-                                        <td className="py-2 px-4 border">{detail.productPrice}</td>
+                                        <td className="py-2 px-4 border">{detail.foodId}</td>
+                                        <td className="py-2 px-4 border">{detail.price}</td>                                      
                                         <td className="py-2 px-4 border">{detail.quantity}</td>
-                                        <td className="py-2 px-4 border">{detail.discount}</td>
-                                        <td className="py-2 px-4 border">{detail.totalPrice}</td>
+                                        <td className="py-2 px-4 border">{detail.status}</td>
                                     </tr>
                                 ))}
                             </tbody>
