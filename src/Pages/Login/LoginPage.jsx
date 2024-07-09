@@ -36,9 +36,14 @@ const LoginPage = () => {
 
   useEffect(() => {
     var username = getCookie("username");
+    var userrole = getCookie("userrole");
     if (username !== "") {
+      if (userrole !== "" && userrole == 1) {
+        navigate("/usermain");
+      } else if (userrole !== "" && userrole == 2) {
+        navigate("/adminmain");
+      }
       navigate("/chefmain");
-      navigate("/usermain");
     }
   }, []);
 
@@ -62,39 +67,49 @@ const LoginPage = () => {
 
   const handleLoginUser = async () => {
     try {
-      const response = await axios.post("https://localhost:44388/api/Users/Login", {
-        id: 0,
-        email: username,
-        firstName: "string",
-        lastName: "string",
-        password: password,
-        phone: "string",
-        address: "string",
-        dob: "2024-07-05",
-        gender: "string",
-        avatar: "string",
-        roleId: 1,
-        status: "string",
-        money: 0,
-        discount: 0,
-      });
+      const response = await axios.post(
+        "https://localhost:44388/api/Users/Login",
+        {
+          id: 0,
+          email: username,
+          firstName: "string",
+          lastName: "string",
+          password: password,
+          phone: "string",
+          address: "string",
+          dob: "2024-07-05",
+          gender: "string",
+          avatar: "string",
+          roleId: 1,
+          status: "string",
+          money: 0,
+          discount: 0,
+        }
+      );
 
-      if (response.data && response.data.userResponse && response.data.userResponse.id) {
+      if (
+        response.data &&
+        response.data.userResponse &&
+        response.data.userResponse.id
+      ) {
         const userId = response.data.userResponse.id;
 
-        const userResponse = await axios.get(`https://localhost:44388/api/Users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${response.data.token}`,
-          },
-        });
+        const userResponse = await axios.get(
+          `https://localhost:44388/api/Users/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${response.data.token}`,
+            },
+          }
+        );
 
         if (userResponse.data && userResponse.data.payload) {
-          const userFullName = userResponse.data.payload.firstName + userResponse.data.payload.lastName;
+          const userFullName =
+            userResponse.data.payload.firstName +
+            userResponse.data.payload.lastName;
           setCookie("usernamereal", userFullName, 10);
-          console.log(userFullName);
+          setCookie("userrole", userResponse.data.payload.role_id, 10);
 
-          console.log(response.data.token);
-          localStorage.setItem("token", "nice");
           setCookie("username", userId, 10);
           setCookie("token", response.data.token, 10);
 
@@ -103,40 +118,50 @@ const LoginPage = () => {
           notify("Failed to fetch user data.");
         }
       } else {
-        notify("Invalid login response.");
+        alert("Đăng nhập không thành công");
       }
     } catch (error) {
       notify("Login fail!");
-      console.error("Login error:", error);
+      alert("Đăng nhập không thành công");
     }
   };
 
   const handleLoginChef = async () => {
     try {
-      const response = await axios.post("https://localhost:44388/api/Chefs/login", {
-        id: 0,
-        name: "string",
-        address: "string",
-        creatorId: 0,
-        profilePicture: "string",
-        score: 0,
-        hours: 0,
-        status: "string",
-        email: username,
-        password: password,
-        phone: "string",
-        money: 0,
-        banking: "string",
-      });
+      const response = await axios.post(
+        "https://localhost:44388/api/Chefs/login",
+        {
+          id: 0,
+          name: "string",
+          address: "string",
+          creatorId: 0,
+          profilePicture: "string",
+          score: 0,
+          hours: 0,
+          status: "string",
+          email: username,
+          password: password,
+          phone: "string",
+          money: 0,
+          banking: "string",
+        }
+      );
 
-      if (response.data && response.data.chefResponse && response.data.chefResponse.id) {
+      if (
+        response.data &&
+        response.data.chefResponse &&
+        response.data.chefResponse.id
+      ) {
         const chefId = response.data.chefResponse.id;
 
-        const chefResponse = await axios.get(`https://localhost:44388/api/Chefs/${chefId}`, {
-          headers: {
-            Authorization: `Bearer ${response.data.token}`,
-          },
-        });
+        const chefResponse = await axios.get(
+          `https://localhost:44388/api/Chefs/${chefId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${response.data.token}`,
+            },
+          }
+        );
 
         if (chefResponse.data && chefResponse.data.payload) {
           const chefFullName = chefResponse.data.payload.name;
@@ -151,13 +176,15 @@ const LoginPage = () => {
           navigate("/chefmain");
         } else {
           notify("Failed to fetch chef data.");
+          alert("Đăng nhập không thành công");
         }
       } else {
         notify("Invalid login response.");
+        alert("Đăng nhập không thành công");
       }
     } catch (error) {
       notify("Login fail!");
-      console.error("Login error:", error);
+      alert("Đăng nhập không thành công");
     }
   };
 
@@ -171,7 +198,11 @@ const LoginPage = () => {
 
   return (
     <div className="relative">
-      <img src={LoginBG} alt="Background" className="absolute inset-0 object-cover w-full h-full" />
+      <img
+        src={LoginBG}
+        alt="Background"
+        className="absolute inset-0 object-cover w-full h-full"
+      />
       <div className="flex justify-center items-center min-h-screen relative z-10">
         <div className="bg-gray-100 bg-opacity-80 flex flex-col justify-center items-center w-full max-w-md mx-auto p-8 rounded-lg shadow-lg">
           <div className="flex items-center justify-center mb-6">
@@ -179,7 +210,9 @@ const LoginPage = () => {
           </div>
           <h1 className="text-2xl font-semibold mb-4">Đăng Nhập</h1>
           <div className="mb-4 w-full">
-            <label htmlFor="username" className="block text-gray-600">Email</label>
+            <label htmlFor="username" className="block text-gray-600">
+              Email
+            </label>
             <input
               type="text"
               id="username"
@@ -191,7 +224,9 @@ const LoginPage = () => {
             />
           </div>
           <div className="mb-4 w-full">
-            <label htmlFor="password" className="block text-gray-600">Password</label>
+            <label htmlFor="password" className="block text-gray-600">
+              Password
+            </label>
             <input
               type="password"
               id="password"
@@ -220,7 +255,9 @@ const LoginPage = () => {
                 onChange={handleRoleChange}
                 className="mr-2"
               />
-              <label htmlFor="user" className="mr-4">User</label>
+              <label htmlFor="user" className="mr-4">
+                User
+              </label>
               <input
                 type="radio"
                 id="chef"
@@ -255,7 +292,9 @@ const LoginPage = () => {
             Login
           </button>
           <div className="flex justify-center items-end mt-4">
-            <p className="text-center">Copyright&copy; 2024 Homee Competition</p>
+            <p className="text-center">
+              Copyright&copy; 2024 Homee Competition
+            </p>
           </div>
         </div>
       </div>

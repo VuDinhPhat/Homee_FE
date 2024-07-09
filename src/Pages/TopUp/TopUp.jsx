@@ -2,22 +2,25 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsBagHeart } from "react-icons/bs";
 import Logo from "../../assets/logo.png";
+import QRCode from "../../assets/QRCode.png";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useForm } from "react-hook-form";
 
-const Order = () => {
+const TopUp = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const [user, setUser] = useState({});
   const [orders, setOrders] = useState([]);
   const [open, setOpen] = useState(false);
+  const [openQR, setOpenQR] = useState(false);
   const [orderDetails, setOrderDetails] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [orderDetailVisible, setOrderDetailVisible] = useState(false);
   const [selectedOrderDetails, setSelectedOrderDetails] = useState([]);
   const [cartList, setCartList] = useState([]);
-
+  const [user, setUser] = useState({});
   const [total, setTotal] = useState(0);
+  const [QRID, setQRID] = useState(0);
   const [formData, setFormData] = useState({
     email: "",
     firstName: "",
@@ -52,8 +55,42 @@ const Order = () => {
     return "";
   };
 
-  const api = axios.create({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => {
+    console.log(data.amount);
+
+    apiTopup
+      .post("", {
+        userId: getCookie("username"),
+        amount: data.amount,
+        requestDate: new Date(),
+        isApproved: false,
+        approvalDate: new Date(),
+      })
+      .then((response) => {
+        console.log(response.data.payload);
+        setQRID(response.data.payload);
+      });
+
+    setOpenQR(true);
+
+    // Add your form submission logic here
+  };
+
+  const apiUser = axios.create({
     baseURL: "https://localhost:44388/api/Users",
+    headers: {
+      Authorization: `Bearer ${getCookie("token")}`,
+    },
+  });
+
+  const apiTopup = axios.create({
+    baseURL: "https://localhost:44388/api/TopUpRequest",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -61,41 +98,9 @@ const Order = () => {
 
   useEffect(() => {
     setUsername(getCookie("usernamereal"));
-    if (getCookie("username") === "") {
+    if (getCookie("username") == "") {
       navigate("/");
     }
-    api.get("/" + getCookie("username")).then(async (response) => {
-      setUser(response.data.payload);
-      setFormData({
-        email: response.data.payload.email,
-        firstName: response.data.payload.firstName,
-        lastName: response.data.payload.lastName,
-        phone: response.data.payload.phone,
-        address: response.data.payload.address,
-        dob: response.data.payload.dob,
-        gender: response.data.payload.gender,
-        password: response.data.payload.password || "",
-      });
-
-      // Fetch orders for the logged-in user
-      axios
-        .get("https://localhost:44388/api/Orders", {
-          headers: {
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-        })
-        .then((orderResponse) => {
-          // Filter orders based on user ID
-          const userOrders = orderResponse.data.payload.filter(
-            (order) => order.userId === response.data.payload.id
-          );
-          setOrders(userOrders);
-        })
-        .catch((error) => {
-          console.error("Error fetching orders:", error);
-        });
-    });
-
     const cookieData = Cookies.get("ArrayFood");
     if (cookieData) {
       const parsedData = JSON.parse(cookieData);
@@ -106,16 +111,13 @@ const Order = () => {
       });
       setTotal(tmp);
     }
+
+    if (getCookie("usernamereal") !== "") {
+      apiUser.get("/" + getCookie("username")).then((response) => {
+        setUser(response.data.payload);
+      });
+    }
   }, []);
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
 
   const handleOrder = async (data) => {
     navigate("/order");
@@ -125,64 +127,26 @@ const Order = () => {
     navigate("/topup");
   };
 
+  const handleRemove = async (data) => {
+    const newItems = cartList.filter((item, i) => i !== data);
+    setCartList(newItems);
+    let tmp = 0;
+    newItems.map((item) => {
+      tmp = tmp + item.sellPrice;
+    });
+    setTotal(tmp);
+
+    const jsonData = JSON.stringify(newItems);
+    Cookies.set("ArrayFood", jsonData, { expires: 10 });
+  };
+
   const handleProfile = () => navigate("/profile");
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const filteredData = {
-      email: formData.email,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      phone: formData.phone,
-      address: formData.address,
-      dob: formData.dob,
-      gender: formData.gender,
-      roleId: 1, // Default roleId to 1
-      password: formData.password,
-    };
-
-    api
-      .put("/" + getCookie("username"), filteredData)
-      .then((response) => {
-        setUser(response.data.payload);
-        setIsEditing(false);
-      })
-      .catch((error) => {
-        console.error("Update failed:", error);
-        console.error("Server error response:", error.response);
-      });
-  };
-
-  const viewOrderDetail = async (orderId) => {
-    try {
-      const orderDetailResponse = await axios.get(
-        `https://localhost:44388/api/OrderDetails`,
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-        }
-      );
-
-      // Filter order details based on orderId
-      const userOrdersDetail = orderDetailResponse.data.payload.filter(
-        (order) => order.orderId === orderId
-      );
-
-      // Update state to display order details
-      setSelectedOrderDetails(userOrdersDetail);
-      setOrderDetailVisible(true); // Show order details modal
-    } catch (error) {
-      console.error("Error fetching order details:", error);
-    }
-  };
-
   const handleLogIn = () => navigate("/login");
   const handleRegister = () => navigate("/register");
   const BackMainPage = () => navigate("/");
   const showDropDown = () => setOpen(!open);
   const handleLogout = () => {
+    setCookie("userrole", "", 0);
     setCookie("username", "", 0);
     setCookie("usernamereal", "", 0);
     navigate("/");
@@ -327,7 +291,7 @@ const Order = () => {
             </div>
             <div>
               <h2 className="text-lg font-semibold mb-4">Tên quán ăn</h2>
-              {cartList.map((product) => (
+              {cartList.map((product, index) => (
                 <div
                   className="flex items-center justify-between border-b-2 border-gray-300 py-2"
                   key={product.id}
@@ -344,7 +308,10 @@ const Order = () => {
                   </div>
                   <div className="flex items-center space-x-4">
                     <span className="text-lg">{product.sellPrice} VND</span>
-                    <button className="text-red-600 border border-red-600 px-2 py-1 rounded">
+                    <button
+                      className="text-red-600 border border-red-600 px-2 py-1 rounded"
+                      onClick={() => handleRemove(index)}
+                    >
                       Remove
                     </button>
                   </div>
@@ -368,101 +335,60 @@ const Order = () => {
           </div>
         </div>
       )}
-
-      <div className="flex items-center justify-center">
-        <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-[70%]">
-          <h1 className="text-2xl font-semibold mb-4">Orders</h1>
-          <table className="min-w-full">
-            <thead>
-              <tr>
-                <th className="py-2 px-4 border">ID</th>
-                <th className="py-2 px-4 border">Chef ID</th>
-                <th className="py-2 px-4 border">Delivery Address</th>
-                <th className="py-2 px-4 border">Order Price</th>
-                <th className="py-2 px-4 border">Quantity</th>
-                <th className="py-2 px-4 border">User ID</th>
-                <th className="py-2 px-4 border">Status</th>
-                <th className="py-2 px-4 border">Order Date</th>
-                <th className="py-2 px-4 border">Actions</th>{" "}
-                {/* Added Actions column */}
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order.id}>
-                  <td className="py-2 px-4 border">{order.id}</td>
-                  <td className="py-2 px-4 border">{order.chefId}</td>
-                  <td className="py-2 px-4 border">{order.deliveryAddress}</td>
-                  <td className="py-2 px-4 border">{order.orderPrice}</td>
-                  <td className="py-2 px-4 border">{order.quantity}</td>
-                  <td className="py-2 px-4 border">{order.userId}</td>
-                  <td className="py-2 px-4 border">{order.status}</td>
-                  <td className="py-2 px-4 border">{order.orderDate}</td>
-                  <td className="py-2 px-4 border">
-                    <button
-                      className="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-md text-xs"
-                      onClick={() => viewOrderDetail(order.id)}
-                    >
-                      View Detail
-                    </button>
-                  </td>
-
-                  {/* Modal for Order Details */}
-                  {orderDetailVisible && (
-                    <div
-                      className={`fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-40`}
-                    >
-                      <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-[50%]">
-                        <h1 className="text-2xl font-semibold mb-4">
-                          Order Details
-                        </h1>
-                        <table className="min-w-full">
-                          <thead>
-                            <tr>
-                              <th className="py-2 px-4 border">Food ID</th>
-                              <th className="py-2 px-4 border">Price</th>
-                              <th className="py-2 px-4 border">Quantity</th>
-                              <th className="py-2 px-4 border">Status</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {selectedOrderDetails.map((detail, index) => (
-                              <tr key={index}>
-                                <td className="py-2 px-4 border">
-                                  {detail.foodId}
-                                </td>
-                                <td className="py-2 px-4 border">
-                                  {detail.price}
-                                </td>
-                                <td className="py-2 px-4 border">
-                                  {detail.quantity}
-                                </td>
-                                <td className="py-2 px-4 border">
-                                  {detail.status}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                        <div className="flex justify-end mt-4">
-                          <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-                            onClick={() => setOrderDetailVisible(false)}
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <div className="container mx-auto p-8">
+        <h1 className="text-2xl font-semibold text-center mb-8">
+          Nạp tiền vào tài khoản
+        </h1>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="max-w-md mx-auto bg-white p-6 shadow-lg rounded-lg"
+        >
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="amount"
+            >
+              Số tiền nạp
+            </label>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              {...register("amount", { required: "Vui lòng nhập số tiền" })}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+            {errors.amount && (
+              <p className="text-red-500 text-xs italic">
+                {errors.amount.message}
+              </p>
+            )}
+          </div>
+          {openQR && (
+            <div className="mb-4">
+              <img src={QRCode} />
+              <br />
+              <h5>
+                Yêu cầu của bạn đã được gửi lên sever, để hoàn tất giao dịch hãy
+                chuyển số tiền bạn đã yêu cầu vào tài khoản của chúng tôi với
+                lời nhắn là : "{QRID.id}".
+              </h5>
+              <h5>
+                Sau khi chúng tôi xác nhận, tài khoản của bạn sẽ được cộng tiền.
+              </h5>
+            </div>
+          )}
+          <div className="flex items-center justify-between">
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+            >
+              Nạp tiền
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
-export default Order;
+export default TopUp;

@@ -2,41 +2,38 @@ import "./Payment.css"; // Import your CSS file for styling
 import apiUserInstance from "../../service/api-user";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState, useRef } from "react";
-import { FaEnvelope } from "react-icons/fa";
-import { BsBagHeart } from "react-icons/bs";
+
 import Logo from "../../assets/logo.png";
-import LoginBG from "../../assets/Lgbg.png";
+
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
-import { FaStar, FaRegCalendarAlt } from "react-icons/fa";
 import axios from "axios";
-import { CiClock1 } from "react-icons/ci";
 import Cookies from "js-cookie";
+
 const Payment = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [username, setUsername] = useState("");
+  const [user, setUser] = useState({});
   const [cartList, setCartList] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [chef, setChef] = useState({});
   const [formData, setFormData] = useState({
     restaurantName: "Pizza Chicago 24H - Mỳ Ý & Ăn Vặt",
     deliveryTime: "20 min (1,8 km away)",
     address: "69 Lo Lu St, P. Tương Bình Hiệp, Thị Thủ Dầu Một, Bình Dương",
     detailedAddress: "",
     driverNotes: "",
-    paymentMethod: "",
+    paymentMethod: "cash",
     profile: "",
     promoCode: "",
   });
+
   const [listUser, setListUser] = useState({});
   const [items, setItems] = useState([
     { id: 1, name: "Pizza Margherita", price: 50000, quantity: 1 },
     { id: 2, name: "Spaghetti Carbonara", price: 70000, quantity: 1 },
   ]);
-
-  const toggleCart = () => {
-    setIsOpen(!isOpen);
-  };
 
   const showDropDown = () => {
     setOpen(!open);
@@ -64,7 +61,43 @@ const Payment = () => {
     return "";
   }
 
+  const apiChef = axios.create({
+    baseURL: "https://localhost:44388/api/Chefs",
+    headers: {
+      Authorization: `Bearer ${getCookie("token")}`,
+    },
+  });
+
+  const apiUser = axios.create({
+    baseURL: "https://localhost:44388/api/Users",
+    headers: {
+      Authorization: `Bearer ${getCookie("token")}`,
+    },
+  });
+
+  const apiOrder = axios.create({
+    baseURL: "https://localhost:44388/api/Orders",
+    headers: {
+      Authorization: `Bearer ${getCookie("token")}`,
+    },
+  });
+
+  const apiOrderDetail = axios.create({
+    baseURL: "https://localhost:44388/api/OrderDetails",
+    headers: {
+      Authorization: `Bearer ${getCookie("token")}`,
+    },
+  });
+
+  const apiPayment = axios.create({
+    baseURL: "https://localhost:44388/api/Payments",
+    headers: {
+      Authorization: `Bearer ${getCookie("token")}`,
+    },
+  });
+
   const handleLogout = async () => {
+    setCookie("userrole", "", 0);
     setCookie("username", "", 0);
     setCookie("usernamereal", "", 0);
     navigate("/Detail");
@@ -75,6 +108,8 @@ const Payment = () => {
     navigate("/login");
   };
 
+  const handleTest = async () => {};
+
   const handleRegister = async () => {
     navigate("/register");
   };
@@ -83,77 +118,83 @@ const Payment = () => {
     navigate("/");
   };
 
-  useEffect(() => {
-    setUsername(getCookie("usernamereal"));
-    if (getCookie("username") == "") {
-      navigate("/");
-    }
-    const cookieData = Cookies.get("ArrayFood");
-    if (cookieData) {
-      const parsedData = JSON.parse(cookieData);
-      setCartList(parsedData);
-    }
-    const storedAddress = getCookie("userAddress");
-    apiUserInstance
-      .get("/1")
-      .then((response) => {
-        const userData = response.data.payload;
-
-        setListUser(userData);
-
-        // Update form data with user's address if stored address not found
-        if (!storedAddress) {
-          setFormData({
-            ...formData,
-            address: userData.address,
-            detailedAddress: userData.detailedAddress,
-            driverNotes: userData.driverNotes,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-      });
-  }, []); // Empty dependency array ensures this effect runs only once
-
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Form submitted:", formData);
-    // Implement form submission logic here
+  const handleSubmit = async () => {
+    if (formData.detailedAddress !== undefined) {
+      if (formData.paymentMethod == "cash") {
+        console.log("Form submitted:", formData);
+        let id = 0;
 
-    // Set address cookie when form is submitted
-    setCookie("userAddress", formData.address, 1); // Set cookie with 1 day expiration
-  };
+        const cookieData2 = Cookies.get("ArrayFood");
+        const parsedData2 = JSON.parse(cookieData2);
 
-  const applyPromoCode = () => {
-    console.log("Promo code applied:", formData.promoCode);
-    // Implement promo code application logic here
-  };
+        const orderResponse = await apiOrder.post("", {
+          id: 0,
+          chefId: chef.id,
+          deliveryAddress: formData.detailedAddress,
+          orderPrice: total,
+          quantity: 1,
+          userId: user.id,
+          status: "Awaiting",
+          orderDate: new Date(),
+        });
 
-  const increaseQuantity = (id) => {
-    setItems(
-      items.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
+        const orderId = orderResponse.data.payload.id;
+        console.log(orderResponse.data.payload);
 
-  const decreaseQuantity = (id) => {
-    setItems(
-      items.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
-  };
+        // Tạo chi tiết đơn hàng cho từng món trong giỏ hàng
+        for (const item of cartList) {
+          await apiOrderDetail.post("", {
+            id: 0,
+            foodId: item.id,
+            price: item.sellPrice,
+            quantity: 1,
+            orderId: orderId,
+            status: "true",
+          });
+        }
 
-  const calculateTotal = () => {
-    return items.reduce((total, item) => total + item.price * item.quantity, 0);
+        // Gán giá trị id của đơn hàng
+        id = orderId;
+
+        let tmp = {};
+        await apiPayment
+          .post("", {
+            id: 0,
+            orderId: id,
+            paymentDate: new Date(),
+            totalPrice: 1000,
+            paymentType: formData.paymentMethod,
+            discount: 1,
+            userId: user.id,
+            status: "Awaiting",
+          })
+          .then((response) => {
+            tmp = response.data.payload;
+          });
+
+        apiPayment
+          .put("/" + tmp.id, {
+            id: tmp.id,
+            orderId: tmp.orderId,
+            paymentDate: tmp.paymentDate,
+            totalPrice: total,
+            paymentType: tmp.paymentType,
+            discount: 10,
+            userId: tmp.userId,
+            status: tmp.status,
+          })
+          .then((response) => {});
+      }
+
+      if (formData.paymentMethod == "point") {
+      }
+    } else {
+      alert("Bạn chưa điền chi tiết địa chỉ !!!");
+    }
   };
 
   function setCookie(cname, cvalue, exdays) {
@@ -178,6 +219,62 @@ const Payment = () => {
     return "";
   }
 
+  useEffect(() => {
+    setUsername(getCookie("usernamereal"));
+    if (getCookie("username") == "") {
+      navigate("/");
+    }
+
+    if (getCookie("username") !== "") {
+      apiUser.get("/" + getCookie("username")).then((response) => {
+        setUser(response.data.payload);
+      });
+    }
+    let id = 0;
+
+    const cookieData = Cookies.get("ArrayFood");
+
+    if (cookieData) {
+      const parsedData = JSON.parse(cookieData);
+      setCartList(parsedData);
+      console.log(cartList);
+
+      let tmp = 20000;
+      parsedData.forEach((item) => {
+        tmp = tmp + item.sellPrice;
+        id = item.chefId;
+      });
+      setTotal(tmp);
+    }
+
+    apiChef.get("/" + id).then(async (response) => {
+      await setChef(response.data.payload);
+      console.log(response.data.payload);
+    });
+
+    const storedAddress = getCookie("userAddress");
+    apiUserInstance
+      .get("/1")
+      .then((response) => {
+        const userData = response.data.payload;
+
+        setListUser(userData);
+
+        // Update form data with user's address if stored address not found
+        if (!storedAddress) {
+          setFormData({
+            ...formData,
+            address: userData.address,
+            detailedAddress: userData.detailedAddress,
+            driverNotes: userData.driverNotes,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  }, []); // Empty dependency array ensures this effect runs only once
+
   const renderData = () => {
     if (getCookie("username") !== "") {
       return (
@@ -187,11 +284,8 @@ const Payment = () => {
           </div>
           <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
-            <div
-              className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
-              onClick={toggleCart}
-            >
-              <BsBagHeart height={150} width={150} />
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+              Money : {user.money}
             </div>
             <div
               className="flex items-center gap-[10px] relative"
@@ -226,11 +320,8 @@ const Payment = () => {
           </div>
           <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
-            <div
-              className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
-              onClick={toggleCart}
-            >
-              <BsBagHeart height={150} width={150} />
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+              Money : {user.money}
             </div>
             <div
               className="flex items-center gap-[10px] relative"
@@ -261,89 +352,14 @@ const Payment = () => {
   return (
     <div className="relative pb-[100px]">
       <div className="flex items-center justify-center">{renderData()}</div>
-      {isOpen && (
-        <div className="fixed inset-0 flex justify-end z-30">
-          <div className="h-full w-[30%] shadow-lg px-6 py-4 bg-white overflow-y-auto relative">
-            <button
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
-              onClick={toggleCart}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-            <div className="border-b-2 border-gray-300 pb-4 mb-4">
-              <h1 className="text-2xl font-semibold text-center">Giỏ hàng</h1>
-              <h5 className="text-sm text-center text-gray-500">
-                Thời gian giao: 15 phút (Cách bạn 1.5km)
-              </h5>
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold mb-4">Tên quán ăn</h2>
 
-              {/* Item 1 */}
-              {cartList.map((product) => (
-                <div
-                  className="flex items-center justify-between border-b-2 border-gray-300 py-2"
-                  key={product.id}
-                >
-                  <div className="flex items-center space-x-4">
-                    <button className="text-blue-600 text-2xl cursor-pointer">
-                      -
-                    </button>
-                    <span className="text-xl">1</span>
-                    <button className="text-blue-600 text-2xl cursor-pointer">
-                      +
-                    </button>
-                    <span className="text-lg">{product.name}</span>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <span className="text-lg">{product.sellPrice}</span>
-                    <button className="text-red-600 border border-red-600 px-2 py-1 rounded">
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-              {/* Total */}
-              <div className="mt-6">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-xl font-semibold">Tổng</h3>
-                  <h3 className="text-xl font-semibold">150.000</h3>
-                </div>
-                <p className="text-sm text-gray-500 mt-2">
-                  Phí giao hàng sẽ được thêm vào khi bạn thanh toán đơn hàng
-                </p>
-              </div>
-
-              <div className="flex justify-center mt-6">
-                <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition duration-300">
-                  Thanh toán
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-8">
             <div className="card shadow">
               <div className="card-body">
                 <h1 className="card-title">Giao đến</h1>
-                <form onSubmit={handleSubmit}>
+                <form>
                   <div className="form-group">
                     <label htmlFor="deliveryTime">Delivery arrival time:</label>
                     <input
@@ -392,6 +408,7 @@ const Payment = () => {
                           name="detailedAddress"
                           value={formData.detailedAddress}
                           onChange={handleChange}
+                          required
                         />
                       </div>
                       <div className="form-group">
@@ -426,24 +443,8 @@ const Payment = () => {
                       value={formData.paymentMethod}
                       onChange={handleChange}
                     >
-                      <option value="">Chọn phương thức thanh toán</option>
                       <option value="cash">Tiền mặt</option>
-                      <option value="creditCard">Thẻ tín dụng</option>
-                      <option value="momo">Momo</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="profile">Hồ sơ thẻ:</label>
-                    <select
-                      className="form-control"
-                      id="profile"
-                      name="profile"
-                      value={formData.profile}
-                      onChange={handleChange}
-                    >
-                      <option value="">Chọn hồ sơ thẻ</option>
-                      <option value="person1">Person 1</option>
-                      <option value="person2">Person 2</option>
+                      <option value="point">Homee Point</option>
                     </select>
                   </div>
                 </form>
@@ -465,7 +466,11 @@ const Payment = () => {
                       onChange={handleChange}
                     />
                     <div className="input-group-append">
-                      <button type="button" className="btn btn-primary ml-2">
+                      <button
+                        type="button"
+                        className="btn btn-primary ml-2"
+                        onClick={handleTest}
+                      >
                         Áp dụng
                       </button>
                     </div>
@@ -474,14 +479,49 @@ const Payment = () => {
               </div>
             </div>
 
+            <div className="card shadow" key={"123"}>
+              <div className="card-body">
+                <h2 className="card-title">Món Ăn</h2>
+                {cartList.map((item, index) => (
+                  <div className="flex flex-row justify-between">
+                    <div className="form-group mr-4">
+                      <label className="block text-gray-700 font-bold mb-2">
+                        Món ăn: {item.name}
+                      </label>
+                    </div>
+                    <div className="form-group mr-2">
+                      <label className="block text-gray-700 font-bold mb-2">
+                        Giá: {item.sellPrice}
+                      </label>
+                    </div>
+
+                    <div className="form-group mr-20">
+                      <label className="block text-gray-700 font-bold mb-2">
+                        Bếp nhà : {chef.name}
+                      </label>
+                    </div>
+                  </div>
+                ))}
+                <div className="flex flex-row justify-between">
+                  <div className="form-group mr-4">
+                    <label className="block text-gray-700 font-bold mb-2">
+                      Phí giao hàng : 20.000 ₫
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="card shadow">
               <div className="card-body d-flex justify-content-between align-items-center">
                 <div>
-                  <h2 className="card-title mb-0">
-                    Tổng cộng: {calculateTotal()} ₫
-                  </h2>
+                  <h2 className="card-title mb-0">Tổng cộng: {total} ₫</h2>
                 </div>
-                <button type="submit" className="btn btn-primary btn-lg">
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg"
+                  onClick={handleSubmit}
+                >
                   Đặt hàng ngay
                 </button>
               </div>
