@@ -21,6 +21,8 @@ const UserMainPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [listFood, setListFood] = useState([]);
   const [cartList, setCartList] = useState([]);
+  const [user, setUser] = useState({});
+  const [total, setTotal] = useState(0);
   const toggleCart = () => {
     setIsOpen(!isOpen);
   };
@@ -54,12 +56,20 @@ const UserMainPage = () => {
   const handleLogout = async () => {
     setCookie("username", "", 0);
     setCookie("usernamereal", "", 0);
+    setCookie("userrole", "", 0);
     navigate("/");
     setUsername(getCookie("usernamereal"));
   };
 
   const api = axios.create({
     baseURL: "https://localhost:44388/api/Chefs",
+    headers: {
+      Authorization: `Bearer ${getCookie("token")}`,
+    },
+  });
+
+  const apiUser = axios.create({
+    baseURL: "https://localhost:44388/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -88,11 +98,26 @@ const UserMainPage = () => {
     navigate("/detail");
   };
 
-
   const handleOrder = async (data) => {
     navigate("/order");
   };
 
+  const handleRemove = async (data) => {
+    const newItems = cartList.filter((item, i) => i !== data);
+    setCartList(newItems);
+    let tmp = 0;
+    newItems.map((item) => {
+      tmp = tmp + item.sellPrice;
+    });
+    setTotal(tmp);
+
+    const jsonData = JSON.stringify(newItems);
+    Cookies.set("ArrayFood", jsonData, { expires: 10 });
+  };
+
+  const handleTopup = async (data) => {
+    navigate("/topup");
+  };
 
   const BackMainPage = async () => {};
 
@@ -120,10 +145,21 @@ const UserMainPage = () => {
     if (cookieData) {
       const parsedData = JSON.parse(cookieData);
       setCartList(parsedData);
+      let tmp = 0;
+      parsedData.map((item) => {
+        tmp = tmp + item.sellPrice;
+      });
+      setTotal(tmp);
     }
     api.get("?pageIndex=1&pageSize=8").then((response) => {
       setListFood(response.data.payload);
     });
+
+    if (getCookie("usernamereal") !== "") {
+      apiUser.get("/" + getCookie("username")).then((response) => {
+        setUser(response.data.payload);
+      });
+    }
   }, []);
 
   let renderData = () => {
@@ -141,6 +177,10 @@ const UserMainPage = () => {
             >
               <BsBagHeart height={150} width={150} />
             </div>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+              Money : {user.money}
+            </div>
+
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
@@ -150,7 +190,13 @@ const UserMainPage = () => {
                 <img src="" alt="" />
               </div>
               {open && (
-                <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                <div className="bg-white border h-[160px] w-[150px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleTopup}
+                  >
+                    Top up money
+                  </p>
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleProfile}
@@ -175,7 +221,6 @@ const UserMainPage = () => {
               )}
             </div>
           </div>
-
         </div>
       );
     } else {
@@ -218,40 +263,6 @@ const UserMainPage = () => {
     }
   };
 
-  const promotions = [
-    {
-      title: "Quán Cơm 2 Lúa",
-      rating: 4.1,
-      time: "15 phút",
-      distance: "1 km",
-      discount: "Ưu đãi đến 22K",
-      imageUrl: "https://via.placeholder.com/150",
-    },
-    {
-      title: "Cơm Chiên Gà Xối Mỡ Hương Ký",
-      rating: 4.6,
-      time: "15 phút",
-      distance: "1.2 km",
-      discount: "Ưu đãi đến 52K",
-      imageUrl: "https://via.placeholder.com/150",
-    },
-    {
-      title: "Cơm Rang - Bánh Mì Mahai Quận 09",
-      rating: 4.8,
-      time: "15 phút",
-      distance: "1.1 km",
-      discount: "Ưu đãi đến 46K",
-      imageUrl: "https://via.placeholder.com/150",
-    },
-    {
-      title: "Cơm Tấm Minh Mập - Lò Lu",
-      rating: 3.8,
-      time: "20 phút",
-      distance: "3.8 km",
-      discount: "Ưu đãi đến 46K",
-      imageUrl: "https://via.placeholder.com/150",
-    },
-  ];
   const categories = [
     { title: "Gà rán", imageUrl: "https://via.placeholder.com/150" },
     { title: "Weekend Treats", imageUrl: "https://via.placeholder.com/150" },
@@ -301,10 +312,10 @@ const UserMainPage = () => {
               </h5>
             </div>
             <div>
-              <h2 className="text-lg font-semibold mb-4">Tên quán ăn</h2>
+              <h2 className="text-lg font-semibold mb-4"></h2>
 
               {/* Item 1 */}
-              {cartList.map((product) => (
+              {cartList.map((product, index) => (
                 <div
                   className="flex items-center justify-between border-b-2 border-gray-300 py-2"
                   key={product.id}
@@ -320,8 +331,11 @@ const UserMainPage = () => {
                     <span className="text-lg">{product.name}</span>
                   </div>
                   <div className="flex items-center space-x-4">
-                    <span className="text-lg">{product.sellPrice}</span>
-                    <button className="text-red-600 border border-red-600 px-2 py-1 rounded">
+                    <span className="text-lg">{product.sellPrice} VND</span>
+                    <button
+                      className="text-red-600 border border-red-600 px-2 py-1 rounded"
+                      onClick={() => handleRemove(index)}
+                    >
                       Remove
                     </button>
                   </div>
@@ -332,7 +346,7 @@ const UserMainPage = () => {
               <div className="mt-6">
                 <div className="flex justify-between items-center">
                   <h3 className="text-xl font-semibold">Tổng</h3>
-                  <h3 className="text-xl font-semibold">150.000</h3>
+                  <h3 className="text-xl font-semibold">{total} VND</h3>
                 </div>
                 <p className="text-sm text-gray-500 mt-2">
                   Phí giao hàng sẽ được thêm vào khi bạn thanh toán đơn hàng

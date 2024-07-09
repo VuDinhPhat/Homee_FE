@@ -20,7 +20,7 @@ import Brackets from "./components/Brackets/Brackets";
 import RegisterPage from "./Pages/Register/RegisPage";
 import Footer from "./Pages/Footer/Footer";
 import Detail from "./Pages/Detail/Detail";
-import Payment from"./Pages/Payment/Payment"
+import Payment from "./Pages/Payment/Payment";
 import UserMainPage from "./Pages/UserMain/UserMainPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Profile from "./Pages/Profile/Profile";
@@ -28,6 +28,8 @@ import Order from "./Pages/Order/Order";
 import ChefMain from "./Pages/ChefMain/ChefMain";
 import ProfileChef from "./Pages/ProfileChef/ProfileChef";
 import OrderChef from "./Pages/OrderChef/OrderChef";
+import TopUp from "./Pages/TopUp/TopUp";
+import TopUpChef from "./Pages/TopUp/TopUpChef";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: "/payment",
     element: <Payment />,
+  },
+  {
+    path: "/topup",
+    element: <TopUp />,
   },
 
   {
@@ -74,6 +80,11 @@ const router = createBrowserRouter([
   {
     path: "/orderchef",
     element: <OrderChef />,
+  },
+
+  {
+    path: "/topupchef",
+    element: <TopUpChef />,
   },
   {
     path: "/",

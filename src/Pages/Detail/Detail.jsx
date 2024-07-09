@@ -17,6 +17,8 @@ const Detail = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState({});
+  const [total, setTotal] = useState(0);
 
   const [chef, setChef] = useState({});
   const [foodList, setFoodList] = useState([]);
@@ -24,9 +26,6 @@ const Detail = () => {
   const yellowColor = "#fde047";
 
   const todayPromotionRef = useRef(null);
-  const mrcDealRef = useRef(null);
-  const overflowingPromotionRef = useRef(null);
-  const interestingFoodsRef = useRef(null);
 
   const scrollToRef = (ref) => {
     ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -47,9 +46,6 @@ const Detail = () => {
     document.cookie = cname + "=" + cvalue + "; " + expires;
   }
 
-  const handlePayMent = async () => {
-    navigate("/payment");
-  };
   const handleLogout = async () => {
     setCookie("username", "", 0);
     setCookie("usernamereal", "", 0);
@@ -65,23 +61,72 @@ const Detail = () => {
     navigate("/register");
   };
 
+  const handleRemove = async (data) => {
+    const newItems = cartList.filter((item, i) => i !== data);
+    setCartList(newItems);
+    let tmp = 0;
+    newItems.map((item) => {
+      tmp = tmp + item.sellPrice;
+    });
+    setTotal(tmp);
+
+    const jsonData = JSON.stringify(newItems);
+    Cookies.set("ArrayFood", jsonData, { expires: 10 });
+  };
+
   const HandlePayment = async () => {
     if (getCookie("username") != "") {
       navigate("/payment");
     }
   };
 
+  const handleOrder = async (data) => {
+    navigate("/order");
+  };
+
+  const handleTopup = async (data) => {
+    navigate("/topup");
+  };
+
+  const handleProfile = () => navigate("/profile");
+
   const addFood = async (data) => {
     let dataArray = [];
     const cookieData = Cookies.get("ArrayFood");
+
     if (cookieData) {
       dataArray = JSON.parse(cookieData);
       setCartList(dataArray);
     }
-
-    dataArray.push(data);
-    const jsonData = JSON.stringify(dataArray);
-    Cookies.set("ArrayFood", jsonData, { expires: 7 });
+    if (cartList == "") {
+      dataArray.push(data);
+      const jsonData = JSON.stringify(dataArray);
+      Cookies.set("ArrayFood", jsonData, { expires: 7 });
+      let tmp = 0;
+      dataArray.map((item) => {
+        tmp = tmp + item.sellPrice;
+      });
+      setTotal(tmp);
+      alert("Thêm sản phẩm thành công");
+    } else {
+      let tmp = true;
+      cartList.map((item) => {
+        if (item.chefId !== data.chefId) {
+          tmp = false;
+        }
+      });
+      if (tmp) {
+        dataArray.push(data);
+        const jsonData = JSON.stringify(dataArray);
+        Cookies.set("ArrayFood", jsonData, { expires: 7 });
+        let tmp = 0;
+        dataArray.map((item) => {
+          tmp = tmp + item.sellPrice;
+        });
+        setTotal(tmp);
+        alert("Thêm sản phẩm thành công");
+      }
+    }
   };
 
   const BackMainPage = async () => {
@@ -116,6 +161,12 @@ const Detail = () => {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
+  const apiUser = axios.create({
+    baseURL: "https://localhost:44388/api/Users",
+    headers: {
+      Authorization: `Bearer ${getCookie("token")}`,
+    },
+  });
 
   useEffect(() => {
     setUsername(getCookie("usernamereal"));
@@ -138,22 +189,23 @@ const Detail = () => {
     if (cookieData) {
       const parsedData = JSON.parse(cookieData);
       setCartList(parsedData);
+      let tmp = 0;
+      parsedData.map((item) => {
+        tmp = tmp + item.sellPrice;
+      });
+      setTotal(tmp);
     }
+    apiUser.get("/" + getCookie("username")).then((response) => {
+      setUser(response.data.payload);
+    });
   }, []);
 
-  const renderData = () => {
+  let renderData = () => {
     if (getCookie("username") !== "") {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
-          <div>
-            <img
-              src={Logo}
-              alt=""
-              width={150}
-              height={150}
-              className="cursor-pointer"
-              onClick={BackMainPage}
-            />
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[155px]">
+          <div className="cursor-pointer" onClick={BackMainPage}>
+            <img src={Logo} alt="" width={150} height={150} />
           </div>
           <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
@@ -163,6 +215,10 @@ const Detail = () => {
             >
               <BsBagHeart height={150} width={150} />
             </div>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+              Money : {user.money}
+            </div>
+
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
@@ -172,10 +228,27 @@ const Detail = () => {
                 <img src="" alt="" />
               </div>
               {open && (
-                <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
-                  <p className="cursor-pointer hover:text-[blue] font-semibold">
+                <div className="bg-white border h-[160px] w-[150px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleTopup}
+                  >
+                    Top up money
+                  </p>
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleProfile}
+                  >
                     Profile
                   </p>
+
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleOrder}
+                  >
+                    View Order
+                  </p>
+
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
@@ -191,15 +264,8 @@ const Detail = () => {
     } else {
       return (
         <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
-          <div>
-            <img
-              src={Logo}
-              alt=""
-              width={150}
-              height={150}
-              className="cursor-pointer"
-              onClick={BackMainPage}
-            />
+          <div className="cursor-pointer" onClick={BackMainPage}>
+            <img src={Logo} alt="" width={150} height={150} />
           </div>
           <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
@@ -270,7 +336,7 @@ const Detail = () => {
               <h2 className="text-lg font-semibold mb-4">Tên quán ăn</h2>
 
               {/* Item 1 */}
-              {cartList.map((product) => (
+              {cartList.map((product, index) => (
                 <div
                   className="flex items-center justify-between border-b-2 border-gray-300 py-2"
                   key={product.id}
@@ -286,8 +352,11 @@ const Detail = () => {
                     <span className="text-lg">{product.name}</span>
                   </div>
                   <div className="flex items-center space-x-4">
-                    <span className="text-lg">{product.sellPrice}</span>
-                    <button className="text-red-600 border border-red-600 px-2 py-1 rounded">
+                    <span className="text-lg">{product.sellPrice} VND</span>
+                    <button
+                      className="text-red-600 border border-red-600 px-2 py-1 rounded"
+                      onClick={() => handleRemove(index)}
+                    >
                       Remove
                     </button>
                   </div>
@@ -298,7 +367,7 @@ const Detail = () => {
               <div className="mt-6">
                 <div className="flex justify-between items-center">
                   <h3 className="text-xl font-semibold">Tổng</h3>
-                  <h3 className="text-xl font-semibold">150.000</h3>
+                  <h3 className="text-xl font-semibold">{total} VND</h3>
                 </div>
                 <p className="text-sm text-gray-500 mt-2">
                   Phí giao hàng sẽ được thêm vào khi bạn thanh toán đơn hàng
