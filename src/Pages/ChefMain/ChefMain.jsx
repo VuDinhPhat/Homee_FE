@@ -163,7 +163,7 @@ const ChefMain = () => {
       console.error("Error updating food item:", error);
     }
   };
-
+  const renderData = () =>{};
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
     setEditingFoodData((prevData) => ({
@@ -269,9 +269,98 @@ const ChefMain = () => {
           </div>
         </div>
       )}
+
+
+      <div className="relative pb-[0px]">
+        {" "}
+        {/* Adjust padding-bottom */}
+        <div className="flex items-center justify-center">{}</div>
+        {isOpen && (
+          <div className="fixed inset-0 flex justify-end z-30">
+            <div className="h-full w-[30%] shadow-lg px-6 py-4 bg-white overflow-y-auto relative">
+              <button
+                className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
+                onClick={toggleCart}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              <div className="border-b-2 border-gray-300 pb-4 mb-4">
+                <h1 className="text-2xl font-semibold text-center">Giỏ hàng</h1>
+                <h5 className="text-sm text-center text-gray-500">
+                  Thời gian giao: 15 phút (Cách bạn 1.5km)
+                </h5>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold mb-4">Tên quán ăn</h2>
+  
+                {/* Item 1 */}
+                {cartList.map((product) => (
+                  <div
+                    className="flex items-center justify-between border-b-2 border-gray-300 py-2"
+                    key={product.id}
+                  >
+                    <div className="flex items-center space-x-4">
+                      <button className="text-blue-600 text-2xl cursor-pointer">
+                        -
+                      </button>
+                      <span className="text-xl">1</span>
+                      <button className="text-blue-600 text-2xl cursor-pointer">
+                        +
+                      </button>
+                      <span className="text-lg">{product.name}</span>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <span className="text-lg">{product.sellPrice}</span>
+                      <button className="text-red-600 border border-red-600 px-2 py-1 rounded">
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ))}
+  
+                {/* Total */}
+                <div className="mt-6">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-xl font-semibold">Tổng</h3>
+                    <h3 className="text-xl font-semibold">150.000</h3>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Phí giao hàng sẽ được thêm vào khi bạn thanh toán đơn hàng
+                  </p>
+                </div>
+                <div className="flex justify-center mt-6">
+                  <button
+                    className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition duration-300"
+                    onClick={HandlePayment}
+                  >
+                    Thanh toán
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+    
+       
+    
+      </div>
+
 <div className="container mx-auto ">
   <div className="px-[50px]">
-      <h1 className="text-center text-3xl my-4">Chef Main Page</h1>
       <button
         className="bg-blue-500 text-white py-2 px-4 rounded"
         onClick={() => setShowAddFoodForm(!showAddFoodForm)}

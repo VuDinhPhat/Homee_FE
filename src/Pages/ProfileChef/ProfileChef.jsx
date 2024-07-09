@@ -87,7 +87,7 @@ const ProfileChef = () => {
           address: response.data.payload.address,
           money: response.data.payload.money,
           banking: response.data.payload.banking,
-          password: response.data.payload.password || "",
+          password: response.data.payload.password,
           status: response.data.payload.status
             
 
@@ -406,20 +406,6 @@ const ProfileChef = () => {
                       id="address"
                       name="address"
                       value={formData.address}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="dob" className="block text-lg font-medium mb-2">
-                     Phone:
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
                       onChange={handleChange}
                       required
                     />
