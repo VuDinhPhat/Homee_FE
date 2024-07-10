@@ -43,7 +43,7 @@ const RegisterPage = () => {
   };
 
   const apiUser = axios.create({
-    baseURL: "http://206.189.95.158/api/Users",
+    baseURL: "https://206.189.95.158/api/Users",
   });
 
   const handleRegister = async () => {
@@ -71,7 +71,7 @@ const RegisterPage = () => {
       formData.append("discount", "0"); // Assuming 'discount' is a string field
 
       const response = await axios.post(
-        "http://206.189.95.158/api/Users",
+        "https://206.189.95.158/api/Users",
         formData
       );
 

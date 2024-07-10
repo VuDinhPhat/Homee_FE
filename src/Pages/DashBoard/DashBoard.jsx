@@ -54,14 +54,14 @@ const DashBoard = () => {
   };
 
   const apiTopUp = axios.create({
-    baseURL: "http://206.189.95.158/api/TopUpRequest",
+    baseURL: "https://206.189.95.158/api/TopUpRequest",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUsers = axios.create({
-    baseURL: "http://206.189.95.158/api/Users",
+    baseURL: "https://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
