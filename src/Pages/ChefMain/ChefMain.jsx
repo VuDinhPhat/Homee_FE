@@ -68,7 +68,7 @@ const ChefMain = () => {
   };
 
   const api = axios.create({
-    baseURL: "http://206.189.95.158/api/Foods",
+    baseURL: "https://206.189.95.158/api/Foods",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -117,7 +117,7 @@ const ChefMain = () => {
     }
     const chefId = getCookie("username");
     api
-      .get(`/by-chef?chefId=${chefId}`)
+      .get(`/?chefId=${chefId}`)
       .then((response) => {
         setListFood(response.data.payload);
       })
@@ -282,7 +282,7 @@ const ChefMain = () => {
                 onClick={toggleCart}
               >
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns="https://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"

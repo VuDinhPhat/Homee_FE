@@ -83,14 +83,14 @@ const TopUpChef = () => {
   };
 
   const apiUser = axios.create({
-    baseURL: "http://206.189.95.158/api/Users",
+    baseURL: "https://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiTopup = axios.create({
-    baseURL: "http://206.189.95.158/api/TopUpRequest",
+    baseURL: "https://206.189.95.158/api/TopUpRequest",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -269,7 +269,7 @@ const TopUpChef = () => {
               onClick={toggleCart}
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
+                xmlns="https://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"

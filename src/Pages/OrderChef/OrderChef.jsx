@@ -42,7 +42,7 @@ const OrderChef = () => {
   };
 
   const api = axios.create({
-    baseURL: "http://206.189.95.158/api/Chefs",
+    baseURL: "https://206.189.95.158/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -57,7 +57,7 @@ const OrderChef = () => {
       setUser(response.data.payload);
       // Fetch orders for the logged-in user
       axios
-        .get("http://206.189.95.158/api/Orders", {
+        .get("https://206.189.95.158/api/Orders", {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
           },
@@ -84,7 +84,7 @@ const OrderChef = () => {
     await Promise.all(
       chefIds.map(async (id) => {
         const response = await axios.get(
-          `http://206.189.95.158/api/Chefs/${id}`,
+          `https://206.189.95.158/api/Chefs/${id}`,
           {
             headers: {
               Authorization: `Bearer ${getCookie("token")}`,
@@ -108,7 +108,7 @@ const OrderChef = () => {
       await Promise.all(
         userIds.map(async (id) => {
           const response = await axios.get(
-            `http://206.189.95.158/api/Users/${id}`,
+            `https://206.189.95.158/api/Users/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${getCookie("token")}`,
@@ -132,7 +132,7 @@ const OrderChef = () => {
     try {
       // Lấy chi tiết đơn hàng từ API /OrderDetails
       const orderDetailResponse = await axios.get(
-        `http://206.189.95.158/api/OrderDetails`,
+        `https://206.189.95.158/api/OrderDetails`,
         {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
@@ -147,7 +147,7 @@ const OrderChef = () => {
 
       // Lấy thông tin status từ đơn hàng chính từ API /Orders
       const orderResponse = await axios.get(
-        `http://206.189.95.158/api/Orders/${orderId}`,
+        `https://206.189.95.158/api/Orders/${orderId}`,
         {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
@@ -167,7 +167,7 @@ const OrderChef = () => {
 
       // Lấy danh sách món ăn từ API /Foods/by-chef
       const foodsResponse = await axios.get(
-        `http://206.189.95.158/api/Foods/?chefId=${chefId}`,
+        `https://206.189.95.158/api/Foods/?chefId=${chefId}`,
         {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
@@ -227,7 +227,7 @@ const OrderChef = () => {
 
       // Gọi API để cập nhật đơn hàng
       await axios.put(
-        `http://206.189.95.158/api/Orders/${orderId}`,
+        `https://206.189.95.158/api/Orders/${orderId}`,
         {
           chefId: orderToUpdate.chefId,
           deliveryAddress: orderToUpdate.deliveryAddress,

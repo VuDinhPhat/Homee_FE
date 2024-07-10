@@ -62,14 +62,14 @@ const UserMainPage = () => {
   };
 
   const api = axios.create({
-    baseURL: "http://206.189.95.158/api/Chefs",
+    baseURL: "https://206.189.95.158/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUser = axios.create({
-    baseURL: "http://206.189.95.158/api/Users",
+    baseURL: "https://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
