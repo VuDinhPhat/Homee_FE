@@ -62,35 +62,35 @@ const Payment = () => {
   }
 
   const apiChef = axios.create({
-    baseURL: "https://localhost:44388/api/Chefs",
+    baseURL: "http://206.189.95.158/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUser = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "http://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiOrder = axios.create({
-    baseURL: "https://localhost:44388/api/Orders",
+    baseURL: "http://206.189.95.158/api/Orders",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiOrderDetail = axios.create({
-    baseURL: "https://localhost:44388/api/OrderDetails",
+    baseURL: "http://206.189.95.158/api/OrderDetails",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiPayment = axios.create({
-    baseURL: "https://localhost:44388/api/Payments",
+    baseURL: "http://206.189.95.158/api/Payments",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },

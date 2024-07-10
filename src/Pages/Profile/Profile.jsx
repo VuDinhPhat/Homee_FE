@@ -46,7 +46,7 @@ const Profile = () => {
   };
 
   const api = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "http://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },

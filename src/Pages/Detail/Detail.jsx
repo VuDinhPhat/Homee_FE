@@ -151,20 +151,20 @@ const Detail = () => {
   }
 
   const apiFood = axios.create({
-    baseURL: "https://localhost:44388/api/Foods",
+    baseURL: "http://206.189.95.158/api/Foods",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiChef = axios.create({
-    baseURL: "https://localhost:44388/api/Chefs",
+    baseURL: "http://206.189.95.158/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
   const apiUser = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "http://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
