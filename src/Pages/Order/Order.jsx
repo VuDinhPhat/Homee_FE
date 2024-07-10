@@ -16,6 +16,8 @@ const Order = () => {
   const [orderDetailVisible, setOrderDetailVisible] = useState(false);
   const [selectedOrderDetails, setSelectedOrderDetails] = useState([]);
   const [cartList, setCartList] = useState([]);
+  const [chefs, setChefs] = useState({});
+  const [users, setUsers] = useState({});
 
   const [total, setTotal] = useState(0);
   const [formData, setFormData] = useState({
@@ -90,6 +92,10 @@ const Order = () => {
             (order) => order.userId === response.data.payload.id
           );
           setOrders(userOrders);
+
+
+          fetchChefNames(userOrders);
+          fetchUserNames(userOrders);
         })
         .catch((error) => {
           console.error("Error fetching orders:", error);
@@ -154,29 +160,104 @@ const Order = () => {
       });
   };
 
-  const viewOrderDetail = async (orderId) => {
+
+  const fetchChefNames = async (orders) => {
+    const chefIds = [...new Set(orders.map(order => order.chefId))];
+    const chefData = {};
+    await Promise.all(chefIds.map(async (id) => {
+        const response = await axios.get(`https://localhost:44388/api/Chefs/${id}`, {
+            headers: {
+                Authorization: `Bearer ${getCookie("token")}`
+            }
+        });
+        chefData[id] = response.data.payload.name;
+    }));
+    setChefs(chefData);
+};
+const fetchUserNames = async (orders) => {
     try {
-      const orderDetailResponse = await axios.get(
-        `https://localhost:44388/api/OrderDetails`,
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-        }
-      );
+        // Lấy danh sách các unique userId từ danh sách các đơn hàng
+        const userIds = [...new Set(orders.map(order => order.userId))];
+        
+        // Tạo đối tượng để lưu trữ tên của các người dùng với key là userId
+        const userData = {};
 
-      // Filter order details based on orderId
-      const userOrdersDetail = orderDetailResponse.data.payload.filter(
-        (order) => order.orderId === orderId
-      );
+        // Sử dụng Promise.all để gọi các API lấy tên người dùng bất đồng bộ
+        await Promise.all(userIds.map(async (id) => {
+            const response = await axios.get(`https://localhost:44388/api/Users/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${getCookie("token")}`
+                }
+            });
+            // Lưu tên của người dùng vào đối tượng userData
+            userData[id] = `${response.data.payload.firstName} ${response.data.payload.lastName}`;
+        }));
 
-      // Update state to display order details
-      setSelectedOrderDetails(userOrdersDetail);
-      setOrderDetailVisible(true); // Show order details modal
+        // Cập nhật state users với dữ liệu vừa lấy được
+        setUsers(userData);
     } catch (error) {
-      console.error("Error fetching order details:", error);
+        console.error("Error fetching user names:", error);
     }
-  };
+};
+
+
+const viewOrderDetail = async (orderId) => {
+  try {
+      // Lấy chi tiết đơn hàng từ API /OrderDetails
+      const orderDetailResponse = await axios.get(`https://localhost:44388/api/OrderDetails`, {
+          headers: {
+              Authorization: `Bearer ${getCookie("token")}`
+          }
+      });
+
+      // Lọc chi tiết đơn hàng theo orderId
+      const userOrdersDetail = orderDetailResponse.data.payload.filter(order => order.orderId === orderId);
+
+      // Lấy thông tin status từ đơn hàng chính từ API /Orders
+      const orderResponse = await axios.get(`https://localhost:44388/api/Orders/${orderId}`, {
+          headers: {
+              Authorization: `Bearer ${getCookie("token")}`
+          }
+      });
+
+      // Lấy thông tin status từ đơn hàng chính
+      const orderStatus = orderResponse.data.payload.status;
+
+      // Lấy danh sách món ăn theo chefId
+      const chefId = getCookie("username");
+      if (!chefId) {
+          navigate("/");
+          return;
+      }
+
+      // Lấy danh sách món ăn từ API /Foods/by-chef
+      const foodsResponse = await axios.get(`https://localhost:44388/api/Foods/by-chef?chefId=${chefId}`, {
+          headers: {
+              Authorization: `Bearer ${getCookie("token")}`
+          }
+      });
+
+      // Tạo một map để truy cập nhanh tên món ăn bằng foodId
+      const foodMap = {};
+      foodsResponse.data.payload.forEach(food => {
+          foodMap[food.id] = food.name;
+      });
+
+      // Cập nhật foodName và status vào userOrdersDetail
+      const ordersWithFoodNamesAndStatus = userOrdersDetail.map(order => ({
+          ...order,
+
+          foodName: foodMap[order.foodId] || "Unknown Food", // Tên món ăn, mặc định nếu không tìm thấy
+          status: orderStatus // Status từ đơn hàng chính
+      }));
+
+      // Cập nhật state để hiển thị chi tiết đơn hàng với tên món ăn và status
+      setSelectedOrderDetails(ordersWithFoodNamesAndStatus);
+      setOrderDetailVisible(true); // Hiển thị modal chi tiết đơn hàng
+  } catch (error) {
+      console.error("Error fetching order details:", error);
+  }
+};
 
   const handleLogIn = () => navigate("/login");
   const handleRegister = () => navigate("/register");
@@ -194,7 +275,7 @@ const Order = () => {
   let renderData = () => {
     if (getCookie("username") !== "") {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[155px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[50px] ">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -370,17 +451,17 @@ const Order = () => {
       )}
 
       <div className="flex items-center justify-center">
-        <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-[70%]">
+        <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-[100%]">
           <h1 className="text-2xl font-semibold mb-4">Orders</h1>
           <table className="min-w-full">
             <thead>
               <tr>
                 <th className="py-2 px-4 border">ID</th>
-                <th className="py-2 px-4 border">Chef ID</th>
+                <th className="py-2 px-4 border">Chef Name</th>
                 <th className="py-2 px-4 border">Delivery Address</th>
                 <th className="py-2 px-4 border">Order Price</th>
                 <th className="py-2 px-4 border">Quantity</th>
-                <th className="py-2 px-4 border">User ID</th>
+                <th className="py-2 px-4 border">User Name</th>
                 <th className="py-2 px-4 border">Status</th>
                 <th className="py-2 px-4 border">Order Date</th>
                 <th className="py-2 px-4 border">Actions</th>{" "}
@@ -391,11 +472,11 @@ const Order = () => {
               {orders.map((order) => (
                 <tr key={order.id}>
                   <td className="py-2 px-4 border">{order.id}</td>
-                  <td className="py-2 px-4 border">{order.chefId}</td>
+                  <td className="py-2 px-4 border-b text-center">{chefs[order.chefId] || "Loading..."}</td>
                   <td className="py-2 px-4 border">{order.deliveryAddress}</td>
                   <td className="py-2 px-4 border">{order.orderPrice}</td>
                   <td className="py-2 px-4 border">{order.quantity}</td>
-                  <td className="py-2 px-4 border">{order.userId}</td>
+                  <td className="py-2 px-4 border">{users[order.userId]}</td>
                   <td className="py-2 px-4 border">{order.status}</td>
                   <td className="py-2 px-4 border">{order.orderDate}</td>
                   <td className="py-2 px-4 border">
@@ -409,51 +490,41 @@ const Order = () => {
 
                   {/* Modal for Order Details */}
                   {orderDetailVisible && (
-                    <div
-                      className={`fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-40`}
-                    >
-                      <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-[50%]">
-                        <h1 className="text-2xl font-semibold mb-4">
-                          Order Details
-                        </h1>
-                        <table className="min-w-full">
-                          <thead>
-                            <tr>
-                              <th className="py-2 px-4 border">Food ID</th>
-                              <th className="py-2 px-4 border">Price</th>
-                              <th className="py-2 px-4 border">Quantity</th>
-                              <th className="py-2 px-4 border">Status</th>
+                    <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-40">
+                    <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:max-w-[80%]">
+                      <h1 className="text-2xl font-semibold mb-4">Order Details</h1>
+                      <table className="min-w-full">
+                        <thead>
+                          <tr>
+                            <th className="py-2 px-4 border">Food Name</th>
+                            <th className="py-2 px-4 border">Price</th>
+                            <th className="py-2 px-4 border">Quantity</th>
+                            <th className="py-2 px-4 border">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {selectedOrderDetails.map((detail, index) => (
+                            <tr key={index}>
+                              <td className="py-2 px-4 border">{detail.foodName}</td>
+                              <td className="py-2 px-4 border">{detail.price}</td>
+                              <td className="py-2 px-4 border">{detail.quantity}</td>
+                              <td className="py-2 px-4 border">{detail.status}</td>
                             </tr>
-                          </thead>
-                          <tbody>
-                            {selectedOrderDetails.map((detail, index) => (
-                              <tr key={index}>
-                                <td className="py-2 px-4 border">
-                                  {detail.foodId}
-                                </td>
-                                <td className="py-2 px-4 border">
-                                  {detail.price}
-                                </td>
-                                <td className="py-2 px-4 border">
-                                  {detail.quantity}
-                                </td>
-                                <td className="py-2 px-4 border">
-                                  {detail.status}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                        <div className="flex justify-end mt-4">
-                          <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-                            onClick={() => setOrderDetailVisible(false)}
-                          >
-                            Close
-                          </button>
-                        </div>
+                          ))}
+                        </tbody>
+                      </table>
+                      <div className="flex justify-end mt-4">
+                        <button
+                          className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                          onClick={() => setOrderDetailVisible(false)}
+                        >
+                          Close
+                        </button>
                       </div>
                     </div>
+                  </div>
+
+
                   )}
                 </tr>
               ))}
