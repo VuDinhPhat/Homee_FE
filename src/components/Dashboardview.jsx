@@ -113,14 +113,14 @@ const Dashboardview = () => {
   }
 
   const api = axios.create({
-    baseURL: "https://206.189.95.158/api/Chefs",
+    baseURL: "http://206.189.95.158/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUser = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "http://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },

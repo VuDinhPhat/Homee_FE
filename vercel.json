@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "http://homee-fe-phatvus-projects.vercel.app",
+      "has": [
+        {
+          "type": "host",
+          "value": "homee-fe-phatvus-projects.vercel.app"
+        }
+      ]
+    }
+  ]
+}

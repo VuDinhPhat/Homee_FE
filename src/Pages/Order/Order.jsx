@@ -55,7 +55,7 @@ const Order = () => {
   };
 
   const api = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "http://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -81,7 +81,7 @@ const Order = () => {
 
       // Fetch orders for the logged-in user
       axios
-        .get("https://206.189.95.158/api/Orders", {
+        .get("http://206.189.95.158/api/Orders", {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
           },
@@ -165,7 +165,7 @@ const Order = () => {
     await Promise.all(
       chefIds.map(async (id) => {
         const response = await axios.get(
-          `https://206.189.95.158/api/Chefs/${id}`,
+          `http://206.189.95.158/api/Chefs/${id}`,
           {
             headers: {
               Authorization: `Bearer ${getCookie("token")}`,
@@ -189,7 +189,7 @@ const Order = () => {
       await Promise.all(
         userIds.map(async (id) => {
           const response = await axios.get(
-            `https://206.189.95.158/api/Users/${id}`,
+            `http://206.189.95.158/api/Users/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${getCookie("token")}`,
@@ -214,7 +214,7 @@ const Order = () => {
     try {
       // Lấy chi tiết đơn hàng từ API /OrderDetails
       const orderDetailResponse = await axios.get(
-        `https://206.189.95.158/api/OrderDetails`,
+        `http://206.189.95.158/api/OrderDetails`,
         {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
@@ -229,7 +229,7 @@ const Order = () => {
 
       // Lấy thông tin status từ đơn hàng chính từ API /Orders
       const orderResponse = await axios.get(
-        `https://206.189.95.158/api/Orders/${orderId}`,
+        `http://206.189.95.158/api/Orders/${orderId}`,
         {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
@@ -249,7 +249,7 @@ const Order = () => {
 
       // Lấy danh sách món ăn từ API /Foods/by-chef
       const foodsResponse = await axios.get(
-        `https://206.189.95.158/api/Foods/by-chef?chefId=${chefId}`,
+        `http://206.189.95.158/api/Foods/?chefId=${chefId}`,
         {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
@@ -406,7 +406,7 @@ const Order = () => {
               onClick={toggleCart}
             >
               <svg
-                xmlns="https://www.w3.org/2000/svg"
+                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
