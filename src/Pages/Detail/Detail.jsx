@@ -77,6 +77,8 @@ const Detail = () => {
   const HandlePayment = async () => {
     if (getCookie("username") != "") {
       navigate("/payment");
+    } else {
+      alert("Bạn chưa đăng nhập");
     }
   };
 

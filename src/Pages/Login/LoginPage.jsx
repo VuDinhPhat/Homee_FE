@@ -108,14 +108,17 @@ const LoginPage = () => {
             userResponse.data.payload.firstName +
             userResponse.data.payload.lastName;
           setCookie("usernamereal", userFullName, 10);
-          setCookie("userrole", userResponse.data.payload.role_id, 10);
+          setCookie("userrole", userResponse.data.payload.roleId, 10);
 
           setCookie("username", userId, 10);
           setCookie("token", response.data.token, 10);
-
-          navigate("/usermain");
+          if (userResponse.data.payload.roleId == 1) {
+            navigate("/usermain");
+          } else if (userResponse.data.payload.roleId == 2) {
+            navigate("/dashboard");
+          }
         } else {
-          notify("Failed to fetch user data.");
+          alert("Đăng nhập không thành công");
         }
       } else {
         alert("Đăng nhập không thành công");
@@ -279,6 +282,18 @@ const LoginPage = () => {
               <span
                 className="text-blue-500 cursor-pointer"
                 onClick={() => navigate("/register")}
+              >
+                Đăng ký tại đây
+              </span>
+            </p>
+          </div>
+
+          <div className="flex justify-center items-center mt-4">
+            <p className="text-gray-600">
+              Đăng ký làm người bán hàng?{" "}
+              <span
+                className="text-blue-500 cursor-pointer"
+                onClick={() => navigate("/registerchef")}
               >
                 Đăng ký tại đây
               </span>

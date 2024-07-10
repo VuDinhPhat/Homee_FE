@@ -30,7 +30,8 @@ import ProfileChef from "./Pages/ProfileChef/ProfileChef";
 import OrderChef from "./Pages/OrderChef/OrderChef";
 import TopUp from "./Pages/TopUp/TopUp";
 import TopUpChef from "./Pages/TopUp/TopUpChef";
-
+import DashBoard from "./Pages/DashBoard/DashBoard";
+import RegisterChefPage from "./Pages/Register/RegisterChefPage";
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+  {
+    path: "/registerchef",
+    element: <RegisterChefPage />,
   },
   {
     path: "/footer",
@@ -51,6 +56,10 @@ const router = createBrowserRouter([
   {
     path: "/payment",
     element: <Payment />,
+  },
+  {
+    path: "/dashboard",
+    element: <DashBoard />,
   },
   {
     path: "/topup",

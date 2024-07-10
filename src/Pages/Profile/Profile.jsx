@@ -19,10 +19,7 @@ const Profile = () => {
     address: "",
     dob: "",
     gender: "",
-    password: ""
-    
-    
-    
+    password: "",
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -55,9 +52,6 @@ const Profile = () => {
     },
   });
 
-
- 
-
   useEffect(() => {
     setUsername(getCookie("usernamereal"));
     if (getCookie("username") === "") {
@@ -73,8 +67,7 @@ const Profile = () => {
         address: response.data.payload.address,
         dob: response.data.payload.dob,
         gender: response.data.payload.gender,
-        password: response.data.payload.password || ""
-
+        password: response.data.payload.password || "",
       });
     });
   }, []);
@@ -90,33 +83,42 @@ const Profile = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-  
 
- // Filter out fields that are null or undefined and keep only the ones you want to update
- const filteredData = {
-  email: formData.email,
-  firstName: formData.firstName,
-  lastName: formData.lastName,
-  phone: formData.phone,
-  address: formData.address,
-  dob: formData.dob,
-  gender: formData.gender,
-  roleId: 1, // Default roleId to 1
-  password: formData.password
+    // Filter out fields that are null or undefined and keep only the ones you want to update
+    const filteredData = {
+      email: formData.email,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      phone: formData.phone,
+      address: formData.address,
+      dob: formData.dob,
+      gender: formData.gender,
+      roleId: 1, // Default roleId to 1
+      password: formData.password,
+    };
 
-};
+    api
+      .put("/" + getCookie("username"), filteredData)
+      .then((response) => {
+        setIsEditing(false);
 
-api
-  .put("/" + getCookie("username"), filteredData)
-  .then((response) => {
-    setUser(response.data.payload);
-    setIsEditing(false);
-  })
-  .catch((error) => {
-    console.error("Update failed:", error);
-    // Log detailed error information from server response
-    console.error("Server error response:", error.response);
-  });
+        api.get("/" + getCookie("username")).then((response) => {
+          setCookie(
+            "usernamereal",
+            response.data.payload.firstName + response.data.payload.lastName,
+            10
+          );
+
+          setUsername(
+            response.data.payload.firstName + response.data.payload.lastName
+          );
+        });
+      })
+      .catch((error) => {
+        console.error("Update failed:", error);
+        // Log detailed error information from server response
+        console.error("Server error response:", error.response);
+      });
   };
 
   const handleProfile = () => navigate("/profile");
@@ -146,7 +148,10 @@ api
             >
               <BsBagHeart height={150} width={150} />
             </div>
-            <div className="flex items-center gap-[10px] relative" onClick={showDropDown}>
+            <div
+              className="flex items-center gap-[10px] relative"
+              onClick={showDropDown}
+            >
               <p>{username}</p>
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
@@ -184,7 +189,10 @@ api
             >
               <BsBagHeart height={150} width={150} />
             </div>
-            <div className="flex items-center gap-[10px] relative" onClick={showDropDown}>
+            <div
+              className="flex items-center gap-[10px] relative"
+              onClick={showDropDown}
+            >
               <p>{username}</p>
               <div
                 onClick={handleLogIn}
@@ -207,11 +215,16 @@ api
 
   return (
     <div className="container mx-auto p-8">
-      <div className="flex items-center justify-center mb-8">{renderData()}</div>
+      <div className="flex items-center justify-center mb-8">
+        {renderData()}
+      </div>
       {isOpen && (
         <div className="fixed inset-0 flex justify-end z-30">
           <div className="h-full w-[30%] shadow-lg px-6 py-4 bg-white overflow-y-auto relative">
-            <button className="absolute top-4 right-4 text-gray-600 hover:text-gray-900" onClick={toggleCart}>
+            <button
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
+              onClick={toggleCart}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -220,7 +233,11 @@ api
                 stroke="currentColor"
                 className="w-6 h-6"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
             <div className="border-b-2 border-gray-300 pb-4 mb-4">
@@ -232,16 +249,25 @@ api
             <div>
               <h2 className="text-lg font-semibold mb-4">Tên quán ăn</h2>
               {[1, 2, 3].map((item) => (
-                <div key={item} className="flex items-center justify-between border-b-2 border-gray-300 py-2">
+                <div
+                  key={item}
+                  className="flex items-center justify-between border-b-2 border-gray-300 py-2"
+                >
                   <div className="flex items-center space-x-4">
-                    <button className="text-blue-600 text-2xl cursor-pointer">-</button>
+                    <button className="text-blue-600 text-2xl cursor-pointer">
+                      -
+                    </button>
                     <span className="text-xl">{item}</span>
-                    <button className="text-blue-600 text-2xl cursor-pointer">+</button>
+                    <button className="text-blue-600 text-2xl cursor-pointer">
+                      +
+                    </button>
                     <span className="text-lg">Combo gà rán kfc</span>
                   </div>
                   <div className="flex items-center space-x-4">
                     <span className="text-lg">50.000</span>
-                    <button className="text-red-600 border border-red-600 px-2 py-1 rounded">Remove</button>
+                    <button className="text-red-600 border border-red-600 px-2 py-1 rounded">
+                      Remove
+                    </button>
                   </div>
                 </div>
               ))}
@@ -250,10 +276,14 @@ api
                   <h3 className="text-xl font-semibold">Tổng</h3>
                   <h3 className="text-xl font-semibold">150.000</h3>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">Phí giao hàng sẽ được thêm vào khi bạn thanh toán đơn hàng</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Phí giao hàng sẽ được thêm vào khi bạn thanh toán đơn hàng
+                </p>
               </div>
               <div className="flex justify-center mt-6">
-                <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300">Thanh toán</button>
+                <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                  Thanh toán
+                </button>
               </div>
             </div>
           </div>
@@ -265,7 +295,10 @@ api
             {isEditing ? (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="form-group">
-                  <label htmlFor="email" className="block text-lg font-medium mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-lg font-medium mb-2"
+                  >
                     Email:
                   </label>
                   <input
@@ -279,7 +312,10 @@ api
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="firstName" className="block text-lg font-medium mb-2">
+                  <label
+                    htmlFor="firstName"
+                    className="block text-lg font-medium mb-2"
+                  >
                     First Name:
                   </label>
                   <input
@@ -293,7 +329,10 @@ api
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="lastName" className="block text-lg font-medium mb-2">
+                  <label
+                    htmlFor="lastName"
+                    className="block text-lg font-medium mb-2"
+                  >
                     Last Name:
                   </label>
                   <input
@@ -307,7 +346,10 @@ api
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="phone" className="block text-lg font-medium mb-2">
+                  <label
+                    htmlFor="phone"
+                    className="block text-lg font-medium mb-2"
+                  >
                     Phone:
                   </label>
                   <input
@@ -321,7 +363,10 @@ api
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="address" className="block text-lg font-medium mb-2">
+                  <label
+                    htmlFor="address"
+                    className="block text-lg font-medium mb-2"
+                  >
                     Address:
                   </label>
                   <input
@@ -335,7 +380,10 @@ api
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="dob" className="block text-lg font-medium mb-2">
+                  <label
+                    htmlFor="dob"
+                    className="block text-lg font-medium mb-2"
+                  >
                     Date of Birth:
                   </label>
                   <input
@@ -349,7 +397,10 @@ api
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="gender" className="block text-lg font-medium mb-2">
+                  <label
+                    htmlFor="gender"
+                    className="block text-lg font-medium mb-2"
+                  >
                     Gender:
                   </label>
                   <select
@@ -383,7 +434,9 @@ api
               </form>
             ) : (
               <div>
-                <h1 className="text-3xl font-semibold mb-6">Profile Information</h1>
+                <h1 className="text-3xl font-semibold mb-6">
+                  Profile Information
+                </h1>
                 <p>
                   <strong>Email:</strong> {formData.email}
                 </p>
