@@ -37,7 +37,7 @@ const RegisterChefPage = () => {
   };
 
   const apiChef = axios.create({
-    baseURL: "https://localhost:44388/api/Chefs",
+    baseURL: "http://206.189.95.158/api/Chefs",
   });
 
   const handleRegister = async () => {

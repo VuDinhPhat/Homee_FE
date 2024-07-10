@@ -83,14 +83,14 @@ const TopUp = () => {
   };
 
   const apiUser = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "http://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiTopup = axios.create({
-    baseURL: "https://localhost:44388/api/TopUpRequest",
+    baseURL: "http://206.189.95.158/api/TopUpRequest",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },

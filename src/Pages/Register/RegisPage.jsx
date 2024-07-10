@@ -43,7 +43,7 @@ const RegisterPage = () => {
   };
 
   const apiUser = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "http://206.189.95.158/api/Users",
   });
 
   const handleRegister = async () => {
@@ -53,22 +53,27 @@ const RegisterPage = () => {
     }
 
     try {
-      const response = await apiUser.post("", {
-        id: 0,
-        email: email,
-        firstName: firstname,
-        lastName: lastname,
-        password: password,
-        phone: phone,
-        address: address,
-        dob: dob,
-        gender: gender,
-        avatar: "string",
-        roleId: 1,
-        status: "true",
-        money: 0,
-        discount: 0,
-      });
+      const formData = new FormData();
+      formData.append("id", "0"); // Assuming 'id' is a string field in your backend
+      formData.append("email", email);
+      formData.append("firstName", firstname);
+      formData.append("lastName", lastname);
+      formData.append("password", password);
+      formData.append("phone", phone);
+      formData.append("address", address);
+      formData.append("dob", dob);
+      formData.append("gender", gender);
+
+      formData.append("avatar", "string"); // Assuming 'avatar' is a string field
+      formData.append("roleId", "1"); // Assuming 'roleId' is a string field
+      formData.append("status", "true"); // Assuming 'status' is a string field
+      formData.append("money", "0"); // Assuming 'money' is a string field
+      formData.append("discount", "0"); // Assuming 'discount' is a string field
+
+      const response = await axios.post(
+        "http://206.189.95.158/api/Users",
+        formData
+      );
 
       if (response.data.status) {
         // Đăng ký thành công, điều hướng tới trang đăng nhập

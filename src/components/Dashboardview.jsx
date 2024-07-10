@@ -113,14 +113,14 @@ const Dashboardview = () => {
   }
 
   const api = axios.create({
-    baseURL: "https://localhost:44388/api/Chefs",
+    baseURL: "http://206.189.95.158/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUser = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "http://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -140,7 +140,7 @@ const Dashboardview = () => {
 
     setUsername(getCookie("usernamereal"));
 
-    api.get("?pageIndex=1&pageSize=8").then((response) => {
+    api.get("?pageIndex=1&pageSize=100").then((response) => {
       setListFood(response.data.payload);
       console.log(response.data.payload);
     });
