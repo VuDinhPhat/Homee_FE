@@ -5,17 +5,15 @@ import LoginBG from "../../assets/Lgbg.png";
 import LogoF from "../../assets/logoF.png";
 import Logo2 from "../../assets/logo2.png";
 import axios from "axios";
-const RegisterPage = () => {
+const RegisterChefPage = () => {
   const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setphone] = useState("");
-  const [address, setaddress] = useState("");
-  const [dob, setdob] = useState("");
-  const [gender, setgender] = useState("");
+  const [bankingId, setbankingId] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [address, setaddress] = useState("");
 
   const navigate = useNavigate();
 
@@ -23,8 +21,6 @@ const RegisterPage = () => {
     const value = e.target.value;
     if (inputType === "firstname") {
       setFirstname(value);
-    } else if (inputType === "lastname") {
-      setLastname(value);
     } else if (inputType === "email") {
       setEmail(value);
     } else if (inputType === "password") {
@@ -33,17 +29,15 @@ const RegisterPage = () => {
       setConfirmPassword(value);
     } else if (inputType === "phone") {
       setphone(value);
+    } else if (inputType === "bankingId") {
+      setbankingId(value);
     } else if (inputType === "address") {
       setaddress(value);
-    } else if (inputType === "dob") {
-      setdob(value);
-    } else if (inputType === "gender") {
-      setgender(value);
     }
   };
 
-  const apiUser = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+  const apiChef = axios.create({
+    baseURL: "https://localhost:44388/api/Chefs",
   });
 
   const handleRegister = async () => {
@@ -53,21 +47,20 @@ const RegisterPage = () => {
     }
 
     try {
-      const response = await apiUser.post("", {
+      const response = await apiChef.post("/register", {
         id: 0,
+        name: firstname,
+        address: address,
+        creatorId: 0,
+        profilePicture: "string",
+        score: 0,
+        hours: 0,
+        status: "true",
         email: email,
-        firstName: firstname,
-        lastName: lastname,
         password: password,
         phone: phone,
-        address: address,
-        dob: dob,
-        gender: gender,
-        avatar: "string",
-        roleId: 1,
-        status: "true",
         money: 0,
-        discount: 0,
+        banking: bankingId,
       });
 
       if (response.data.status) {
@@ -97,11 +90,13 @@ const RegisterPage = () => {
         <div className="flex items-center justify-center mb-6">
           <img className="w-[380px]" src={Logo2} alt="Logo" />
         </div>
-        <h1 className="text-2xl font-semibold mb-4">Đăng ký tài khoản</h1>
+        <h1 className="text-2xl font-semibold mb-4">
+          Đăng ký tài khoản người bán hàng
+        </h1>
         {/* Username Input */}
         <div className="mb-4 w-full">
           <label htmlFor="firstname" className="block text-gray-600">
-            Họ, tên đệm
+            Tên
           </label>
           <input
             type="text"
@@ -113,20 +108,7 @@ const RegisterPage = () => {
             onChange={(e) => handleInputChange(e, "firstname")}
           />
         </div>
-        <div className="mb-4 w-full">
-          <label htmlFor="lastname" className="block text-gray-600">
-            Tên
-          </label>
-          <input
-            type="text"
-            id="lastname"
-            name="lastname"
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-            autoComplete="off"
-            value={lastname}
-            onChange={(e) => handleInputChange(e, "lastname")}
-          />
-        </div>
+
         <div className="mb-4 w-full">
           <label htmlFor="phone" className="block text-gray-600">
             Số điện thoại
@@ -156,33 +138,20 @@ const RegisterPage = () => {
           />
         </div>
         <div className="mb-4 w-full">
-          <label htmlFor="dob" className="block text-gray-600">
-            Ngày sinh
+          <label htmlFor="bankingId" className="block text-gray-600">
+            Số tài khoản ngân hàng
           </label>
           <input
-            type="date"
-            id="dob"
-            name="dob"
+            type="number"
+            id="bankingId"
+            name="bankingId"
             className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
             autoComplete="off"
-            value={dob}
-            onChange={(e) => handleInputChange(e, "dob")}
+            value={bankingId}
+            onChange={(e) => handleInputChange(e, "bankingId")}
           />
         </div>
-        <div className="mb-4 w-full">
-          <label htmlFor="gender" className="block text-gray-600">
-            Giới tính
-          </label>
-          <input
-            type="text"
-            id="gender"
-            name="gender"
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-            autoComplete="off"
-            value={gender}
-            onChange={(e) => handleInputChange(e, "gender")}
-          />
-        </div>
+
         {/* Email Input */}
         <div className="mb-4 w-full">
           <label htmlFor="email" className="block text-gray-600">
@@ -258,4 +227,4 @@ const RegisterPage = () => {
     </div>
   );
 };
-export default RegisterPage;
+export default RegisterChefPage;
