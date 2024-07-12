@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiUserInstance from "../../service/api-user";
-import LoginBG from "../../assets/Lgbg.png";
-import LogoF from "../../assets/logoF.png";
+import LoginBG from "../../assets/LGBG.jpg";
 import Logo2 from "../../assets/logo2.png";
 import axios from "axios";
 const RegisterPage = () => {

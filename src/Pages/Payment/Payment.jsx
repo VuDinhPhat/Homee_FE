@@ -114,7 +114,7 @@ const Payment = () => {
   };
 
   const BackMainPage = async () => {
-    navigate("/");
+    navigate("/usermain");
   };
 
   const handleChange = (event) => {
@@ -376,7 +376,7 @@ const Payment = () => {
   const renderData = () => {
     if (getCookie("username") !== "") {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[25px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -412,7 +412,7 @@ const Payment = () => {
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[25px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>

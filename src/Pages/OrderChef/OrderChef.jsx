@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logocochu.png";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Footer from "../Footer/Footer";
 
 const OrderChef = () => {
   const navigate = useNavigate();
@@ -138,6 +139,29 @@ const OrderChef = () => {
             Authorization: `Bearer ${getCookie("token")}`,
           },
         }
+
+    };
+    const handleTopup = async (data) => {
+        navigate("/topup");
+      };
+      const handleOrder = async (data) => {
+        navigate("/orderchef");
+      };
+    
+
+    const BackMainPage = async () => {
+        navigate("/chefmain");
+      };
+
+    const handleProfile = () => navigate("/profile");
+    const handleLogIn = () => navigate("/login");
+    const handleRegister = () => navigate("/register");
+   
+    const showDropDown = () => setOpen(!open);
+    const handleLogout = () => {
+        setCookie("username", "", 0);
+        setCookie("usernamereal", "", 0);
+
       );
 
       // Lọc chi tiết đơn hàng theo orderId
@@ -161,6 +185,7 @@ const OrderChef = () => {
       // Lấy danh sách món ăn theo chefId
       const chefId = getCookie("username");
       if (!chefId) {
+
         navigate("/");
         return;
       }
@@ -173,6 +198,70 @@ const OrderChef = () => {
             Authorization: `Bearer ${getCookie("token")}`,
           },
         }
+
+    };
+
+    let renderData = () => {
+        if (getCookie("username") !== "") {
+          return (
+            <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[155px]">
+              <div className="cursor-pointer" onClick={BackMainPage}>
+                <img src={Logo} alt="" width={150} height={150} />
+              </div>
+              <div className="flex items-center rounded-[5px]"></div>
+              <div className="flex items-center gap-[15px] relative">
+                <div
+                  className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
+                  onClick={toggleCart}
+                >
+                  <BsBagHeart height={150} width={150} />
+                </div>
+                <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+                  {/* Tiền : {user.money || ""} */}
+                </div>
+                <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+                {username}
+                </div>
+    
+                <div
+                  className="flex items-center gap-[10px] relative"
+                  onClick={showDropDown}
+                >
+                  {/* <p>{username}</p> */}
+                  <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
+                    <img src="" alt="" />
+                  </div>
+                  {open && (
+                    <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                      <p
+                        className="cursor-pointer hover:text-[blue] font-semibold"
+                        onClick={handleTopup}
+                      >
+                        Nạp Tiền
+                      </p>
+                      <p
+                        className="cursor-pointer hover:text-[blue] font-semibold"
+                        onClick={handleProfile}
+                      >
+                        Thông tin Người dùng
+                      </p>
+    
+                      <p
+                        className="cursor-pointer hover:text-[blue] font-semibold"
+                        onClick={handleOrder}
+                      >
+                        Lịch sử mua hàng
+                      </p>
+    
+                      <p
+                        className="cursor-pointer hover:text-[blue] font-semibold"
+                        onClick={handleLogout}
+                      >
+                       Thoát
+                      </p>
+                    </div>
+                  )}
+
       );
 
       // Tạo một map để truy cập nhanh tên món ăn bằng foodId
@@ -294,6 +383,7 @@ const OrderChef = () => {
                   >
                     Log out
                   </p>
+
                 </div>
               )}
             </div>
@@ -326,6 +416,149 @@ const OrderChef = () => {
                 Đăng nhập
                 <img src="" alt="" />
               </div>
+
+            </div>
+          );
+        } else {
+          return (
+            <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
+              <div className="cursor-pointer" onClick={BackMainPage}>
+                <img src={Logo} alt="" width={150} height={150} />
+              </div>
+              <div className="flex items-center rounded-[5px]"></div>
+              <div className="flex items-center gap-[15px] relative">
+                <div
+                  className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
+                  onClick={toggleCart}
+                >
+                  <BsBagHeart height={150} width={150} />
+                </div>
+                <div
+                  className="flex items-center gap-[10px] relative"
+                  onClick={showDropDown}
+                >
+                  <p>{username}</p>
+                  <div
+                    onClick={handleLogIn}
+                    className="cursor-pointer flex items-center justify-center relative"
+                  >
+                    Đăng nhập
+                    <img src="" alt="" />
+                  </div>
+                  <div
+                    onClick={handleRegister}
+                    className="cursor-pointer flex items-center justify-center relative"
+                  >
+                    /Đăng ký
+                    <img src="" alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+      };
+    const renderOrderTable = (orders, status) => (
+        <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-[70%] mb-8  pb-[20px] mt-[20px]">
+            <h1 className="text-2xl font-semibold mb-4">{status} Trạng thái</h1>
+            <table className="min-w-full">
+                <thead>
+                    <tr>
+                 
+                        <th className="py-2 px-4 border">Tên đầu bếp</th>
+                        <th className="py-2 px-4 border">Địa chỉ giao hàng</th>
+                        <th className="py-2 px-4 border">Giá</th>
+                        <th className="py-2 px-4 border">Số lượng</th>
+                        <th className="py-2 px-4 border">Người đặt</th>
+                        <th className="py-2 px-4 border">Trạng thái</th>
+                        <th className="py-2 px-4 border">Ngày đặt</th>
+                        <th className="py-2 px-4 border">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {orders.map((order) => (
+                        <tr key={order.id}>
+                    
+                            <td className="py-2 px-4 border-b text-center">{chefs[order.chefId] || "Loading..."}</td>
+                            <td className="py-2 px-4 border">{order.deliveryAddress}</td>
+                            <td className="py-2 px-4 border">{order.orderPrice}</td>
+                            <td className="py-2 px-4 border">{order.quantity}</td>
+                            <td className="py-2 px-4 border">{users[order.userId]}</td>
+                            <td className="py-2 px-4 border">{order.status}</td>
+                            <td className="py-2 px-4 border">{order.orderDate}</td>
+                            <td className="py-2 px-4 border">
+                                {status === "Đang chờ" ? (
+                                    <>
+                                        <button
+                                            className="bg-green-500 hover:bg-green-700 text-white px-2 py-1 rounded-md text-xs mr-2"
+                                            onClick={() => updateOrderStatus(order.id, "Đang chuẩn bị")}
+                                        >
+                                            Đang chuẩn bị
+                                        </button>
+                                        <button
+                                            className="bg-yellow-500 hover:bg-red-700 text-white px-2 py-1 rounded-md text-xs mr-2"
+                                            onClick={() => updateOrderStatus(order.id, "Đã giao")}
+                                        >
+                                           Đã giao
+                                        </button>
+
+                                        <button
+                                            className="bg-red-500 hover:bg--700 text-white px-2 py-1 rounded-md text-xs mr-2"
+                                            onClick={() => updateOrderStatus(order.id, "Đã huỷ")}
+                                        >
+                                            Đã huỷ
+                                        </button>
+
+                                        <button
+                                        className="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-md text-xs"
+                                        onClick={() => viewOrderDetail(order.id)}
+                                    >
+                                       Xem chi tiết
+                                    </button>
+
+                                    </>
+                                ) : (
+                                    <button
+                                        className="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-md text-xs"
+                                        onClick={() => viewOrderDetail(order.id)}
+                                    >
+                                       
+                                       Xem chi tiết
+                                    </button>
+                                )}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+    
+         {/* Modal for Order Details */}
+{orderDetailVisible && (
+    <div className={`fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50`}>
+        <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 h-2/3 overflow-auto">
+            <h2 className="text-xl font-bold mb-4">Order Details</h2>
+            <table className="min-w-full">
+                <thead>
+                    <tr>
+                        
+                        <th className="py-2 px-4 border">Tên thức ăn</th>                                               
+                        <th className="py-2 px-4 border">Giá</th>
+                        <th className="py-2 px-4 border">Số lượng</th>
+                        <th className="py-2 px-4 border">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {selectedOrderDetails.map((detail) => (
+                        <tr key={detail.id}>
+                         
+                            <td className="py-2 px-4 border">{detail.foodName}</td>
+                            <td className="py-2 px-4 border">{detail.price}</td>                                      
+                            <td className="py-2 px-4 border">{detail.quantity}</td>
+                            <td className="py-2 px-4 border">{detail.status}</td>
+                        </tr>
+                    ))}
+                </tbody>
+
               <div
                 onClick={handleRegister}
                 className="cursor-pointer flex items-center justify-center relative"
@@ -436,6 +669,7 @@ const OrderChef = () => {
                   </tr>
                 ))}
               </tbody>
+
             </table>
             <button
               className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 mt-4 rounded-md"
@@ -447,6 +681,36 @@ const OrderChef = () => {
         </div>
       )}
     </div>
+
+)}
+
+                        
+        </div>
+        
+    );
+ 
+
+    return (
+        <div>
+        <div className="flex flex-col items-center justify-center w-screen">
+            {renderData()}
+            {renderOrderTable(orders.filter(order => order.status === "Đang chờ"), "Đang chờ")}
+            {renderOrderTable(orders.filter(order => order.status === "Đang chuẩn bị"), "Đang chuẩn bị")}
+            {renderOrderTable(orders.filter(order => order.status === "Đã giao"), "Đã giao")}
+            {renderOrderTable(orders.filter(order => order.status === "Đã huỷ"), "Đã huỷ")}
+
+            </div>
+            <div style={{ marginTop: 'auto' }}>
+  <Footer />
+</div>
+
+        </div>
+        
+    );
+
+ 
+   
+
   );
 
   return (
@@ -466,6 +730,7 @@ const OrderChef = () => {
       )}
     </div>
   );
+
 };
 
 export default OrderChef;
