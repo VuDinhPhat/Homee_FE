@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logocochu.png";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Footer from "../Footer/Footer";
 
 const ChefMain = () => {
   const [username, setUsername] = useState("");
@@ -14,6 +15,11 @@ const ChefMain = () => {
   const [cartList, setCartList] = useState([]);
   const [showAddFoodForm, setShowAddFoodForm] = useState(false);
   const [showEditFoodForm, setShowEditFoodForm] = useState(false);
+  const [user, setUser] = useState({});
+  const [categories, setCategories] = useState([]);
+  const [chef, setChef] = useState(null);
+const [selectedCategoryId, setSelectedCategoryId] = useState(0);
+const [listCategories, setListCategories] = useState([]);
   const chefId = getCookie("username");
   const [foodData, setFoodData] = useState({
     id: 0,
@@ -25,7 +31,8 @@ const ChefMain = () => {
     sellCount: 0,
     status: "",
     categoryId: 0,
-    chefId: chefId ? parseInt(chefId) : 0
+    chefId: chefId ? parseInt(chefId) : 0,
+    money:0
   });
 
   const [editingFoodData, setEditingFoodData] = useState(null);
@@ -59,6 +66,8 @@ const ChefMain = () => {
     }
     return "";
   }
+
+
 
   const handleLogout = async () => {
     setCookie("username", "", 0);
@@ -122,13 +131,96 @@ const ChefMain = () => {
         setListFood(response.data.payload);
       })
       .catch((error) => {});
+
+// Call API to get chef info
+api
+.get(`https://localhost:44388/api/Chefs?${chefId}`)
+.then((response) => {
+  setUser(response.data); // Assuming the response contains the chef object
+})
+.catch((error) => {
+  console.error("Error fetching chef info:", error);
+});
+    // Fetch categories from API
+        const fetchCategories = async () => {
+          try {
+            const response = await axios.get("https://localhost:44388/api/Categories");
+            setCategories(response.data.payload); // Update categories state with fetched data
+          } catch (error) {
+            console.error("Error fetching categories:", error);
+          }
+        };
+      
+        fetchCategories();
+
   }, []);
+
+  const fetchCategoriesName = async () => {
+    try {
+      const response = await axios.get("https://localhost:44388/api/Categories");
+      const categories = response.data.payload;  // Danh sách categories từ API Categories
+      return categories;
+      
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      return [];
+    }
+  };
+
+
+// Function to fetch categories
+  // Function to fetch categories
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("https://localhost:44388/api/Categories");
+      const categoriesFromApi = response.data.payload;  // Danh sách categories từ API Categories
+      setCategories(categoriesFromApi);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+// Function to fetch foods with category names
+const fetchFoodsWithCategoryNames = async () => {
+  try {
+    // Fetch categories
+    const categories = await fetchCategoriesName();
+
+    // Fetch foods from API
+    const response = await axios.get("https://localhost:44388/api/Foods");
+    const foods = response.data.payload;  // Danh sách foods từ API Foods
+
+    // Map foods to include category names
+    const foodsWithCategoryNames = foods.map(food => {
+      const category = categories.find(cat => cat.categoryId === food.categoryId);
+      const categoryName = category ? category.categoryName : 'Unknown Category';
+      return { ...food, categoryName };
+    });
+
+    return foodsWithCategoryNames;
+  } catch (error) {
+    console.error("Error fetching foods:", error);
+    return [];
+  }
+};
+
+// Example usage
+fetchFoodsWithCategoryNames()
+  .then(foods => {
+    console.log("Foods with category names:", foods);
+    // Do something with the foods list that includes category names
+  })
+  .catch(error => {
+    console.error("Error fetching foods with category names:", error);
+  });
+
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFoodData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: name === 'categoryId' ? parseInt(value) : value,
+    
     }));
   };
 
@@ -163,12 +255,15 @@ const ChefMain = () => {
       console.error("Error updating food item:", error);
     }
   };
-  const renderData = () =>{};
+  const handleTopup = async (data) => {
+    navigate("/topup");
+  };
+
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
     setEditingFoodData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: name === 'categoryId' ? parseInt(value) : value,
     }));
   };
 
@@ -181,60 +276,73 @@ const ChefMain = () => {
     }
   };
 
+
   return (
     <div>
       {getCookie("username") !== "" ? (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
-          <div className="cursor-pointer" onClick={BackMainPage}>
-            <img src={Logo} alt="" width={150} height={150} />
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[155px]">
+        <div className="cursor-pointer" onClick={BackMainPage}>
+          <img src={Logo} alt="" width={150} height={150} />
+        </div>
+        <div className="flex items-center rounded-[5px]"></div>
+        <div className="flex items-center gap-[15px] relative">
+          <div
+            className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
+            onClick={toggleCart}
+          >
+            <BsBagHeart height={150} width={150} />
           </div>
-          <div className="flex items-center rounded-[5px]"></div>
-          <div className="flex items-center gap-[15px] relative">
-            <div
-              className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
-              onClick={toggleCart}
-            >
-              <div style={{ height: '30px', width: '30px' }}>
-                <BsBagHeart style={{ height: '100%', width: '100%' }} />
-              </div>
-            </div>
-            <div
-              className="flex items-center gap-[10px] relative"
-              onClick={showDropDown}
-            >
-              <p>{username}</p>
-              <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
-                <img src="" alt="" />
-              </div>
-              {open && (
-                <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
-                  <p
-                    className="cursor-pointer hover:text-[blue] font-semibold"
-                    onClick={handleProfile}
-                  >
-                    Profile
-                  </p>
+          <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+          {/* Tiền: {chef.money} Hiển thị tiền của đầu bếp */}
+     
+        </div>
+          <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+          {username}
+          </div>
 
-                  <p
-                    className="cursor-pointer hover:text-[blue] font-semibold"
-                    onClick={handleOrder}
-                  >
-                    View Order
-                  </p>
-
-                  <p
-                    className="cursor-pointer hover:text-[blue] font-semibold"
-                    onClick={handleLogout}
-                  >
-                    Log out
-                  </p>
-                </div>
-              )}
+          <div
+            className="flex items-center gap-[10px] relative"
+            onClick={showDropDown}
+          >
+            {/* <p>{username}</p> */}
+            <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
+              <img src="" alt="" />
             </div>
+            {open && (
+             <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+             <p
+               className="cursor-pointer hover:text-[blue] font-semibold"
+               onClick={handleTopup}
+             >
+               Nạp Tiền
+             </p>
+             <p
+               className="cursor-pointer hover:text-[blue] font-semibold"
+               onClick={handleProfile}
+             >
+               Thông tin Người bán
+             </p>
+
+             <p
+               className="cursor-pointer hover:text-[blue] font-semibold"
+               onClick={handleOrder}
+             >
+               Lịch sử mua hàng
+             </p>
+
+             <p
+               className="cursor-pointer hover:text-[blue] font-semibold"
+               onClick={handleLogout}
+             >
+              Thoát
+             </p>
+           </div>
+            )}
           </div>
         </div>
+      </div>
       ) : (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[25px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -361,11 +469,12 @@ const ChefMain = () => {
 
 <div className="container mx-auto ">
   <div className="px-[50px]">
+
       <button
         className="bg-blue-500 text-white py-2 px-4 rounded"
         onClick={() => setShowAddFoodForm(!showAddFoodForm)}
       >
-        {showAddFoodForm ? "Close Form" : "Add Food"}
+        {showAddFoodForm ? "Đóng" : "Thêm thức ăn"}
       </button>
 
       {showAddFoodForm && (
@@ -492,28 +601,31 @@ const ChefMain = () => {
               className="border p-2 w-full mb-2"
             />
           </div>
-          <div className="mb-4">
-            <label
-              htmlFor="categoryId"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Category ID
-            </label>
-            <input
-              type="number"
-              id="categoryId"
-              name="categoryId"
-              placeholder="Category ID"
-              value={foodData.categoryId}
-              onChange={handleInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
+          <div>
+    <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700">
+      Category
+    </label>
+    <select
+      id="categoryId"
+      name="categoryId"
+      value={foodData.categoryId}
+      onChange={handleInputChange}
+      className="border p-2 w-full mb-2"
+    >
+      <option value="">Select category...</option>
+      {categories.map((category) => (
+        <option key={category.categoryId} value={category.categoryId}>
+          {category.categoryName}
+        </option>
+      ))}
+    </select>
+  </div>
+
           <button
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded"
           >
-            Add Food
+           Thêm thức ăn
           </button>
         </form>
       )}
@@ -528,7 +640,7 @@ const ChefMain = () => {
               htmlFor="name"
               className="block text-sm font-medium text-gray-700"
             >
-              Name
+              Tên
             </label>
             <input
               type="text"
@@ -545,7 +657,7 @@ const ChefMain = () => {
               htmlFor="image"
               className="block text-sm font-medium text-gray-700"
             >
-              Image URL
+             Hình ảnh
             </label>
             <input
               type="text"
@@ -562,7 +674,7 @@ const ChefMain = () => {
               htmlFor="foodType"
               className="block text-sm font-medium text-gray-700"
             >
-              Food Type
+              Kiểu thức ăn
             </label>
             <input
               type="text"
@@ -579,7 +691,7 @@ const ChefMain = () => {
               htmlFor="price"
               className="block text-sm font-medium text-gray-700"
             >
-              Price
+              Giá
             </label>
             <input
               type="number"
@@ -596,7 +708,7 @@ const ChefMain = () => {
               htmlFor="sellPrice"
               className="block text-sm font-medium text-gray-700"
             >
-              Sell Price
+             Giá thực
             </label>
             <input
               type="number"
@@ -613,7 +725,7 @@ const ChefMain = () => {
               htmlFor="sellCount"
               className="block text-sm font-medium text-gray-700"
             >
-              Sell Count
+              Giá giảm
             </label>
             <input
               type="number"
@@ -630,7 +742,7 @@ const ChefMain = () => {
               htmlFor="status"
               className="block text-sm font-medium text-gray-700"
             >
-              Status
+              Trạng thái
             </label>
             <input
               type="text"
@@ -642,35 +754,37 @@ const ChefMain = () => {
               className="border p-2 w-full mb-2"
             />
           </div>
-          <div className="mb-4">
-            <label
-              htmlFor="categoryId"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Category ID
-            </label>
-            <input
-              type="number"
-              id="categoryId"
-              name="categoryId"
-              placeholder="Category ID"
-              value={editingFoodData.categoryId}
-              onChange={handleEditInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
+                <div className="mb-4">
+          <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700">
+            Category
+          </label>
+          <select
+            id="categoryId"
+            name="categoryId"
+            value={editingFoodData.categoryId}
+            onChange={handleInputChange}
+            className="border p-2 w-full mb-2"
+          >
+            <option value="">Select category...</option>
+            {categories.map((category) => (
+              <option key={category.categoryId} value={category.categoryId}>
+                {category.categoryName}
+              </option>
+            ))}
+          </select>
+  </div>
           <button
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded"
           >
-            Update Food
+            Chỉnh sửa
           </button>
           <button
             type="button"
             className="bg-red-500 text-white py-2 px-4 rounded ml-2"
             onClick={() => setShowEditFoodForm(false)}
           >
-            Cancel
+            Huỷ
           </button>
         </form>
       )}
@@ -697,13 +811,13 @@ const ChefMain = () => {
             className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
             onClick={() => handleEditFood(food)}
           >
-            Edit
+            Chỉnh sửa
           </button>
           <button
             className="bg-red-500 text-white py-1 px-2 rounded ml-2"
             onClick={() => handleDeleteFood(food.id)}
           >
-            Delete
+           Xoá
           </button>
         </div>
       </div>
@@ -713,7 +827,9 @@ const ChefMain = () => {
 
 </div>
 </div>
-
+<div style={{ marginTop: 'auto' }}>
+  <Footer />
+</div>
     </div>
   );
 };

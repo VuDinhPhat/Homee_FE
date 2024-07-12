@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsBagHeart } from "react-icons/bs";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logocochu.png";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Footer from "../Footer/Footer";
 
 const Order = () => {
   const navigate = useNavigate();
@@ -261,7 +262,7 @@ const viewOrderDetail = async (orderId) => {
 
   const handleLogIn = () => navigate("/login");
   const handleRegister = () => navigate("/register");
-  const BackMainPage = () => navigate("/");
+  const BackMainPage = () => navigate("/usermain");
   const showDropDown = () => setOpen(!open);
   const handleLogout = () => {
     setCookie("username", "", 0);
@@ -275,7 +276,7 @@ const viewOrderDetail = async (orderId) => {
   let renderData = () => {
     if (getCookie("username") !== "") {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[50px] ">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[155px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -288,44 +289,47 @@ const viewOrderDetail = async (orderId) => {
               <BsBagHeart height={150} width={150} />
             </div>
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-              Money : {user.money}
+              Tiền : {user.money}
+            </div>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            {username}
             </div>
 
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-              <p>{username}</p>
+              {/* <p>{username}</p> */}
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
               {open && (
-                <div className="bg-white border h-[160px] w-[150px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleTopup}
                   >
-                    Top up money
+                    Nạp Tiền
                   </p>
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleProfile}
                   >
-                    Profile
+                    Thông tin Người dùng
                   </p>
 
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleOrder}
                   >
-                    View Order
+                    Lịch sử mua hàng
                   </p>
 
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                    Log out
+                   Thoát
                   </p>
                 </div>
               )}
@@ -335,7 +339,7 @@ const viewOrderDetail = async (orderId) => {
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -373,8 +377,9 @@ const viewOrderDetail = async (orderId) => {
     }
   };
 
+
   return (
-    <div className="container mx-auto p-8">
+    <div className="">
       <div className="flex items-center justify-center mb-8">
         {renderData()}
       </div>
@@ -450,28 +455,27 @@ const viewOrderDetail = async (orderId) => {
         </div>
       )}
 
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center px-[150px]">
         <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-[100%]">
           <h1 className="text-2xl font-semibold mb-4">Orders</h1>
           <table className="min-w-full">
             <thead>
               <tr>
-                <th className="py-2 px-4 border">ID</th>
-                <th className="py-2 px-4 border">Chef Name</th>
-                <th className="py-2 px-4 border">Delivery Address</th>
-                <th className="py-2 px-4 border">Order Price</th>
-                <th className="py-2 px-4 border">Quantity</th>
-                <th className="py-2 px-4 border">User Name</th>
-                <th className="py-2 px-4 border">Status</th>
-                <th className="py-2 px-4 border">Order Date</th>
-                <th className="py-2 px-4 border">Actions</th>{" "}
+                <th className="py-2 px-4 border">Tên đầu bếp</th>
+                <th className="py-2 px-4 border">Địa chỉ giao hàng</th>
+                <th className="py-2 px-4 border">Giá</th>
+                <th className="py-2 px-4 border">Số lượng</th>
+                <th className="py-2 px-4 border">Người đặt hàng</th>
+                <th className="py-2 px-4 border">Trạng thái</th>
+                <th className="py-2 px-4 border">Ngày đặt</th>
+                <th className="py-2 px-4 border">Hành động</th>{" "}
                 {/* Added Actions column */}
               </tr>
             </thead>
             <tbody>
               {orders.map((order) => (
                 <tr key={order.id}>
-                  <td className="py-2 px-4 border">{order.id}</td>
+                
                   <td className="py-2 px-4 border-b text-center">{chefs[order.chefId] || "Loading..."}</td>
                   <td className="py-2 px-4 border">{order.deliveryAddress}</td>
                   <td className="py-2 px-4 border">{order.orderPrice}</td>
@@ -484,7 +488,7 @@ const viewOrderDetail = async (orderId) => {
                       className="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-md text-xs"
                       onClick={() => viewOrderDetail(order.id)}
                     >
-                      View Detail
+                      Xem chi tiết 
                     </button>
                   </td>
 
@@ -496,10 +500,10 @@ const viewOrderDetail = async (orderId) => {
                       <table className="min-w-full">
                         <thead>
                           <tr>
-                            <th className="py-2 px-4 border">Food Name</th>
-                            <th className="py-2 px-4 border">Price</th>
-                            <th className="py-2 px-4 border">Quantity</th>
-                            <th className="py-2 px-4 border">Status</th>
+                            <th className="py-2 px-4 border">Tên món ăn</th>
+                            <th className="py-2 px-4 border">Giá</th>
+                            <th className="py-2 px-4 border">Số lượng</th>
+                            <th className="py-2 px-4 border">Trạng thái</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -532,6 +536,9 @@ const viewOrderDetail = async (orderId) => {
           </table>
         </div>
       </div>
+      <div style={{ marginTop: 'auto' }}>
+  <Footer />
+</div>
     </div>
   );
 };

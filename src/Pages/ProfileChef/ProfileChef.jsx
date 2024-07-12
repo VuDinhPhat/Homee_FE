@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logocochu.png";
 import hutieumuc from "../../assets/hutieumuc.jpg";
 import garan from "../../assets/garan.jpg";
 import Pizza from "../../assets/pizza.jpg";
@@ -12,6 +12,7 @@ import { BorderBottom, BorderColor } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import Footer from "../Footer/Footer";
 import Cookies from "js-cookie";
 const ProfileChef = () => {
     const navigate = useNavigate();
@@ -146,7 +147,9 @@ const ProfileChef = () => {
       console.error("Server error response:", error.response);
     });
     };
-  
+    const handleTopup = async (data) => {
+      navigate("/topup");
+    };
     const handleProfile = () => navigate("/profile");
     const handleLogIn = () => navigate("/login");
     const handleRegister = () => navigate("/register");
@@ -175,37 +178,49 @@ const ProfileChef = () => {
                 >
                   <BsBagHeart height={150} width={150} />
                 </div>
+                <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+                   {/* Tiền: {user.money} */}
+               </div>
+          <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+          {username}
+          </div>
                 <div
                   className="flex items-center gap-[10px] relative"
                   onClick={showDropDown}
                 >
-                  <p>{username}</p>
+              
                   <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                     <img src="" alt="" />
                   </div>
                   {open && (
-                    <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
-                      <p
-                        className="cursor-pointer hover:text-[blue] font-semibold"
-                        onClick={handleProfile}
-                      >
-                        Profile
-                      </p>
-    
-                      <p
-                        className="cursor-pointer hover:text-[blue] font-semibold"
-                        onClick={handleOrder}
-                      >
-                        View Order
-                      </p>
-    
-                      <p
-                        className="cursor-pointer hover:text-[blue] font-semibold"
-                        onClick={handleLogout}
-                      >
-                        Log out
-                      </p>
-                    </div>
+                    <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                <p
+                  className="cursor-pointer hover:text-[blue] font-semibold"
+                  onClick={handleTopup}
+                >
+                  Nạp Tiền
+                </p>
+                <p
+                  className="cursor-pointer hover:text-[blue] font-semibold"
+                  onClick={handleProfile}
+                >
+                  Thông tin Người dùng
+                </p>
+
+                <p
+                  className="cursor-pointer hover:text-[blue] font-semibold"
+                  onClick={handleOrder}
+                >
+                  Lịch sử mua hàng
+                </p>
+
+                <p
+                  className="cursor-pointer hover:text-[blue] font-semibold"
+                  onClick={handleLogout}
+                >
+                 Thoát
+                </p>
+              </div>
                   )}
                 </div>
               </div>
@@ -253,7 +268,7 @@ const ProfileChef = () => {
       };
     
       return (
-        <div className="relative pb-[100px]">
+        <div className="relative ">
           {" "}
           {/* Adjust padding-bottom */}
           <div className="flex items-center justify-center">{renderData()}</div>
@@ -356,7 +371,7 @@ const ProfileChef = () => {
                   </div>
                   <div className="form-group">
                     <label htmlFor="firstName" className="block text-lg font-medium mb-2">
-                     Name:
+                     Tên:
                     </label>
                     <input
                       type="text"
@@ -370,7 +385,7 @@ const ProfileChef = () => {
                   </div>
                   <div className="form-group">
                     <label htmlFor="lastName" className="block text-lg font-medium mb-2">
-                     Score
+                     Điểm
                     </label>
                     <input
                       type="text"
@@ -384,7 +399,7 @@ const ProfileChef = () => {
                   </div>
                   <div className="form-group">
                     <label htmlFor="phone" className="block text-lg font-medium mb-2">
-                      Phone:
+                      Số diện thoại:
                     </label>
                     <input
                       type="text"
@@ -398,7 +413,7 @@ const ProfileChef = () => {
                   </div>
                   <div className="form-group">
                     <label htmlFor="address" className="block text-lg font-medium mb-2">
-                      Address:
+                      Địa chỉ:
                     </label>
                     <input
                       type="text"
@@ -410,23 +425,10 @@ const ProfileChef = () => {
                       required
                     />
                   </div>
+          
                   <div className="form-group">
                     <label htmlFor="gender" className="block text-lg font-medium mb-2">
-                      Money:
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                      id="money"
-                      name="money"
-                      value={formData.money}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="gender" className="block text-lg font-medium mb-2">
-                      Banking:
+                      Ngân hàng:
                     </label>
                     <input
                       type="text"
@@ -440,7 +442,7 @@ const ProfileChef = () => {
                   </div>
                   <div className="form-group">
                     <label htmlFor="gender" className="block text-lg font-medium mb-2">
-                      Status:
+                      Trạng thái:
                     </label>
                     <input
                       type="text"
@@ -457,50 +459,50 @@ const ProfileChef = () => {
                       type="submit"
                       className="btn btn-primary bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
                     >
-                      Save
+                      Lưu
                     </button>
                     <button
                       type="button"
                       className="btn btn-secondary ml-4"
                       onClick={() => setIsEditing(false)}
                     >
-                      Cancel
+                      Huỷ
                     </button>
                   </div>
                 </form>
               ) : (
                 <div>
-                  <h1 className="text-3xl font-semibold mb-6">Profile Information</h1>
+                  <h1 className="text-3xl font-semibold mb-6">Thông tin người bán</h1>
                   <p>
                     <strong>Email:</strong> {formData.email}
                   </p>
                   <p>
-                    <strong>Name:</strong> {formData.name}
+                    <strong>Tên:</strong> {formData.name}
                   </p>
                   <p>
-                    <strong>Score:</strong> {formData.score}
+                    <strong>Điểm:</strong> {formData.score}
                   </p>
                   <p>
-                    <strong>Phone:</strong> {formData.phone}
+                    <strong>Số điện thoại:</strong> {formData.phone}
                   </p>
                   <p>
-                    <strong>Address:</strong> {formData.address}
+                    <strong>Đăng ký:</strong> {formData.address}
                   </p>
                   <p>
-                    <strong>Money:</strong> {formData.money}
+                    <strong>Tiền:</strong> {formData.money}
                   </p>
                   <p>
-                    <strong>Banking:</strong> {formData.banking}
+                    <strong>Ngân hàng:</strong> {formData.banking}
                   </p>
                   <p>
-                    <strong>Status:</strong> {formData.status}
+                    <strong>Trạng thái:</strong> {formData.status}
                   </p>
                   <div className="flex justify-center mt-6">
                     <button
                       className="btn btn-primary bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
                       onClick={handleEdit}
                     >
-                      Edit
+                      Chỉnh sửa
                     </button>
                   </div>
                 </div>
@@ -508,6 +510,10 @@ const ProfileChef = () => {
             </div>
           </div>
         </div>
+
+        <div style={{ marginTop: 'auto' }}>
+  <Footer />
+</div>
       </div>
     );
   };

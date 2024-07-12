@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsBagHeart } from "react-icons/bs";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logocochu.png";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Footer from "../Footer/Footer";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -19,7 +20,8 @@ const Profile = () => {
     address: "",
     dob: "",
     gender: "",
-    password: ""
+    password: "",
+    money:""
     
     
     
@@ -73,8 +75,8 @@ const Profile = () => {
         address: response.data.payload.address,
         dob: response.data.payload.dob,
         gender: response.data.payload.gender,
-        password: response.data.payload.password || ""
-
+        password: response.data.payload.password || "",
+        money: response.data.payload.money
       });
     });
   }, []);
@@ -90,9 +92,7 @@ const Profile = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-  
 
- // Filter out fields that are null or undefined and keep only the ones you want to update
  const filteredData = {
   email: formData.email,
   firstName: formData.firstName,
@@ -122,7 +122,7 @@ api
   const handleProfile = () => navigate("/profile");
   const handleLogIn = () => navigate("/login");
   const handleRegister = () => navigate("/register");
-  const BackMainPage = () => navigate("/");
+  const BackMainPage = () => navigate("/usermain");
   const toggleCart = () => setIsOpen(!isOpen);
   const showDropDown = () => setOpen(!open);
   const handleLogout = () => {
@@ -132,13 +132,22 @@ api
     setUsername("");
   };
 
-  const renderData = () => {
+  const handleTopup = async (data) => {
+    navigate("/topup");
+  };
+
+  const handleOrder = async (data) => {
+    navigate("/order");
+  };
+  
+  let renderData = () => {
     if (getCookie("username") !== "") {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[2000%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[155px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
-            <img src={Logo} alt="Logo" width={150} height={150} />
+            <img src={Logo} alt="" width={150} height={150} />
           </div>
+          <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
             <div
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
@@ -146,24 +155,48 @@ api
             >
               <BsBagHeart height={150} width={150} />
             </div>
-            <div className="flex items-center gap-[10px] relative" onClick={showDropDown}>
-              <p>{username}</p>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+              Money : {formData.money}
+            </div>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] mt-[15px]">
+            <p>{username}</p>
+            </div>
+
+            <div
+              className="flex items-center gap-[10px] relative"
+              onClick={showDropDown}
+            >
+            
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
               {open && (
-                <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleTopup}
+                  >
+                   Nạp tiền
+                  </p>
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleProfile}
                   >
-                    Profile
+                    Thông tin người dùng
                   </p>
+
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleOrder}
+                  >
+                   Lịch sử mua hàng
+                  </p>
+
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                    Log out
+                   Thoát
                   </p>
                 </div>
               )}
@@ -173,10 +206,11 @@ api
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
-          <div>
-            <img src={Logo} alt="Logo" width={150} height={150} />
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[25px]">
+          <div className="cursor-pointer" onClick={BackMainPage}>
+            <img src={Logo} alt="" width={150} height={150} />
           </div>
+          <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
             <div
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
@@ -184,19 +218,24 @@ api
             >
               <BsBagHeart height={150} width={150} />
             </div>
-            <div className="flex items-center gap-[10px] relative" onClick={showDropDown}>
+            <div
+              className="flex items-center gap-[10px] relative"
+              onClick={showDropDown}
+            >
               <p>{username}</p>
               <div
                 onClick={handleLogIn}
                 className="cursor-pointer flex items-center justify-center relative"
               >
                 Đăng nhập
+                <img src="" alt="" />
               </div>
               <div
                 onClick={handleRegister}
                 className="cursor-pointer flex items-center justify-center relative"
               >
                 /Đăng ký
+                <img src="" alt="" />
               </div>
             </div>
           </div>
@@ -205,8 +244,9 @@ api
     }
   };
 
+
   return (
-    <div className="container mx-auto p-8">
+    <div className="">
       <div className="flex items-center justify-center mb-8">{renderData()}</div>
       {isOpen && (
         <div className="fixed inset-0 flex justify-end z-30">
@@ -259,6 +299,8 @@ api
           </div>
         </div>
       )}
+
+
       <div className="flex justify-center mt-8">
         <div className="w-[80%]">
           <div className="bg-white rounded-lg shadow-lg p-8">
@@ -280,7 +322,7 @@ api
                 </div>
                 <div className="form-group">
                   <label htmlFor="firstName" className="block text-lg font-medium mb-2">
-                    First Name:
+                   Họ
                   </label>
                   <input
                     type="text"
@@ -294,7 +336,7 @@ api
                 </div>
                 <div className="form-group">
                   <label htmlFor="lastName" className="block text-lg font-medium mb-2">
-                    Last Name:
+                    Tên:
                   </label>
                   <input
                     type="text"
@@ -308,7 +350,7 @@ api
                 </div>
                 <div className="form-group">
                   <label htmlFor="phone" className="block text-lg font-medium mb-2">
-                    Phone:
+                   Số điện thoại:
                   </label>
                   <input
                     type="text"
@@ -322,7 +364,7 @@ api
                 </div>
                 <div className="form-group">
                   <label htmlFor="address" className="block text-lg font-medium mb-2">
-                    Address:
+                    Địa chỉ:
                   </label>
                   <input
                     type="text"
@@ -336,7 +378,7 @@ api
                 </div>
                 <div className="form-group">
                   <label htmlFor="dob" className="block text-lg font-medium mb-2">
-                    Date of Birth:
+                   Ngày sinh:
                   </label>
                   <input
                     type="date"
@@ -350,7 +392,7 @@ api
                 </div>
                 <div className="form-group">
                   <label htmlFor="gender" className="block text-lg font-medium mb-2">
-                    Gender:
+                    Giới tính:
                   </label>
                   <select
                     className="form-control block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -370,47 +412,47 @@ api
                     type="submit"
                     className="btn btn-primary bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
                   >
-                    Save
+                    Lưu
                   </button>
                   <button
                     type="button"
                     className="btn btn-secondary ml-4"
                     onClick={() => setIsEditing(false)}
                   >
-                    Cancel
+                    Huỷ
                   </button>
                 </div>
               </form>
             ) : (
               <div>
-                <h1 className="text-3xl font-semibold mb-6">Profile Information</h1>
+                <h1 className="text-3xl font-semibold mb-6">Thông tin người</h1>
                 <p>
                   <strong>Email:</strong> {formData.email}
                 </p>
                 <p>
-                  <strong>First Name:</strong> {formData.firstName}
+                  <strong>Họ:</strong> {formData.firstName}
                 </p>
                 <p>
-                  <strong>Last Name:</strong> {formData.lastName}
+                  <strong>Tên:</strong> {formData.lastName}
                 </p>
                 <p>
-                  <strong>Phone:</strong> {formData.phone}
+                  <strong>Số điện thoại:</strong> {formData.phone}
                 </p>
                 <p>
-                  <strong>Address:</strong> {formData.address}
+                  <strong>địa chỉ:</strong> {formData.address}
                 </p>
                 <p>
-                  <strong>Date of Birth:</strong> {formData.dob}
+                  <strong>Ngày sinh:</strong> {formData.dob}
                 </p>
                 <p>
-                  <strong>Gender:</strong> {formData.gender}
+                  <strong>Giới tính:</strong> {formData.gender}
                 </p>
                 <div className="flex justify-center mt-6">
                   <button
                     className="btn btn-primary bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
                     onClick={handleEdit}
                   >
-                    Edit
+                    chỉnh sửa thông tin
                   </button>
                 </div>
               </div>
@@ -418,6 +460,10 @@ api
           </div>
         </div>
       </div>
+      <div style={{ marginTop: 'auto' }}>
+  <Footer />
+</div>
+
     </div>
   );
 };
