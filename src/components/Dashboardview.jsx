@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../assets/logo.png";
+import Logo from "../assets/logocochu.png";
 import hutieumuc from "../assets/hutieumuc.jpg";
 import garan from "../assets/garan.jpg";
 import Pizza from "../assets/pizza.jpg";
@@ -113,14 +113,14 @@ const Dashboardview = () => {
   }
 
   const api = axios.create({
-    baseURL: "https://206.189.95.158/api/Chefs",
+    baseURL: "https://localhost:44388/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUser = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "https://localhost:44388/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -155,7 +155,7 @@ const Dashboardview = () => {
   let renderData = () => {
     if (getCookie("username") !== "") {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[155px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -376,9 +376,9 @@ const Dashboardview = () => {
               key={index}
               onClick={() => handleDetail(promo.id)}
             >
-              <div className="card mb-4">
+              <div className="card mb-4 w-[300px] h-[300px]">
                 <span className="promo-badge">Promo</span>
-                <img className="card-img-top" src={Pizza} alt={promo.name} />
+                <img className="card-img-top w-[150px] h-[200px]" src={promo.profilePicture} />
                 <div className="card-body">
                   <h5 className="card-title">Bếp nhà: {promo.name}</h5>
                   <p className="card-text">
@@ -443,10 +443,10 @@ const Dashboardview = () => {
           Read More
         </button>
       </div>
-      <div style={{ marginTop: 'auto' }}>
-  <Footer />
-</div>
+
+      <Footer />
     </div>
+    
   );
 };
 

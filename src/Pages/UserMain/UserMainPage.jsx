@@ -12,9 +12,9 @@ import { BorderBottom, BorderColor } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import "./UserMainPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Footer from "../Footer/Footer";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Footer from "../Footer/Footer";
 const UserMainPage = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
@@ -22,9 +22,8 @@ const UserMainPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [listFood, setListFood] = useState([]);
   const [cartList, setCartList] = useState([]);
-  const [total, setTotal] = useState(0);
   const [user, setUser] = useState({});
-
+  const [total, setTotal] = useState(0);
   const toggleCart = () => {
     setIsOpen(!isOpen);
   };
@@ -64,14 +63,14 @@ const UserMainPage = () => {
   };
 
   const api = axios.create({
-    baseURL: "https://206.189.95.158/api/Chefs",
+    baseURL: "https://localhost:44388/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUser = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "https://localhost:44388/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -180,47 +179,46 @@ const UserMainPage = () => {
               <BsBagHeart height={150} width={150} />
             </div>
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-              Tiền : {user.money}
+              Money : {user.money}
             </div>
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-            {username}
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] mt-[15px]">
+            <p>{username}</p>
             </div>
-
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-              {/* <p>{username}</p> */}
+             
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
               {open && (
-                <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                <div className="bg-white border h-[160px] w-[150px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleTopup}
                   >
-                    Nạp Tiền
+                    Top up money
                   </p>
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleProfile}
                   >
-                    Thông tin Người dùng
+                    Profile
                   </p>
 
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleOrder}
                   >
-                    Lịch sử mua hàng
+                    View Order
                   </p>
 
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                   Thoát
+                    Log out
                   </p>
                 </div>
               )}
@@ -230,7 +228,7 @@ const UserMainPage = () => {
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
+        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -284,7 +282,7 @@ const UserMainPage = () => {
   ];
 
   return (
-    <div className="relative ">
+    <div className="relative">
       {" "}
       {/* Adjust padding-bottom */}
       <div className="flex items-center justify-center">{renderData()}</div>
@@ -386,7 +384,7 @@ const UserMainPage = () => {
           </button>
         </form>
         <h2>
-          Ưu đãi GrabFood tại 182 Lã Xuân Oai, P.Tăng Nhơn Phú A, Tp. Thủ Đức
+          Ưu đãi Hoome tại 182 Lã Xuân Oai, P.Tăng Nhơn Phú A, Tp. Thủ Đức
         </h2>
         <div className="row">
           {listFood.map((promo, index) => (
@@ -395,9 +393,9 @@ const UserMainPage = () => {
               key={index}
               onClick={() => handleDetail(promo.id)}
             >
-              <div className="card mb-4">
+              <div className="card mb-4 w-[300px] h-[300px]">
                 <span className="promo-badge">Promo</span>
-                <img className="card-img-top" src={Pizza} />
+                <img className="card-img-top w-[150px] h-[200px]" src={promo.profilePicture} />
                 <div className="card-body">
                   <h5 className="card-title">Bếp nhà: {promo.name}</h5>
                   <p className="card-text">
@@ -462,15 +460,10 @@ const UserMainPage = () => {
           Read More
         </button>
       </div>
-
-      <div style={{ marginTop: 'auto' }}>
-  <Footer />
-</div>
+      <Footer />
     </div>
 
   );
-  
-
 };
 
 export default UserMainPage;

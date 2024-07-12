@@ -84,14 +84,14 @@ const TopUp = () => {
   };
 
   const apiUser = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "https://localhost:44388/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiTopup = axios.create({
-    baseURL: "https://206.189.95.158/api/TopUpRequest",
+    baseURL: "https://localhost:44388/api/TopUpRequest",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -144,7 +144,7 @@ const TopUp = () => {
   const handleProfile = () => navigate("/profile");
   const handleLogIn = () => navigate("/login");
   const handleRegister = () => navigate("/register");
-  const BackMainPage = () => navigate("/usermain");
+  const BackMainPage = () => navigate("/");
   const showDropDown = () => setOpen(!open);
   const handleLogout = () => {
     setCookie("userrole", "", 0);
@@ -259,6 +259,7 @@ const TopUp = () => {
       );
     }
   };
+
 
   return (
     <div className="">
@@ -391,9 +392,8 @@ const TopUp = () => {
           </div>
         </form>
       </div>
-      <div style={{ marginTop: 'auto' }}>
-  <Footer />
-</div>
+
+      <Footer />
     </div>
   );
 };

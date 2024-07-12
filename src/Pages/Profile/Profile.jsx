@@ -5,11 +5,10 @@ import Logo from "../../assets/logocochu.png";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Footer from "../Footer/Footer";
-
 const Profile = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -21,11 +20,6 @@ const Profile = () => {
     dob: "",
     gender: "",
     password: "",
-
-    money:""
-    
-    
-
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -52,7 +46,7 @@ const Profile = () => {
   };
 
   const api = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "https://localhost:44388/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -65,6 +59,7 @@ const Profile = () => {
     }
     api.get("/" + getCookie("username")).then((response) => {
       setUser(response.data.payload);
+      console.log(response.data.payload)
       setFormData({
         email: response.data.payload.email,
         firstName: response.data.payload.firstName,
@@ -74,9 +69,7 @@ const Profile = () => {
         dob: response.data.payload.dob,
         gender: response.data.payload.gender,
         password: response.data.payload.password || "",
-
         money: response.data.payload.money
-
       });
     });
   }, []);
@@ -93,18 +86,6 @@ const Profile = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-
- const filteredData = {
-  email: formData.email,
-  firstName: formData.firstName,
-  lastName: formData.lastName,
-  phone: formData.phone,
-  address: formData.address,
-  dob: formData.dob,
-  gender: formData.gender,
-  roleId: 1, // Default roleId to 1
-  password: formData.password
-
     // Filter out fields that are null or undefined and keep only the ones you want to update
     const filteredData = {
       email: formData.email,
@@ -117,7 +98,6 @@ const Profile = () => {
       roleId: 1, // Default roleId to 1
       password: formData.password,
     };
-
 
     api
       .put("/" + getCookie("username"), filteredData)
@@ -146,7 +126,7 @@ const Profile = () => {
   const handleProfile = () => navigate("/profile");
   const handleLogIn = () => navigate("/login");
   const handleRegister = () => navigate("/register");
-  const BackMainPage = () => navigate("/usermain");
+  const BackMainPage = () => navigate("/");
   const toggleCart = () => setIsOpen(!isOpen);
   const showDropDown = () => setOpen(!open);
   const handleLogout = () => {
@@ -155,15 +135,13 @@ const Profile = () => {
     navigate("/");
     setUsername("");
   };
+  const handleOrder = async (data) => {
+    navigate("/order");
+  };
 
   const handleTopup = async (data) => {
     navigate("/topup");
   };
-
-  const handleOrder = async (data) => {
-    navigate("/order");
-  };
-  
   let renderData = () => {
     if (getCookie("username") !== "") {
       return (
@@ -179,22 +157,18 @@ const Profile = () => {
             >
               <BsBagHeart height={150} width={150} />
             </div>
-
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-              Money : {formData.money}
+              Tiền : {user.money}
             </div>
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] mt-[15px]">
-            <p>{username}</p>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            {username}
             </div>
-
 
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-
-              <p>{username}</p>
-
+              {/* <p>{username}</p> */}
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
@@ -204,20 +178,20 @@ const Profile = () => {
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleTopup}
                   >
-                   Nạp tiền
+                    Nạp Tiền
                   </p>
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleProfile}
                   >
-                    Thông tin người dùng
+                    Thông tin Người dùng
                   </p>
 
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleOrder}
                   >
-                   Lịch sử mua hàng
+                    Lịch sử mua hàng
                   </p>
 
                   <p
@@ -234,7 +208,7 @@ const Profile = () => {
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -274,15 +248,10 @@ const Profile = () => {
 
 
   return (
-
     <div className="">
-      <div className="flex items-center justify-center mb-8">{renderData()}</div>
-
-    <div className="container mx-auto p-8">
       <div className="flex items-center justify-center mb-8">
         {renderData()}
       </div>
-
       {isOpen && (
         <div className="fixed inset-0 flex justify-end z-30">
           <div className="h-full w-[30%] shadow-lg px-6 py-4 bg-white overflow-y-auto relative">
@@ -354,8 +323,6 @@ const Profile = () => {
           </div>
         </div>
       )}
-
-
       <div className="flex justify-center mt-8">
         <div className="w-[80%]">
           <div className="bg-white rounded-lg shadow-lg p-8">
@@ -379,16 +346,11 @@ const Profile = () => {
                   />
                 </div>
                 <div className="form-group">
-
-                  <label htmlFor="firstName" className="block text-lg font-medium mb-2">
-                   Họ
-
                   <label
                     htmlFor="firstName"
                     className="block text-lg font-medium mb-2"
                   >
                     First Name:
-
                   </label>
                   <input
                     type="text"
@@ -401,16 +363,11 @@ const Profile = () => {
                   />
                 </div>
                 <div className="form-group">
-
-                  <label htmlFor="lastName" className="block text-lg font-medium mb-2">
-                    Tên:
-
                   <label
                     htmlFor="lastName"
                     className="block text-lg font-medium mb-2"
                   >
                     Last Name:
-
                   </label>
                   <input
                     type="text"
@@ -423,16 +380,11 @@ const Profile = () => {
                   />
                 </div>
                 <div className="form-group">
-
-                  <label htmlFor="phone" className="block text-lg font-medium mb-2">
-                   Số điện thoại:
-
                   <label
                     htmlFor="phone"
                     className="block text-lg font-medium mb-2"
                   >
                     Phone:
-
                   </label>
                   <input
                     type="text"
@@ -445,15 +397,11 @@ const Profile = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="address" className="block text-lg font-medium mb-2">
-                    Địa chỉ:
-
                   <label
                     htmlFor="address"
                     className="block text-lg font-medium mb-2"
                   >
                     Address:
-
                   </label>
                   <input
                     type="text"
@@ -466,16 +414,11 @@ const Profile = () => {
                   />
                 </div>
                 <div className="form-group">
-
-                  <label htmlFor="dob" className="block text-lg font-medium mb-2">
-                   Ngày sinh:
-
                   <label
                     htmlFor="dob"
                     className="block text-lg font-medium mb-2"
                   >
                     Date of Birth:
-
                   </label>
                   <input
                     type="date"
@@ -488,16 +431,11 @@ const Profile = () => {
                   />
                 </div>
                 <div className="form-group">
-
-                  <label htmlFor="gender" className="block text-lg font-medium mb-2">
-                    Giới tính:
-
                   <label
                     htmlFor="gender"
                     className="block text-lg font-medium mb-2"
                   >
                     Gender:
-
                   </label>
                   <select
                     className="form-control block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -517,53 +455,49 @@ const Profile = () => {
                     type="submit"
                     className="btn btn-primary bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
                   >
-                    Lưu
+                    Save
                   </button>
                   <button
                     type="button"
                     className="btn btn-secondary ml-4"
                     onClick={() => setIsEditing(false)}
                   >
-                    Huỷ
+                    Cancel
                   </button>
                 </div>
               </form>
             ) : (
               <div>
-
-                <h1 className="text-3xl font-semibold mb-6">Thông tin người</h1>
-
                 <h1 className="text-3xl font-semibold mb-6">
                   Profile Information
                 </h1>
-
                 <p>
                   <strong>Email:</strong> {formData.email}
                 </p>
                 <p>
-                  <strong>Họ:</strong> {formData.firstName}
+                  <strong>First Name:</strong> {formData.firstName}
                 </p>
                 <p>
-                  <strong>Tên:</strong> {formData.lastName}
+                  <strong>Last Name:</strong> {formData.lastName}
                 </p>
                 <p>
-                  <strong>Số điện thoại:</strong> {formData.phone}
+                  <strong>Phone:</strong> {formData.phone}
                 </p>
                 <p>
-                  <strong>địa chỉ:</strong> {formData.address}
+                  <strong>Address:</strong> {formData.address}
                 </p>
                 <p>
-                  <strong>Ngày sinh:</strong> {formData.dob}
+                  <strong>Date of Birth:</strong> {formData.dob}
                 </p>
                 <p>
-                  <strong>Giới tính:</strong> {formData.gender}
+                  <strong>Gender:</strong> {formData.gender}
                 </p>
                 <div className="flex justify-center mt-6">
                   <button
                     className="btn btn-primary bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
                     onClick={handleEdit}
                   >
-                    chỉnh sửa thông tin
+                    Edit
                   </button>
                 </div>
               </div>
@@ -571,10 +505,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div style={{ marginTop: 'auto' }}>
-  <Footer />
-</div>
-
+      <Footer />
     </div>
   );
 };
