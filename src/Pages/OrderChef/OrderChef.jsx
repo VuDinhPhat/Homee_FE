@@ -71,10 +71,12 @@ const OrderChef = () => {
           setOrders(userOrders);
           // Fetch chef names for orders
           fetchChefNames(userOrders);
+          fetchUserNames(userOrders);
         })
         .catch((error) => {
           console.error("Error fetching orders:", error);
         });
+       
     });
   }, []);
 
