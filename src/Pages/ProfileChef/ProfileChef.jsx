@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logocochu.png";
 import hutieumuc from "../../assets/hutieumuc.jpg";
 import garan from "../../assets/garan.jpg";
 import Pizza from "../../assets/pizza.jpg";

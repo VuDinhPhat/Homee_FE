@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsBagHeart } from "react-icons/bs";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logocochu.png";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -130,7 +130,7 @@ const Profile = () => {
   const handleProfile = () => navigate("/profile");
   const handleLogIn = () => navigate("/login");
   const handleRegister = () => navigate("/register");
-  const BackMainPage = () => navigate("/");
+  const BackMainPage = () => navigate("/usermain");
   const toggleCart = () => setIsOpen(!isOpen);
   const showDropDown = () => setOpen(!open);
   const handleLogout = () => {
@@ -151,7 +151,7 @@ const Profile = () => {
 
     if (getCookie("username") !== "") {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[2000%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="Logo" width={150} height={150} />
           </div>

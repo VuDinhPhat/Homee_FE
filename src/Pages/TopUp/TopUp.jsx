@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsBagHeart } from "react-icons/bs";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logocochu.png";
 import QRCode from "../../assets/QRCode.png";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -144,7 +144,7 @@ const TopUp = () => {
   const handleProfile = () => navigate("/profile");
   const handleLogIn = () => navigate("/login");
   const handleRegister = () => navigate("/register");
-  const BackMainPage = () => navigate("/");
+  const BackMainPage = () => navigate("/usermain");
   const showDropDown = () => setOpen(!open);
   const handleLogout = () => {
     setCookie("userrole", "", 0);
@@ -159,7 +159,7 @@ const TopUp = () => {
   let renderData = () => {
     if (getCookie("username") !== "") {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[155px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -219,7 +219,7 @@ const TopUp = () => {
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -259,7 +259,7 @@ const TopUp = () => {
 
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="">
       <div className="flex items-center justify-center mb-8">
         {renderData()}
       </div>

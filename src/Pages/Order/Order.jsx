@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsBagHeart } from "react-icons/bs";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logocochu.png";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Footer from "../Footer/Footer";
 
 const Order = () => {
   const navigate = useNavigate();
@@ -275,7 +276,7 @@ const viewOrderDetail = async (orderId) => {
   let renderData = () => {
     if (getCookie("username") !== "") {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[50px] ">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px] ">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -335,7 +336,7 @@ const viewOrderDetail = async (orderId) => {
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -374,7 +375,7 @@ const viewOrderDetail = async (orderId) => {
   };
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="">
       <div className="flex items-center justify-center mb-8">
         {renderData()}
       </div>
@@ -450,13 +451,13 @@ const viewOrderDetail = async (orderId) => {
         </div>
       )}
 
-      <div className="flex items-center justify-center">
-        <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-[100%]">
+      <div className="flex items-center justify-center mb-10">
+        <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-[80%]">
           <h1 className="text-2xl font-semibold mb-4">Orders</h1>
           <table className="min-w-full">
             <thead>
               <tr>
-                <th className="py-2 px-4 border">ID</th>
+               
                 <th className="py-2 px-4 border">Chef Name</th>
                 <th className="py-2 px-4 border">Delivery Address</th>
                 <th className="py-2 px-4 border">Order Price</th>
@@ -535,6 +536,10 @@ const viewOrderDetail = async (orderId) => {
             </tbody>
           </table>
         </div>
+      </div>
+      
+      <div>
+      <Footer/>
       </div>
     </div>
   );
