@@ -24,7 +24,7 @@ const Payment = () => {
     address: "69 Lo Lu St, P. Tương Bình Hiệp, Thị Thủ Dầu Một, Bình Dương",
     detailedAddress: "",
     driverNotes: "",
-    paymentMethod: "cash",
+    paymentMethod: "point",
     profile: "",
     promoCode: "",
   });
@@ -62,35 +62,35 @@ const Payment = () => {
   }
 
   const apiChef = axios.create({
-    baseURL: "https://localhost:44388/api/Chefs",
+    baseURL: "https://206.189.95.158/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUser = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "https://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiOrder = axios.create({
-    baseURL: "https://localhost:44388/api/Orders",
+    baseURL: "https://206.189.95.158/api/Orders",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiOrderDetail = axios.create({
-    baseURL: "https://localhost:44388/api/OrderDetails",
+    baseURL: "https://206.189.95.158/api/OrderDetails",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiPayment = axios.create({
-    baseURL: "https://localhost:44388/api/Payments",
+    baseURL: "https://206.189.95.158/api/Payments",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -100,8 +100,7 @@ const Payment = () => {
     setCookie("userrole", "", 0);
     setCookie("username", "", 0);
     setCookie("usernamereal", "", 0);
-    navigate("/Detail");
-    setUsername(getCookie("usernamereal"));
+    navigate("/detail");
   };
 
   const handleLogIn = async () => {
@@ -129,13 +128,12 @@ const Payment = () => {
         let id = 0;
 
         const cookieData2 = Cookies.get("ArrayFood");
-        const parsedData2 = JSON.parse(cookieData2);
 
         const orderResponse = await apiOrder.post("", {
           id: 0,
           chefId: chef.id,
           deliveryAddress: formData.detailedAddress,
-          orderPrice: total,
+          orderPrice: 20000,
           quantity: 1,
           userId: user.id,
           status: "Awaiting",
@@ -188,9 +186,104 @@ const Payment = () => {
             status: tmp.status,
           })
           .then((response) => {});
+
+        alert("tạo đơn hàng thành công");
+        Cookies.set("ArrayFood", "", { expires: 7 });
+        navigate("/usermain");
       }
 
       if (formData.paymentMethod == "point") {
+        if (user.money >= total) {
+          console.log("Form submitted:", formData);
+          let id = 0;
+
+          const cookieData2 = Cookies.get("ArrayFood");
+
+          const orderResponse = await apiOrder.post("", {
+            id: 0,
+            chefId: chef.id,
+            deliveryAddress: formData.detailedAddress,
+            orderPrice: 20000,
+            quantity: 1,
+            userId: user.id,
+            status: "Awaiting",
+            orderDate: new Date(),
+          });
+
+          const orderId = orderResponse.data.payload.id;
+          console.log(orderResponse.data.payload);
+
+          // Tạo chi tiết đơn hàng cho từng món trong giỏ hàng
+          for (const item of cartList) {
+            await apiOrderDetail.post("", {
+              id: 0,
+              foodId: item.id,
+              price: item.sellPrice,
+              quantity: 1,
+              orderId: orderId,
+              status: "true",
+            });
+          }
+
+          // Gán giá trị id của đơn hàng
+          id = orderId;
+
+          let tmp = {};
+          await apiPayment
+            .post("", {
+              id: 0,
+              orderId: id,
+              paymentDate: new Date(),
+              totalPrice: 1000,
+              paymentType: formData.paymentMethod,
+              discount: 1,
+              userId: user.id,
+              status: "Awaiting",
+            })
+            .then((response) => {
+              tmp = response.data.payload;
+            });
+
+          apiPayment
+            .put("/" + tmp.id, {
+              id: tmp.id,
+              orderId: tmp.orderId,
+              paymentDate: tmp.paymentDate,
+              totalPrice: total,
+              paymentType: tmp.paymentType,
+              discount: 10,
+              userId: tmp.userId,
+              status: tmp.status,
+            })
+            .then((response) => {});
+
+          apiUser
+            .put("/" + user.id, {
+              id: user.id,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              password: user.password,
+              phone: user.phone,
+              address: user.address,
+              dob: user.dob,
+              gender: user.gender,
+              avatar: user.avatar,
+              roleId: user.roleId,
+              status: user.status,
+              money: user.money - total,
+              discount: user.discount,
+            })
+            .then((respone) => {});
+
+          alert("tạo đơn hàng thành công");
+          Cookies.set("ArrayFood", "", { expires: 7 });
+          navigate("/usermain");
+        } else {
+          alert(
+            "bạn thông đủ tiền trong tài khoản để thanh toán bàng homee point"
+          );
+        }
       }
     } else {
       alert("Bạn chưa điền chi tiết địa chỉ !!!");
@@ -220,10 +313,15 @@ const Payment = () => {
   }
 
   useEffect(() => {
-    setUsername(getCookie("usernamereal"));
+    if (Cookies.get("ArrayFood") == "") {
+      navigate("/");
+      return;
+    }
     if (getCookie("username") == "") {
       navigate("/");
     }
+
+    setUsername(getCookie("usernamereal"));
 
     if (getCookie("username") !== "") {
       apiUser.get("/" + getCookie("username")).then((response) => {
@@ -443,8 +541,8 @@ const Payment = () => {
                       value={formData.paymentMethod}
                       onChange={handleChange}
                     >
-                      <option value="cash">Tiền mặt</option>
                       <option value="point">Homee Point</option>
+                      <option value="cash">Tiền mặt</option>
                     </select>
                   </div>
                 </form>

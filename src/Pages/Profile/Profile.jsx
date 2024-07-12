@@ -21,10 +21,11 @@ const Profile = () => {
     dob: "",
     gender: "",
     password: "",
+
     money:""
     
     
-    
+
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -51,14 +52,11 @@ const Profile = () => {
   };
 
   const api = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "https://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
-
-
- 
 
   useEffect(() => {
     setUsername(getCookie("usernamereal"));
@@ -76,7 +74,9 @@ const Profile = () => {
         dob: response.data.payload.dob,
         gender: response.data.payload.gender,
         password: response.data.payload.password || "",
+
         money: response.data.payload.money
+
       });
     });
   }, []);
@@ -93,6 +93,7 @@ const Profile = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+
  const filteredData = {
   email: formData.email,
   firstName: formData.firstName,
@@ -104,19 +105,42 @@ const Profile = () => {
   roleId: 1, // Default roleId to 1
   password: formData.password
 
-};
+    // Filter out fields that are null or undefined and keep only the ones you want to update
+    const filteredData = {
+      email: formData.email,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      phone: formData.phone,
+      address: formData.address,
+      dob: formData.dob,
+      gender: formData.gender,
+      roleId: 1, // Default roleId to 1
+      password: formData.password,
+    };
 
-api
-  .put("/" + getCookie("username"), filteredData)
-  .then((response) => {
-    setUser(response.data.payload);
-    setIsEditing(false);
-  })
-  .catch((error) => {
-    console.error("Update failed:", error);
-    // Log detailed error information from server response
-    console.error("Server error response:", error.response);
-  });
+
+    api
+      .put("/" + getCookie("username"), filteredData)
+      .then((response) => {
+        setIsEditing(false);
+
+        api.get("/" + getCookie("username")).then((response) => {
+          setCookie(
+            "usernamereal",
+            response.data.payload.firstName + response.data.payload.lastName,
+            10
+          );
+
+          setUsername(
+            response.data.payload.firstName + response.data.payload.lastName
+          );
+        });
+      })
+      .catch((error) => {
+        console.error("Update failed:", error);
+        // Log detailed error information from server response
+        console.error("Server error response:", error.response);
+      });
   };
 
   const handleProfile = () => navigate("/profile");
@@ -155,6 +179,7 @@ api
             >
               <BsBagHeart height={150} width={150} />
             </div>
+
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
               Money : {formData.money}
             </div>
@@ -162,11 +187,14 @@ api
             <p>{username}</p>
             </div>
 
+
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-            
+
+              <p>{username}</p>
+
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
@@ -246,21 +274,35 @@ api
 
 
   return (
+
     <div className="">
       <div className="flex items-center justify-center mb-8">{renderData()}</div>
+
+    <div className="container mx-auto p-8">
+      <div className="flex items-center justify-center mb-8">
+        {renderData()}
+      </div>
+
       {isOpen && (
         <div className="fixed inset-0 flex justify-end z-30">
           <div className="h-full w-[30%] shadow-lg px-6 py-4 bg-white overflow-y-auto relative">
-            <button className="absolute top-4 right-4 text-gray-600 hover:text-gray-900" onClick={toggleCart}>
+            <button
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
+              onClick={toggleCart}
+            >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
+                xmlns="https://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
                 className="w-6 h-6"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
             <div className="border-b-2 border-gray-300 pb-4 mb-4">
@@ -272,16 +314,25 @@ api
             <div>
               <h2 className="text-lg font-semibold mb-4">Tên quán ăn</h2>
               {[1, 2, 3].map((item) => (
-                <div key={item} className="flex items-center justify-between border-b-2 border-gray-300 py-2">
+                <div
+                  key={item}
+                  className="flex items-center justify-between border-b-2 border-gray-300 py-2"
+                >
                   <div className="flex items-center space-x-4">
-                    <button className="text-blue-600 text-2xl cursor-pointer">-</button>
+                    <button className="text-blue-600 text-2xl cursor-pointer">
+                      -
+                    </button>
                     <span className="text-xl">{item}</span>
-                    <button className="text-blue-600 text-2xl cursor-pointer">+</button>
+                    <button className="text-blue-600 text-2xl cursor-pointer">
+                      +
+                    </button>
                     <span className="text-lg">Combo gà rán kfc</span>
                   </div>
                   <div className="flex items-center space-x-4">
                     <span className="text-lg">50.000</span>
-                    <button className="text-red-600 border border-red-600 px-2 py-1 rounded">Remove</button>
+                    <button className="text-red-600 border border-red-600 px-2 py-1 rounded">
+                      Remove
+                    </button>
                   </div>
                 </div>
               ))}
@@ -290,10 +341,14 @@ api
                   <h3 className="text-xl font-semibold">Tổng</h3>
                   <h3 className="text-xl font-semibold">150.000</h3>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">Phí giao hàng sẽ được thêm vào khi bạn thanh toán đơn hàng</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Phí giao hàng sẽ được thêm vào khi bạn thanh toán đơn hàng
+                </p>
               </div>
               <div className="flex justify-center mt-6">
-                <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300">Thanh toán</button>
+                <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                  Thanh toán
+                </button>
               </div>
             </div>
           </div>
@@ -307,7 +362,10 @@ api
             {isEditing ? (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="form-group">
-                  <label htmlFor="email" className="block text-lg font-medium mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-lg font-medium mb-2"
+                  >
                     Email:
                   </label>
                   <input
@@ -321,8 +379,16 @@ api
                   />
                 </div>
                 <div className="form-group">
+
                   <label htmlFor="firstName" className="block text-lg font-medium mb-2">
                    Họ
+
+                  <label
+                    htmlFor="firstName"
+                    className="block text-lg font-medium mb-2"
+                  >
+                    First Name:
+
                   </label>
                   <input
                     type="text"
@@ -335,8 +401,16 @@ api
                   />
                 </div>
                 <div className="form-group">
+
                   <label htmlFor="lastName" className="block text-lg font-medium mb-2">
                     Tên:
+
+                  <label
+                    htmlFor="lastName"
+                    className="block text-lg font-medium mb-2"
+                  >
+                    Last Name:
+
                   </label>
                   <input
                     type="text"
@@ -349,8 +423,16 @@ api
                   />
                 </div>
                 <div className="form-group">
+
                   <label htmlFor="phone" className="block text-lg font-medium mb-2">
                    Số điện thoại:
+
+                  <label
+                    htmlFor="phone"
+                    className="block text-lg font-medium mb-2"
+                  >
+                    Phone:
+
                   </label>
                   <input
                     type="text"
@@ -365,6 +447,13 @@ api
                 <div className="form-group">
                   <label htmlFor="address" className="block text-lg font-medium mb-2">
                     Địa chỉ:
+
+                  <label
+                    htmlFor="address"
+                    className="block text-lg font-medium mb-2"
+                  >
+                    Address:
+
                   </label>
                   <input
                     type="text"
@@ -377,8 +466,16 @@ api
                   />
                 </div>
                 <div className="form-group">
+
                   <label htmlFor="dob" className="block text-lg font-medium mb-2">
                    Ngày sinh:
+
+                  <label
+                    htmlFor="dob"
+                    className="block text-lg font-medium mb-2"
+                  >
+                    Date of Birth:
+
                   </label>
                   <input
                     type="date"
@@ -391,8 +488,16 @@ api
                   />
                 </div>
                 <div className="form-group">
+
                   <label htmlFor="gender" className="block text-lg font-medium mb-2">
                     Giới tính:
+
+                  <label
+                    htmlFor="gender"
+                    className="block text-lg font-medium mb-2"
+                  >
+                    Gender:
+
                   </label>
                   <select
                     className="form-control block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -425,7 +530,13 @@ api
               </form>
             ) : (
               <div>
+
                 <h1 className="text-3xl font-semibold mb-6">Thông tin người</h1>
+
+                <h1 className="text-3xl font-semibold mb-6">
+                  Profile Information
+                </h1>
+
                 <p>
                   <strong>Email:</strong> {formData.email}
                 </p>

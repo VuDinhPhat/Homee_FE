@@ -44,6 +44,7 @@ const Dashboardview = () => {
   }
 
   const handleLogout = async () => {
+    setUsername("");
     setCookie("username", "", 0);
     setCookie("usernamereal", "", 0);
     setCookie("userrole", "", 0);
@@ -69,6 +70,8 @@ const Dashboardview = () => {
 
   const HandlePayment = async () => {
     if (getCookie("username") != "") {
+      if (Cookies.get("ArrayList")) {
+      }
       navigate("/payment");
     } else {
       alert("Bạn chưa đăng nhập");
@@ -110,14 +113,14 @@ const Dashboardview = () => {
   }
 
   const api = axios.create({
-    baseURL: "https://localhost:44388/api/Chefs",
+    baseURL: "https://206.189.95.158/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUser = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "https://206.189.95.158/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -137,7 +140,7 @@ const Dashboardview = () => {
 
     setUsername(getCookie("usernamereal"));
 
-    api.get("?pageIndex=1&pageSize=8").then((response) => {
+    api.get("?pageIndex=1&pageSize=100").then((response) => {
       setListFood(response.data.payload);
       console.log(response.data.payload);
     });
@@ -392,25 +395,6 @@ const Dashboardview = () => {
         <button className="btn btn-outline-secondary btn-block">
           See all promotions
         </button>
-      </div>
-      <div className="container mt-5">
-        <h2>There's something for everyone!</h2>
-        <div className="row">
-          {categories.map((category, index) => (
-            <div className="col-md-3 mb-4" key={index}>
-              <div className="card">
-                <img
-                  className="card-img-top"
-                  src={category.imageUrl}
-                  alt={category.title}
-                />
-                <div className="card-body text-center">
-                  <h5 className="card-title">{category.title}</h5>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
       <div className="container mt-5">
         <h2>Vì sao bạn nên Order trên Homee?</h2>
