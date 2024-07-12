@@ -68,7 +68,7 @@ const LoginPage = () => {
   const handleLoginUser = async () => {
     try {
       const response = await axios.post(
-        "https://localhost:44388/api/Users/Login",
+        "https://api.homee.id.vn/api/Users/Login",
         {
           id: 0,
           email: username,
@@ -95,7 +95,7 @@ const LoginPage = () => {
         const userId = response.data.userResponse.id;
 
         const userResponse = await axios.get(
-          `https://localhost:44388/api/Users/${userId}`,
+          `https://api.homee.id.vn/api/Users/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${response.data.token}`,
@@ -132,7 +132,7 @@ const LoginPage = () => {
   const handleLoginChef = async () => {
     try {
       const response = await axios.post(
-        "https://localhost:44388/api/Chefs/login",
+        "https://api.homee.id.vn/api/Chefs/login",
         {
           id: 0,
           name: "string",
@@ -158,7 +158,7 @@ const LoginPage = () => {
         const chefId = response.data.chefResponse.id;
 
         const chefResponse = await axios.get(
-          `https://localhost:44388/api/Chefs/${chefId}`,
+          `https://api.homee.id.vn/api/Chefs/${chefId}`,
           {
             headers: {
               Authorization: `Bearer ${response.data.token}`,
@@ -273,7 +273,7 @@ const LoginPage = () => {
               <label htmlFor="chef">Đầu bếp</label>
             </div>
           </div>
-         
+
           <div className="flex justify-center items-center mt-4">
             <p className="text-gray-600">
               Chưa có tài khoản?{" "}
@@ -302,7 +302,7 @@ const LoginPage = () => {
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
             onClick={handleLogin}
           >
-          Đăng Nhập
+            Đăng Nhập
           </button>
           <div className="flex justify-center items-end mt-4">
             <p className="text-center">

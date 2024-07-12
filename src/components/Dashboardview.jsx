@@ -113,14 +113,14 @@ const Dashboardview = () => {
   }
 
   const api = axios.create({
-    baseURL: "https://localhost:44388/api/Chefs",
+    baseURL: "https://api.homee.id.vn/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUser = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "https://api.homee.id.vn/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -155,9 +155,7 @@ const Dashboardview = () => {
   let renderData = () => {
     if (getCookie("username") !== "") {
       return (
-
         <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
-
           <div>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -380,7 +378,10 @@ const Dashboardview = () => {
             >
               <div className="card mb-4 w-[300px] h-[300px]">
                 <span className="promo-badge">Promo</span>
-                <img className="card-img-top w-[150px] h-[200px]" src={promo.profilePicture} />
+                <img
+                  className="card-img-top w-[150px] h-[200px]"
+                  src={promo.profilePicture}
+                />
                 <div className="card-body">
                   <h5 className="card-title">Bếp nhà: {promo.name}</h5>
                   <p className="card-text">
@@ -445,12 +446,8 @@ const Dashboardview = () => {
           Read More
         </button>
       </div>
-
-
       <Footer />
-
     </div>
-    
   );
 };
 

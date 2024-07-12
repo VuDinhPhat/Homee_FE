@@ -62,35 +62,35 @@ const Payment = () => {
   }
 
   const apiChef = axios.create({
-    baseURL: "https://206.189.95.158/api/Chefs",
+    baseURL: "https://api.homee.id.vn/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUser = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "https://api.homee.id.vn/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiOrder = axios.create({
-    baseURL: "https://206.189.95.158/api/Orders",
+    baseURL: "https://api.homee.id.vn/api/Orders",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiOrderDetail = axios.create({
-    baseURL: "https://206.189.95.158/api/OrderDetails",
+    baseURL: "https://api.homee.id.vn/api/OrderDetails",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiPayment = axios.create({
-    baseURL: "https://206.189.95.158/api/Payments",
+    baseURL: "https://api.homee.id.vn/api/Payments",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },

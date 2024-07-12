@@ -84,14 +84,14 @@ const TopUp = () => {
   };
 
   const apiUser = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "https://api.homee.id.vn/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiTopup = axios.create({
-    baseURL: "https://localhost:44388/api/TopUpRequest",
+    baseURL: "https://api.homee.id.vn/api/TopUpRequest",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -257,7 +257,6 @@ const TopUp = () => {
     }
   };
 
-
   return (
     <div className="">
       <div className="flex items-center justify-center mb-8">
@@ -390,9 +389,7 @@ const TopUp = () => {
         </form>
       </div>
 
-
       <Footer />
-
     </div>
   );
 };

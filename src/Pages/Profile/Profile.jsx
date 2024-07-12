@@ -48,7 +48,7 @@ const Profile = () => {
   };
 
   const api = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "https://api.homee.id.vn/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -61,7 +61,7 @@ const Profile = () => {
     }
     api.get("/" + getCookie("username")).then((response) => {
       setUser(response.data.payload);
-      console.log(response.data.payload)
+      console.log(response.data.payload);
       setFormData({
         email: response.data.payload.email,
         firstName: response.data.payload.firstName,
@@ -72,8 +72,7 @@ const Profile = () => {
         gender: response.data.payload.gender,
         password: response.data.payload.password || "",
 
-        money: response.data.payload.money
-
+        money: response.data.payload.money,
       });
     });
   }, []);
@@ -143,12 +142,10 @@ const Profile = () => {
     navigate("/order");
   };
 
-
   const handleTopup = async (data) => {
     navigate("/topup");
   };
   let renderData = () => {
-
     if (getCookie("username") !== "") {
       return (
         <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
@@ -167,22 +164,19 @@ const Profile = () => {
               Tiền : {user.money}
             </div>
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-            {username}
+              {username}
             </div>
-
 
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-
               {/* <p>{username}</p> */}
 
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
               {open && (
-
                 <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
@@ -195,7 +189,6 @@ const Profile = () => {
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleProfile}
                   >
-
                     Thông tin Người dùng
                   </p>
 
@@ -204,7 +197,6 @@ const Profile = () => {
                     onClick={handleOrder}
                   >
                     Lịch sử mua hàng
-
                   </p>
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
@@ -220,11 +212,9 @@ const Profile = () => {
       );
     } else {
       return (
-
         <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
-
           </div>
           <div className="flex items-center gap-[15px] relative">
             <div
@@ -258,9 +248,7 @@ const Profile = () => {
   };
 
   return (
-
     <div className="">
-
       <div className="flex items-center justify-center mb-8">
         {renderData()}
       </div>
@@ -517,14 +505,9 @@ const Profile = () => {
           </div>
         </div>
       </div>
-   
-
 
       <Footer />
     </div>
-   
-      
-    
   );
 };
 

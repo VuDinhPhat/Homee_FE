@@ -63,14 +63,14 @@ const UserMainPage = () => {
   };
 
   const api = axios.create({
-    baseURL: "https://localhost:44388/api/Chefs",
+    baseURL: "https://api.homee.id.vn/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUser = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "https://api.homee.id.vn/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -180,19 +180,14 @@ const UserMainPage = () => {
             </div>
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
               Money : {user.money}
-
             </div>
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] mt-[15px]">
-            <p>{username}</p>
-
+              <p>{username}</p>
             </div>
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-
-             
-
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
@@ -286,9 +281,7 @@ const UserMainPage = () => {
   ];
 
   return (
-
     <div className="relative">
-
       {" "}
       {/* Adjust padding-bottom */}
       <div className="flex items-center justify-center">{renderData()}</div>
@@ -401,7 +394,10 @@ const UserMainPage = () => {
             >
               <div className="card mb-4 w-[300px] h-[300px]">
                 <span className="promo-badge">Promo</span>
-                <img className="card-img-top w-[150px] h-[200px]" src={promo.profilePicture} />
+                <img
+                  className="card-img-top w-[150px] h-[200px]"
+                  src={promo.profilePicture}
+                />
                 <div className="card-body">
                   <h5 className="card-title">Bếp nhà: {promo.name}</h5>
                   <p className="card-text">
@@ -466,9 +462,7 @@ const UserMainPage = () => {
           Read More
         </button>
       </div>
-
       <Footer />
-
     </div>
   );
 };

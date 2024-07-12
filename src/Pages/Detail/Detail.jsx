@@ -151,20 +151,20 @@ const Detail = () => {
   }
 
   const apiFood = axios.create({
-    baseURL: "https://206.189.95.158/api/Foods",
+    baseURL: "https://api.homee.id.vn/api/Foods",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiChef = axios.create({
-    baseURL: "https://206.189.95.158/api/Chefs",
+    baseURL: "https://api.homee.id.vn/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
   const apiUser = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "https://api.homee.id.vn/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -181,11 +181,12 @@ const Detail = () => {
           tmp.push(item);
         }
       });
-      await setFoodList(tmp);
+      setFoodList(tmp);
+      console.log(tmp);
     });
 
     apiChef.get("/" + getCookie("chefid")).then(async (response) => {
-      await setChef(response.data.payload);
+      setChef(response.data.payload);
     });
     const cookieData = Cookies.get("ArrayFood");
     if (cookieData) {
@@ -454,7 +455,7 @@ const Detail = () => {
                 {foodList.map((product) => (
                   <Col key={product.id} sm={12} md={6} lg={4} className="mb-4">
                     <Card>
-                      <Card.Img variant="top" src={LoginBG} />
+                      <Card.Img variant="top" src={product.image} />
                       <Card.Body>
                         <Card.Title>{product.name}</Card.Title>
                         <Card.Text>{}</Card.Text>

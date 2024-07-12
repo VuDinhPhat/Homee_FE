@@ -54,14 +54,14 @@ const DashBoard = () => {
   };
 
   const apiTopUp = axios.create({
-    baseURL: "https://localhost:44388/api/TopUpRequest",
+    baseURL: "https://api.homee.id.vn/api/TopUpRequest",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUsers = axios.create({
-    baseURL: "https://localhost:44388/api/Users",
+    baseURL: "https://api.homee.id.vn/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -140,20 +140,6 @@ const DashBoard = () => {
           </div>
           <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
-            <div
-              className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
-              onClick={toggleCart}
-            >
-              <div style={{ height: "30px", width: "30px" }}>
-                <BsBagHeart style={{ height: "100%", width: "100%" }} />
-              </div>
-             
-            </div>
-
-            <div >
- 
-              <p>{username}</p>
-           </div>
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}

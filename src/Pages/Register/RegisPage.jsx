@@ -43,7 +43,7 @@ const RegisterPage = () => {
   };
 
   const apiUser = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "https://api.homee.id.vn/api/Users",
   });
 
   const handleRegister = async () => {
