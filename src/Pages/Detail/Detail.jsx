@@ -133,7 +133,7 @@ const Detail = () => {
   };
 
   const BackMainPage = async () => {
-    navigate("/");
+    navigate("/usermain");
   };
 
   function getCookie(cname) {
@@ -207,11 +207,10 @@ const Detail = () => {
   let renderData = () => {
     if (getCookie("username") !== "") {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[155px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
-            <img src={Logo} alt="" width={150} height={150} />
+            <img src={Logo} alt="Logo" width={150} height={150} />
           </div>
-          <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
             <div
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
@@ -219,41 +218,45 @@ const Detail = () => {
             >
               <BsBagHeart height={150} width={150} />
             </div>
+
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-              Money : {user.money}
+              Tiền : {user.money}
             </div>
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] mt-[15px]">
-              <p>{username}</p>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+              {username}
             </div>
+
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
+              {/* <p>{username}</p> */}
+
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
               {open && (
-                <div className="bg-white border h-[160px] w-[150px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleTopup}
                   >
-                    Top up money
+                    Nạp Tiền
                   </p>
+
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleProfile}
                   >
-                    Profile
+                    Thông tin Người dùng
                   </p>
 
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleOrder}
                   >
-                    View Order
+                    Lịch sử mua hàng
                   </p>
-
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
@@ -307,7 +310,7 @@ const Detail = () => {
   };
 
   return (
-    <div className="relative pb-[100px]">
+    <div className="relative ">
       <div className="flex items-center justify-center">{renderData()}</div>
       {isOpen && (
         <div className="fixed inset-0 flex justify-end z-30">
@@ -395,69 +398,44 @@ const Detail = () => {
       <Container>
         <div className="flex items-center justify-between mt-5">
           <div>
-            <h2>Trang chủ - Nhà hàng - Bếp nhà: {chef.name}</h2>
+           
             <h1 className="font-bold">Bếp nhà: {chef.name}</h1>
 
             <div className="flex items-center">
               <FaStar style={{ color: yellowColor }} />
-              <p className="ml-2">{chef.score}</p>
+              <p className="ml-2 mt-3">{chef.score}</p>
             </div>
             <div className="flex items-center">
               <CiClock1 />
-              <p>Giờ mở cửa</p>
+              <p className="ml-2 mt-3">Giờ mở cửa</p>
             </div>
 
-            <p>Hôm nay mở cửa {chef.hours} tiếng</p>
+            <p>Hôm nay mở cửa: {chef.hours} tiếng</p>
             <p>Tận hưởng ưu đãi</p>
 
-            <p>Xem chi tiết</p>
+      
             <div className="flex mt-5">
               <button
-                className="border border-green-500 h-[50px] w-[250px] flex items-center justify-center mr-4 bg-customColor"
+                className="border border-green-500 h-[50px] w-[100%] flex items-center justify-center mr-4 bg-customColor "
                 onClick={() => scrollToRef(todayPromotionRef)}
               >
-                <div className="flex items-center">
+                <div className="flex items-center ">
                   <FaRegCalendarAlt />
-                  <p className="ml-2 mt-3">Ưu đãi hôm nay</p>
+                  <p className="ml-2 mt-3 text-xl font-bold text-white ">Ưu đãi hôm nay</p>
                 </div>
               </button>
-              {/* <button
-                className="border border-green-500 h-[50px] w-[250px] flex items-center justify-center mr-4 bg-customColor"
-                onClick={() => scrollToRef(mrcDealRef)}
-              >
-                <div className="flex items-center">
-                  <FaRegCalendarAlt />
-                  <p className="ml-2 mt-3">MrC khao Deal Lớn</p>
-                </div>
-              </button>
-              <button
-                className="border border-green-500 h-[50px] w-[250px] flex items-center justify-center mr-4 bg-customColor"
-                onClick={() => scrollToRef(overflowingPromotionRef)}
-              >
-                <div className="flex items-center">
-                  <FaRegCalendarAlt />
-                  <p className="ml-2 mt-3">Món ngập tràn ưu đãi</p>
-                </div>
-              </button>
-              <button
-                className="border border-green-500 h-[50px] w-[250px] flex items-center justify-center bg-customColor"
-                onClick={() => scrollToRef(interestingFoodsRef)}
-              >
-                <div className="flex items-center">
-                  <FaRegCalendarAlt />
-                  <p className="ml-2 mt-3">Nhiều món ngon & lạ ở đây</p>
-                </div>
-              </button> */}
+          
             </div>
-
+            
             {/* Phần "Ưu đãi hôm nay" */}
             <div ref={todayPromotionRef}>
-              <h1 className="mt-4">Ưu đãi hôm nay</h1>
+            <h1 className="mt-4">Ưu đãi hôm nay</h1>
               <Row>
                 {foodList.map((product) => (
                   <Col key={product.id} sm={12} md={6} lg={4} className="mb-4">
                     <Card>
-                      <Card.Img variant="top" src={product.image} />
+                    <Card.Img variant="top" src={product.image} style={{ width: '250px', height: '250px' }} />
+
                       <Card.Body>
                         <Card.Title>{product.name}</Card.Title>
                         <Card.Text>{}</Card.Text>
@@ -474,64 +452,6 @@ const Detail = () => {
                 ))}
               </Row>
             </div>
-
-            {/* <div ref={mrcDealRef}>
-              <h1 className="mt-4">MrC khao Deal Lớn</h1>
-              <Row>
-                {products.map((product) => (
-                  <Col key={product.id} sm={12} md={6} lg={4} className="mb-4">
-                    <Card>
-                      <Card.Img variant="top" src={product.img} />
-                      <Card.Body>
-                        <Card.Title>{product.name}</Card.Title>
-                        <Card.Text>{product.description}</Card.Text>
-                        <h5>{product.price}</h5>
-                        <Button variant="success">+</Button>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-            </div>
-
-           
-            <div ref={overflowingPromotionRef}>
-              <h1 className="mt-4">Món ngập tràn ưu đãi</h1>
-              <Row>
-                {products.map((product) => (
-                  <Col key={product.id} sm={12} md={6} lg={4} className="mb-4">
-                    <Card>
-                      <Card.Img variant="top" src={product.img} />
-                      <Card.Body>
-                        <Card.Title>{product.name}</Card.Title>
-                        <Card.Text>{product.description}</Card.Text>
-                        <h5>{product.price}</h5>
-                        <Button variant="success">+</Button>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-            </div> */}
-
-            {/* <div ref={interestingFoodsRef}>
-              <h1 className="mt-4">Nhiều món ngon & lạ ở đây</h1>
-              <Row>
-                {products.map((product) => (
-                  <Col key={product.id} sm={12} md={6} lg={4} className="mb-4">
-                    <Card>
-                      <Card.Img variant="top" src={product.img} />
-                      <Card.Body>
-                        <Card.Title>{product.name}</Card.Title>
-                        <Card.Text>{product.description}</Card.Text>
-                        <h5>{product.price}</h5>
-                        <Button variant="success">+</Button>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-            </div> */}
           </div>
         </div>
       </Container>
