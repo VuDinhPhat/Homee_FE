@@ -221,7 +221,7 @@ const Payment = () => {
               price: item.sellPrice,
               quantity: 1,
               orderId: orderId,
-              status: "true",
+              status: "Đang chờ",
             });
           }
 
