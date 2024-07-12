@@ -206,7 +206,7 @@ const Payment = () => {
             orderPrice: 20000,
             quantity: 1,
             userId: user.id,
-            status: "Awaiting",
+            status: "Đang chờ",
             orderDate: new Date(),
           });
 
@@ -238,7 +238,7 @@ const Payment = () => {
               paymentType: formData.paymentMethod,
               discount: 1,
               userId: user.id,
-              status: "Awaiting",
+              status: "Đang chờ",
             })
             .then((response) => {
               tmp = response.data.payload;
