@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logocochu.png";
+import Logo from "../../assets/logo.png";
 import hutieumuc from "../../assets/hutieumuc.jpg";
 import garan from "../../assets/garan.jpg";
 import Pizza from "../../assets/pizza.jpg";
@@ -14,7 +14,6 @@ import "./UserMainPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Footer from "../Footer/Footer";
 const UserMainPage = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
@@ -22,9 +21,8 @@ const UserMainPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [listFood, setListFood] = useState([]);
   const [cartList, setCartList] = useState([]);
-  const [total, setTotal] = useState(0);
   const [user, setUser] = useState({});
-
+  const [total, setTotal] = useState(0);
   const toggleCart = () => {
     setIsOpen(!isOpen);
   };
@@ -180,47 +178,44 @@ const UserMainPage = () => {
               <BsBagHeart height={150} width={150} />
             </div>
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-              Tiền : {user.money}
-            </div>
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-            {username}
+              Money : {user.money}
             </div>
 
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-              {/* <p>{username}</p> */}
+              <p>{username}</p>
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
               {open && (
-                <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                <div className="bg-white border h-[160px] w-[150px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleTopup}
                   >
-                    Nạp Tiền
+                    Top up money
                   </p>
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleProfile}
                   >
-                    Thông tin Người dùng
+                    Profile
                   </p>
 
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleOrder}
                   >
-                    Lịch sử mua hàng
+                    View Order
                   </p>
 
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                   Thoát
+                    Log out
                   </p>
                 </div>
               )}
@@ -230,7 +225,7 @@ const UserMainPage = () => {
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
+        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -284,7 +279,7 @@ const UserMainPage = () => {
   ];
 
   return (
-    <div className="relative ">
+    <div className="relative pb-[100px]">
       {" "}
       {/* Adjust padding-bottom */}
       <div className="flex items-center justify-center">{renderData()}</div>
@@ -462,15 +457,8 @@ const UserMainPage = () => {
           Read More
         </button>
       </div>
-
-      <div style={{ marginTop: 'auto' }}>
-  <Footer />
-</div>
     </div>
-
   );
-  
-
 };
 
 export default UserMainPage;

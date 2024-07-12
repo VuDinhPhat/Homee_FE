@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logocochu.png";
+import Logo from "../../assets/logo.png";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Footer from "../Footer/Footer";
 
 const ChefMain = () => {
   const [username, setUsername] = useState("");
@@ -15,11 +14,6 @@ const ChefMain = () => {
   const [cartList, setCartList] = useState([]);
   const [showAddFoodForm, setShowAddFoodForm] = useState(false);
   const [showEditFoodForm, setShowEditFoodForm] = useState(false);
-  const [user, setUser] = useState({});
-  const [categories, setCategories] = useState([]);
-  const [chef, setChef] = useState(null);
-const [selectedCategoryId, setSelectedCategoryId] = useState(0);
-const [listCategories, setListCategories] = useState([]);
   const chefId = getCookie("username");
   const [foodData, setFoodData] = useState({
     id: 0,
@@ -32,8 +26,6 @@ const [listCategories, setListCategories] = useState([]);
     status: "",
     categoryId: 0,
     chefId: chefId ? parseInt(chefId) : 0,
-    money:0
-
   });
 
   const [editingFoodData, setEditingFoodData] = useState(null);
@@ -67,8 +59,6 @@ const [listCategories, setListCategories] = useState([]);
     }
     return "";
   }
-
-
 
   const handleLogout = async () => {
     setCookie("username", "", 0);
@@ -132,96 +122,13 @@ const [listCategories, setListCategories] = useState([]);
         setListFood(response.data.payload);
       })
       .catch((error) => {});
-
-// Call API to get chef info
-api
-.get(`https://localhost:44388/api/Chefs?${chefId}`)
-.then((response) => {
-  setUser(response.data); // Assuming the response contains the chef object
-})
-.catch((error) => {
-  console.error("Error fetching chef info:", error);
-});
-    // Fetch categories from API
-        const fetchCategories = async () => {
-          try {
-            const response = await axios.get("https://localhost:44388/api/Categories");
-            setCategories(response.data.payload); // Update categories state with fetched data
-          } catch (error) {
-            console.error("Error fetching categories:", error);
-          }
-        };
-      
-        fetchCategories();
-
   }, []);
-
-  const fetchCategoriesName = async () => {
-    try {
-      const response = await axios.get("https://localhost:44388/api/Categories");
-      const categories = response.data.payload;  // Danh sách categories từ API Categories
-      return categories;
-      
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      return [];
-    }
-  };
-
-
-// Function to fetch categories
-  // Function to fetch categories
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get("https://localhost:44388/api/Categories");
-      const categoriesFromApi = response.data.payload;  // Danh sách categories từ API Categories
-      setCategories(categoriesFromApi);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-// Function to fetch foods with category names
-const fetchFoodsWithCategoryNames = async () => {
-  try {
-    // Fetch categories
-    const categories = await fetchCategoriesName();
-
-    // Fetch foods from API
-    const response = await axios.get("https://localhost:44388/api/Foods");
-    const foods = response.data.payload;  // Danh sách foods từ API Foods
-
-    // Map foods to include category names
-    const foodsWithCategoryNames = foods.map(food => {
-      const category = categories.find(cat => cat.categoryId === food.categoryId);
-      const categoryName = category ? category.categoryName : 'Unknown Category';
-      return { ...food, categoryName };
-    });
-
-    return foodsWithCategoryNames;
-  } catch (error) {
-    console.error("Error fetching foods:", error);
-    return [];
-  }
-};
-
-// Example usage
-fetchFoodsWithCategoryNames()
-  .then(foods => {
-    console.log("Foods with category names:", foods);
-    // Do something with the foods list that includes category names
-  })
-  .catch(error => {
-    console.error("Error fetching foods with category names:", error);
-  });
-
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFoodData((prevData) => ({
       ...prevData,
-      [name]: name === 'categoryId' ? parseInt(value) : value,
-    
+      [name]: value,
     }));
   };
 
@@ -256,19 +163,12 @@ fetchFoodsWithCategoryNames()
       console.error("Error updating food item:", error);
     }
   };
-
-  const handleTopup = async (data) => {
-    navigate("/topup");
-  };
-
-
   const renderData = () => {};
-
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
     setEditingFoodData((prevData) => ({
       ...prevData,
-      [name]: name === 'categoryId' ? parseInt(value) : value,
+      [name]: value,
     }));
   };
 
@@ -281,31 +181,13 @@ fetchFoodsWithCategoryNames()
     }
   };
 
-
   return (
     <div>
       {getCookie("username") !== "" ? (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[155px]">
-        <div className="cursor-pointer" onClick={BackMainPage}>
-          <img src={Logo} alt="" width={150} height={150} />
-        </div>
-        <div className="flex items-center rounded-[5px]"></div>
-        <div className="flex items-center gap-[15px] relative">
-          <div
-            className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
-            onClick={toggleCart}
-          >
-            <BsBagHeart height={150} width={150} />
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
+          <div className="cursor-pointer" onClick={BackMainPage}>
+            <img src={Logo} alt="" width={150} height={150} />
           </div>
-          <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-          {/* Tiền: {chef.money} Hiển thị tiền của đầu bếp */}
-     
-        </div>
-          <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-          {username}
-          </div>
-
-
           <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
             <div
@@ -340,50 +222,19 @@ fetchFoodsWithCategoryNames()
                     View Order
                   </p>
 
-
-          <div
-            className="flex items-center gap-[10px] relative"
-            onClick={showDropDown}
-          >
-            {/* <p>{username}</p> */}
-            <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
-              <img src="" alt="" />
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleLogout}
+                  >
+                    Log out
+                  </p>
+                </div>
+              )}
             </div>
-            {open && (
-             <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
-             <p
-               className="cursor-pointer hover:text-[blue] font-semibold"
-               onClick={handleTopup}
-             >
-               Nạp Tiền
-             </p>
-             <p
-               className="cursor-pointer hover:text-[blue] font-semibold"
-               onClick={handleProfile}
-             >
-               Thông tin Người bán
-             </p>
-
-             <p
-               className="cursor-pointer hover:text-[blue] font-semibold"
-               onClick={handleOrder}
-             >
-               Lịch sử mua hàng
-             </p>
-
-             <p
-               className="cursor-pointer hover:text-[blue] font-semibold"
-               onClick={handleLogout}
-             >
-              Thoát
-             </p>
-           </div>
-            )}
           </div>
         </div>
-      </div>
       ) : (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -503,378 +354,14 @@ fetchFoodsWithCategoryNames()
         )}
       </div>
 
-
-<div className="container mx-auto ">
-  <div className="px-[50px]">
-
-      <button
-        className="bg-blue-500 text-white py-2 px-4 rounded"
-        onClick={() => setShowAddFoodForm(!showAddFoodForm)}
-      >
-        {showAddFoodForm ? "Đóng" : "Thêm thức ăn"}
-      </button>
-
-      {showAddFoodForm && (
-        <form
-          className="bg-white p-4 rounded shadow-md mt-4"
-          onSubmit={handleAddFood}
-        >
-          <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Name"
-              value={foodData.name}
-              onChange={handleInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="image"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Image URL
-            </label>
-            <input
-              type="text"
-              id="image"
-              name="image"
-              placeholder="Image URL"
-              value={foodData.image}
-              onChange={handleInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="foodType"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Food Type
-            </label>
-            <input
-              type="text"
-              id="foodType"
-              name="foodType"
-              placeholder="Food Type"
-              value={foodData.foodType}
-              onChange={handleInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="price"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Price
-            </label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              placeholder="Price"
-              value={foodData.price}
-              onChange={handleInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="sellPrice"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Sell Price
-            </label>
-            <input
-              type="number"
-              id="sellPrice"
-              name="sellPrice"
-              placeholder="Sell Price"
-              value={foodData.sellPrice}
-              onChange={handleInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="sellCount"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Sell Count
-            </label>
-            <input
-              type="number"
-              id="sellCount"
-              name="sellCount"
-              placeholder="Sell Count"
-              value={foodData.sellCount}
-              onChange={handleInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="status"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Status
-            </label>
-            <input
-              type="text"
-              id="status"
-              name="status"
-              placeholder="Status"
-              value={foodData.status}
-              onChange={handleInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div>
-    <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700">
-      Category
-    </label>
-    <select
-      id="categoryId"
-      name="categoryId"
-      value={foodData.categoryId}
-      onChange={handleInputChange}
-      className="border p-2 w-full mb-2"
-    >
-      <option value="">Select category...</option>
-      {categories.map((category) => (
-        <option key={category.categoryId} value={category.categoryId}>
-          {category.categoryName}
-        </option>
-      ))}
-    </select>
-  </div>
-
-
       <div className="container mx-auto ">
         <div className="px-[50px]">
-
           <button
             className="bg-blue-500 text-white py-2 px-4 rounded"
             onClick={() => setShowAddFoodForm(!showAddFoodForm)}
           >
-
-           Thêm thức ăn
-
             {showAddFoodForm ? "Close Form" : "Add Food"}
-
           </button>
-
-
-      {showEditFoodForm && (
-        <form
-          className="bg-white p-4 rounded shadow-md mt-4"
-          onSubmit={handleUpdateFood}
-        >
-          <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Tên
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Name"
-              value={editingFoodData.name}
-              onChange={handleEditInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="image"
-              className="block text-sm font-medium text-gray-700"
-            >
-             Hình ảnh
-            </label>
-            <input
-              type="text"
-              id="image"
-              name="image"
-              placeholder="Image URL"
-              value={editingFoodData.image}
-              onChange={handleEditInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="foodType"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Kiểu thức ăn
-            </label>
-            <input
-              type="text"
-              id="foodType"
-              name="foodType"
-              placeholder="Food Type"
-              value={editingFoodData.foodType}
-              onChange={handleEditInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="price"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Giá
-            </label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              placeholder="Price"
-              value={editingFoodData.price}
-              onChange={handleEditInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="sellPrice"
-              className="block text-sm font-medium text-gray-700"
-            >
-             Giá thực
-            </label>
-            <input
-              type="number"
-              id="sellPrice"
-              name="sellPrice"
-              placeholder="Sell Price"
-              value={editingFoodData.sellPrice}
-              onChange={handleEditInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="sellCount"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Giá giảm
-            </label>
-            <input
-              type="number"
-              id="sellCount"
-              name="sellCount"
-              placeholder="Sell Count"
-              value={editingFoodData.sellCount}
-              onChange={handleEditInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="status"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Trạng thái
-            </label>
-            <input
-              type="text"
-              id="status"
-              name="status"
-              placeholder="Status"
-              value={editingFoodData.status}
-              onChange={handleEditInputChange}
-              className="border p-2 w-full mb-2"
-            />
-          </div>
-                <div className="mb-4">
-          <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700">
-            Category
-          </label>
-          <select
-            id="categoryId"
-            name="categoryId"
-            value={editingFoodData.categoryId}
-            onChange={handleInputChange}
-            className="border p-2 w-full mb-2"
-          >
-            <option value="">Select category...</option>
-            {categories.map((category) => (
-              <option key={category.categoryId} value={category.categoryId}>
-                {category.categoryName}
-              </option>
-            ))}
-          </select>
-  </div>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded"
-          >
-            Chỉnh sửa
-          </button>
-          <button
-            type="button"
-            className="bg-red-500 text-white py-2 px-4 rounded ml-2"
-            onClick={() => setShowEditFoodForm(false)}
-          >
-            Huỷ
-          </button>
-        </form>
-      )}
-
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-  {listFood.map((food) => (
-    <div key={food.id} className="bg-white shadow-md rounded-lg p-4 mb-4 relative">
-      <div className="mt-2">
-        <img src={food.image} alt={food.name} className="h-40 w-full object-cover" />
-      </div>
-      <div className="mt-4 text-left">
-      <p><strong>Name:</strong> {food.name}</p>
-        <p><strong>Type:</strong> {food.foodType}</p>
-        <p><strong>Price:</strong> {food.price}</p>
-        <p><strong>Sell Price:</strong> {food.sellPrice}</p>
-        <p><strong>Sell Count:</strong> {food.sellCount}</p>
-        <p><strong>Status:</strong> {food.status}</p>
-      
-      </div>
-      <div className="absolute bottom-0 left-0 w-full text-center mb-1">
-        <div className="mx-auto mt-2">
-          <button
-       
-            className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
-            onClick={() => handleEditFood(food)}
-          >
-            Chỉnh sửa
-          </button>
-          <button
-            className="bg-red-500 text-white py-1 px-2 rounded ml-2"
-            onClick={() => handleDeleteFood(food.id)}
-          >
-           Xoá
-          </button>
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
-
-</div>
-</div>
-<div style={{ marginTop: 'auto' }}>
-  <Footer />
-</div>
-    </div>
 
           {showAddFoodForm && (
             <form
@@ -1238,7 +725,6 @@ fetchFoodsWithCategoryNames()
         </div>
       </div>
     </div>
-
   );
 };
 
