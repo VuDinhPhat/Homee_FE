@@ -69,6 +69,7 @@ const OrderChef = () => {
             (order) => order.chefIdId === response.data.payload.chefId
           );
           setOrders(userOrders);
+          console.log(userOrders);
           // Fetch chef names for orders
           fetchChefNames(userOrders);
           fetchUserNames(userOrders);
@@ -169,7 +170,7 @@ const OrderChef = () => {
 
       // Lấy danh sách món ăn từ API /Foods/by-chef
       const foodsResponse = await axios.get(
-        `https://api.homee.id.vn/api/Foods/by-chef?chefId=${chefId}`,
+        `https://api.homee.id.vn/api/Foods/chefId=${chefId}`,
         {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
