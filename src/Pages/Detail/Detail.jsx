@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logocochu.png";
 import LoginBG from "../../assets/Lgbg.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
@@ -10,6 +10,7 @@ import { FaStar, FaRegCalendarAlt } from "react-icons/fa";
 import axios from "axios";
 import { CiClock1 } from "react-icons/ci";
 import Cookies from "js-cookie";
+import Footer from "../Footer/Footer";
 
 const Detail = () => {
   const [username, setUsername] = useState("");
@@ -221,12 +222,13 @@ const Detail = () => {
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
               Money : {user.money}
             </div>
-
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] mt-[15px]">
+              <p>{username}</p>
+            </div>
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-              <p>{username}</p>
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
@@ -266,7 +268,7 @@ const Detail = () => {
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -533,7 +535,9 @@ const Detail = () => {
           </div>
         </div>
       </Container>
+      <Footer/>
     </div>
+    
   );
 };
 
