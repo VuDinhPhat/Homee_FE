@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logocochu.png";
+import Logo from "../../assets/logo.png";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Footer from "../Footer/Footer";
 
 const ChefMain = () => {
   const [username, setUsername] = useState("");
@@ -15,11 +14,6 @@ const ChefMain = () => {
   const [cartList, setCartList] = useState([]);
   const [showAddFoodForm, setShowAddFoodForm] = useState(false);
   const [showEditFoodForm, setShowEditFoodForm] = useState(false);
-  const [user, setUser] = useState({});
-  const [categories, setCategories] = useState([]);
-  const [chef, setChef] = useState(null);
-const [selectedCategoryId, setSelectedCategoryId] = useState(0);
-const [listCategories, setListCategories] = useState([]);
   const chefId = getCookie("username");
   const [foodData, setFoodData] = useState({
     id: 0,
@@ -32,7 +26,10 @@ const [listCategories, setListCategories] = useState([]);
     status: "",
     categoryId: 0,
     chefId: chefId ? parseInt(chefId) : 0,
+
     money:0
+
+
   });
 
   const [editingFoodData, setEditingFoodData] = useState(null);
@@ -66,8 +63,6 @@ const [listCategories, setListCategories] = useState([]);
     }
     return "";
   }
-
-
 
   const handleLogout = async () => {
     setCookie("username", "", 0);
@@ -132,6 +127,7 @@ const [listCategories, setListCategories] = useState([]);
       })
       .catch((error) => {});
 
+
 // Call API to get chef info
 const fetchCheft = async () =>{
   const respone= await axios.get(`https://localhost:44388/api/Chefs/${chefId}`)
@@ -154,74 +150,15 @@ const fetchCheft = async () =>{
         fetchCheft();
         fetchCategories();
 
+
+
   }, []);
-
-  const fetchCategoriesName = async () => {
-    try {
-      const response = await axios.get("https://localhost:44388/api/Categories");
-      const categories = response.data.payload;  // Danh sách categories từ API Categories
-      return categories;
-      
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      return [];
-    }
-  };
-
-
-// Function to fetch categories
-  // Function to fetch categories
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get("https://localhost:44388/api/Categories");
-      const categoriesFromApi = response.data.payload;  // Danh sách categories từ API Categories
-      setCategories(categoriesFromApi);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-// Function to fetch foods with category names
-const fetchFoodsWithCategoryNames = async () => {
-  try {
-    // Fetch categories
-    const categories = await fetchCategoriesName();
-
-    // Fetch foods from API
-    const response = await axios.get("https://localhost:44388/api/Foods");
-    const foods = response.data.payload;  // Danh sách foods từ API Foods
-
-    // Map foods to include category names
-    const foodsWithCategoryNames = foods.map(food => {
-      const category = categories.find(cat => cat.categoryId === food.categoryId);
-      const categoryName = category ? category.categoryName : 'Unknown Category';
-      return { ...food, categoryName };
-    });
-
-    return foodsWithCategoryNames;
-  } catch (error) {
-    console.error("Error fetching foods:", error);
-    return [];
-  }
-};
-
-// Example usage
-fetchFoodsWithCategoryNames()
-  .then(foods => {
-    console.log("Foods with category names:", foods);
-    // Do something with the foods list that includes category names
-  })
-  .catch(error => {
-    console.error("Error fetching foods with category names:", error);
-  });
-
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFoodData((prevData) => ({
       ...prevData,
-      [name]: name === 'categoryId' ? parseInt(value) : value,
-    
+      [name]: value,
     }));
   };
 
@@ -256,15 +193,17 @@ fetchFoodsWithCategoryNames()
       console.error("Error updating food item:", error);
     }
   };
+
   const handleTopup = async (data) => {
     navigate("/topupchef");
   };
+
 
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
     setEditingFoodData((prevData) => ({
       ...prevData,
-      [name]: name === 'categoryId' ? parseInt(value) : value,
+      [name]: value,
     }));
   };
 
@@ -277,10 +216,10 @@ fetchFoodsWithCategoryNames()
     }
   };
 
-
   return (
     <div>
       {getCookie("username") !== "" ? (
+
         <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[155px]">
         <div className="cursor-pointer" onClick={BackMainPage}>
           <img src={Logo} alt="" width={150} height={150} />
@@ -303,42 +242,12 @@ fetchFoodsWithCategoryNames()
             {/* <p>{username}</p> */}
             <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
               <img src="" alt="" />
+
             </div>
-            {open && (
-             <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
-             <p
-               className="cursor-pointer hover:text-[blue] font-semibold"
-               onClick={handleTopup}
-             >
-               Nạp Tiền
-             </p>
-             <p
-               className="cursor-pointer hover:text-[blue] font-semibold"
-               onClick={handleProfile}
-             >
-               Thông tin Người bán
-             </p>
-
-             <p
-               className="cursor-pointer hover:text-[blue] font-semibold"
-               onClick={handleOrder}
-             >
-               Lịch sử mua hàng
-             </p>
-
-             <p
-               className="cursor-pointer hover:text-[blue] font-semibold"
-               onClick={handleLogout}
-             >
-              Thoát
-             </p>
-           </div>
-            )}
           </div>
         </div>
-      </div>
       ) : (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -458,7 +367,7 @@ fetchFoodsWithCategoryNames()
           </div>
         )}
 
-    
+
        
     
       </div>
@@ -617,10 +526,12 @@ fetchFoodsWithCategoryNames()
     </select>
   </div>
 
+
           <button
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded"
           >
+
            Thêm thức ăn
           </button>
         </form>
@@ -827,6 +738,7 @@ fetchFoodsWithCategoryNames()
   <Footer />
 </div>
     </div>
+
   );
 };
 

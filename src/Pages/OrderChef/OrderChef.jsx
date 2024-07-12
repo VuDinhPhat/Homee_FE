@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logocochu.png";
+import Logo from "../../assets/logo.png";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Footer from "../Footer/Footer";
 
 const OrderChef = () => {
     const navigate = useNavigate();
@@ -210,9 +209,11 @@ const OrderChef = () => {
     const handleLogout = () => {
         setCookie("username", "", 0);
         setCookie("usernamereal", "", 0);
+
         navigate("/");
         setUsername("");
     };
+
 
     const toggleCart = () => setIsOpen(!isOpen);
 
@@ -306,8 +307,10 @@ const OrderChef = () => {
                       </p>
                     </div>
                   )}
+
                 </div>
               </div>
+
             </div>
           );
         } else {
@@ -449,6 +452,7 @@ const OrderChef = () => {
                         </tr>
                     ))}
                 </tbody>
+
             </table>
             <button
                 className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 mt-4 rounded-md"
@@ -458,6 +462,7 @@ const OrderChef = () => {
             </button>
         </div>
     </div>
+
 )}
 
                         
@@ -486,6 +491,7 @@ const OrderChef = () => {
 
  
    
+
 };
 
 export default OrderChef;

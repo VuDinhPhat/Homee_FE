@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logocochu.png";
+import Logo from "../../assets/logo.png";
 import hutieumuc from "../../assets/hutieumuc.jpg";
 import garan from "../../assets/garan.jpg";
 import Pizza from "../../assets/pizza.jpg";
@@ -180,15 +180,19 @@ const UserMainPage = () => {
             </div>
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
               Money : {user.money}
+
             </div>
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] mt-[15px]">
             <p>{username}</p>
+
             </div>
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
+
              
+
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
@@ -282,7 +286,9 @@ const UserMainPage = () => {
   ];
 
   return (
+
     <div className="relative">
+
       {" "}
       {/* Adjust padding-bottom */}
       <div className="flex items-center justify-center">{renderData()}</div>
@@ -460,9 +466,10 @@ const UserMainPage = () => {
           Read More
         </button>
       </div>
-      <Footer />
-    </div>
 
+      <Footer />
+
+    </div>
   );
 };
 

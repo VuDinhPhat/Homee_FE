@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logocochu.png";
+import Logo from "../../assets/logo.png";
 import hutieumuc from "../../assets/hutieumuc.jpg";
 import garan from "../../assets/garan.jpg";
 import Pizza from "../../assets/pizza.jpg";
@@ -12,7 +12,6 @@ import { BorderBottom, BorderColor } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import Footer from "../Footer/Footer";
 import Cookies from "js-cookie";
 const ProfileChef = () => {
     const navigate = useNavigate();
@@ -162,6 +161,7 @@ const ProfileChef = () => {
 
 
 
+
     const handleTopup = async (data) => {
       navigate("/topupchef");
     };
@@ -235,6 +235,7 @@ const ProfileChef = () => {
                 </div>
               </div>
     
+
             </div>
           );
         } else {
@@ -278,6 +279,7 @@ const ProfileChef = () => {
       };
     
       return (
+
         <div className="relative ">
           {" "}
           {/* Adjust padding-bottom */}
@@ -513,6 +515,7 @@ const ProfileChef = () => {
                       onClick={handleEdit}
                     >
                       Chỉnh sửa
+
                     </button>
                   </div>
                 </div>
@@ -521,9 +524,11 @@ const ProfileChef = () => {
           </div>
         </div>
 
+
         <div style={{ marginTop: 'auto' }}>
   <Footer />
 </div>
+
       </div>
     );
   };
