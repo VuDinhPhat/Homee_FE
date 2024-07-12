@@ -6,6 +6,7 @@ import QRCode from "../../assets/QRCode.png";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useForm } from "react-hook-form";
+import Footer from "../Footer/Footer";
 
 const TopUp = () => {
   const navigate = useNavigate();

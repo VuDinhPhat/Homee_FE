@@ -13,10 +13,11 @@ import { red } from "@mui/material/colors";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Footer from "../Footer/Footer";
 const ProfileChef = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({});
     const [open, setOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [cartList, setCartList] = useState([]);

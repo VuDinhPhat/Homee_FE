@@ -335,7 +335,7 @@ const Profile = () => {
           </div>
         </div>
       )}
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-20">
         <div className="w-[80%]">
           <div className="bg-white rounded-lg shadow-lg p-8">
             {isEditing ? (
@@ -480,7 +480,7 @@ const Profile = () => {
               </form>
             ) : (
               <div>
-                <h1 className="text-3xl font-semibold mb-6">
+                <h1 className="text-3xl font-semibold mb-16">
                   Profile Information
                 </h1>
                 <p>
@@ -517,10 +517,14 @@ const Profile = () => {
           </div>
         </div>
       </div>
+   
+
 
       <Footer />
-
     </div>
+   
+      
+    
   );
 };
 

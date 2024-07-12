@@ -147,7 +147,13 @@ const DashBoard = () => {
               <div style={{ height: "30px", width: "30px" }}>
                 <BsBagHeart style={{ height: "100%", width: "100%" }} />
               </div>
+             
             </div>
+
+            <div >
+ 
+              <p>{username}</p>
+           </div>
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
@@ -177,7 +183,7 @@ const DashBoard = () => {
           </div>
         </div>
       ) : (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>

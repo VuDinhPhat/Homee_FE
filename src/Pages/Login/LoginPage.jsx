@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import LoginBG from "../../assets/Lgbg.png";
+import LoginBG from "../../assets/loginha.jpg";
 import Logo2 from "../../assets/logo2.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -208,10 +208,10 @@ const LoginPage = () => {
       />
       <div className="flex justify-center items-center min-h-screen relative z-10">
         <div className="bg-gray-100 bg-opacity-80 flex flex-col justify-center items-center w-full max-w-md mx-auto p-8 rounded-lg shadow-lg">
-          <div className="flex items-center justify-center mb-6">
-            <img className="w-[380px]" src={Logo2} alt="Logo" />
+          <div className="flex items-center justify-center">
+            <img className="w-[230px]" src={Logo2} alt="Logo" />
           </div>
-          <h1 className="text-2xl font-semibold mb-4">Đăng Nhập</h1>
+          <h1 className="text-2xl font-semibold mb-2">Đăng Nhập</h1>
           <div className="mb-4 w-full">
             <label htmlFor="username" className="block text-gray-600">
               Email
@@ -273,9 +273,7 @@ const LoginPage = () => {
               <label htmlFor="chef">Đầu bếp</label>
             </div>
           </div>
-          <div className="mb-3 text-blue-500 flex justify-center">
-            Forgot Password? Please contact the administrator.
-          </div>
+         
           <div className="flex justify-center items-center mt-4">
             <p className="text-gray-600">
               Chưa có tài khoản?{" "}
@@ -304,7 +302,7 @@ const LoginPage = () => {
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
             onClick={handleLogin}
           >
-            Login
+          Đăng Nhập
           </button>
           <div className="flex justify-center items-end mt-4">
             <p className="text-center">

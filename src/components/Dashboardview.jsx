@@ -214,7 +214,7 @@ const Dashboardview = () => {
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -268,7 +268,7 @@ const Dashboardview = () => {
   ];
 
   return (
-    <div className="relative pb-[100px]">
+    <div className="relative ">
       {" "}
       {/* Adjust padding-bottom */}
       <div className="flex items-center justify-center">{renderData()}</div>

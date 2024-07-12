@@ -5,11 +5,12 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Footer from "../Footer/Footer";
 
 const OrderChef = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({});
     const [orders, setOrders] = useState([]);
     const [chefs, setChefs] = useState({});
     const [users, setUsers] = useState({});
@@ -66,29 +67,18 @@ const OrderChef = () => {
                 setOrders(userOrders);
                 // Fetch chef names for orders
                 fetchChefNames(userOrders);
-                fetchUserNames(userOrders);
+               
             }).catch((error) => {
                 console.error("Error fetching orders:", error);
             });
         });
-
-        if (getCookie("usernamereal") !== "") {
-            apiUser.get("/" + getCookie("username")).then((response) => {
-              setUser(response.data.payload);
-            });
-          }
 
 
 
 
     }, []);
 
-    const apiUser = axios.create({
-        baseURL: "https://localhost:44388/api/Chefs",
-        headers: {
-          Authorization: `Bearer ${getCookie("token")}`,
-        },
-      });
+
 
 
 
@@ -263,7 +253,7 @@ const OrderChef = () => {
               <div className="flex items-center gap-[15px] relative">
             
                 <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-                  Tiền : {user.money || ""}
+                  Tiền : {user.money}
                 </div>
                 <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
                 {username}
