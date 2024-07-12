@@ -228,7 +228,7 @@ const LoginPage = () => {
           </div>
           <div className="mb-4 w-full">
             <label htmlFor="password" className="block text-gray-600">
-              Password
+              Mật khẩu
             </label>
             <input
               type="password"
@@ -259,7 +259,7 @@ const LoginPage = () => {
                 className="mr-2"
               />
               <label htmlFor="user" className="mr-4">
-                User
+                Người dùng
               </label>
               <input
                 type="radio"
