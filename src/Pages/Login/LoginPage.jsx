@@ -106,6 +106,7 @@ const LoginPage = () => {
         if (userResponse.data && userResponse.data.payload) {
           const userFullName =
             userResponse.data.payload.firstName +
+            " " +
             userResponse.data.payload.lastName;
           setCookie("usernamereal", userFullName, 10);
           setCookie("userrole", userResponse.data.payload.roleId, 10);

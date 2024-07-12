@@ -167,66 +167,66 @@ const UserMainPage = () => {
     if (getCookie("username") !== "") {
       return (
         <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
-        <div className="cursor-pointer" onClick={BackMainPage}>
-          <img src={Logo} alt="Logo" width={150} height={150} />
-        </div>
-        <div className="flex items-center gap-[15px] relative">
-          <div
-            className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
-            onClick={toggleCart}
-          >
-            <BsBagHeart height={150} width={150} />
+          <div className="cursor-pointer" onClick={BackMainPage}>
+            <img src={Logo} alt="Logo" width={150} height={150} />
           </div>
-
-          <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-            Tiền : {user.money}
-          </div>
-          <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-            {username}
-          </div>
-
-          <div
-            className="flex items-center gap-[10px] relative"
-            onClick={showDropDown}
-          >
-            {/* <p>{username}</p> */}
-
-            <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
-              <img src="" alt="" />
+          <div className="flex items-center gap-[15px] relative">
+            <div
+              className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
+              onClick={toggleCart}
+            >
+              <BsBagHeart height={150} width={150} />
             </div>
-            {open && (
-              <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
-                <p
-                  className="cursor-pointer hover:text-[blue] font-semibold"
-                  onClick={handleTopup}
-                >
-                  Nạp Tiền
-                </p>
 
-                <p
-                  className="cursor-pointer hover:text-[blue] font-semibold"
-                  onClick={handleProfile}
-                >
-                  Thông tin Người dùng
-                </p>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+              Tiền : {user.money}
+            </div>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+              {username}
+            </div>
 
-                <p
-                  className="cursor-pointer hover:text-[blue] font-semibold"
-                  onClick={handleOrder}
-                >
-                  Lịch sử mua hàng
-                </p>
-                <p
-                  className="cursor-pointer hover:text-[blue] font-semibold"
-                  onClick={handleLogout}
-                >
-                  Log out
-                </p>
+            <div
+              className="flex items-center gap-[10px] relative"
+              onClick={showDropDown}
+            >
+              {/* <p>{username}</p> */}
+
+              <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
+                <img src="" alt="" />
               </div>
-            )}
+              {open && (
+                <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleTopup}
+                  >
+                    Nạp Tiền
+                  </p>
+
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleProfile}
+                  >
+                    Thông tin Người dùng
+                  </p>
+
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleOrder}
+                  >
+                    Lịch sử mua hàng
+                  </p>
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleLogout}
+                  >
+                    Log out
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
       );
     } else {
       return (
