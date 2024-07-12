@@ -55,7 +55,7 @@ const Order = () => {
   };
 
   const api = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "https://localhost:44388/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -81,7 +81,7 @@ const Order = () => {
 
       // Fetch orders for the logged-in user
       axios
-        .get("https://206.189.95.158/api/Orders", {
+        .get("https://localhost:44388/api/Orders", {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
           },
@@ -92,6 +92,7 @@ const Order = () => {
             (order) => order.userId === response.data.payload.id
           );
           setOrders(userOrders);
+
 
           fetchChefNames(userOrders);
           fetchUserNames(userOrders);
@@ -159,83 +160,65 @@ const Order = () => {
       });
   };
 
+
   const fetchChefNames = async (orders) => {
-    const chefIds = [...new Set(orders.map((order) => order.chefId))];
+    const chefIds = [...new Set(orders.map(order => order.chefId))];
     const chefData = {};
-    await Promise.all(
-      chefIds.map(async (id) => {
-        const response = await axios.get(
-          `https://206.189.95.158/api/Chefs/${id}`,
-          {
+    await Promise.all(chefIds.map(async (id) => {
+        const response = await axios.get(`https://localhost:44388/api/Chefs/${id}`, {
             headers: {
-              Authorization: `Bearer ${getCookie("token")}`,
-            },
-          }
-        );
-        chefData[id] = response.data.payload.name;
-      })
-    );
-    setChefs(chefData);
-  };
-  const fetchUserNames = async (orders) => {
-    try {
-      // Lấy danh sách các unique userId từ danh sách các đơn hàng
-      const userIds = [...new Set(orders.map((order) => order.userId))];
-
-      // Tạo đối tượng để lưu trữ tên của các người dùng với key là userId
-      const userData = {};
-
-      // Sử dụng Promise.all để gọi các API lấy tên người dùng bất đồng bộ
-      await Promise.all(
-        userIds.map(async (id) => {
-          const response = await axios.get(
-            `https://206.189.95.158/api/Users/${id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${getCookie("token")}`,
-              },
+                Authorization: `Bearer ${getCookie("token")}`
             }
-          );
-          // Lưu tên của người dùng vào đối tượng userData
-          userData[
-            id
-          ] = `${response.data.payload.firstName} ${response.data.payload.lastName}`;
-        })
-      );
-
-      // Cập nhật state users với dữ liệu vừa lấy được
-      setUsers(userData);
-    } catch (error) {
-      console.error("Error fetching user names:", error);
-    }
-  };
-
-  const viewOrderDetail = async (orderId) => {
+        });
+        chefData[id] = response.data.payload.name;
+    }));
+    setChefs(chefData);
+};
+const fetchUserNames = async (orders) => {
     try {
+        // Lấy danh sách các unique userId từ danh sách các đơn hàng
+        const userIds = [...new Set(orders.map(order => order.userId))];
+        
+        // Tạo đối tượng để lưu trữ tên của các người dùng với key là userId
+        const userData = {};
+
+        // Sử dụng Promise.all để gọi các API lấy tên người dùng bất đồng bộ
+        await Promise.all(userIds.map(async (id) => {
+            const response = await axios.get(`https://localhost:44388/api/Users/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${getCookie("token")}`
+                }
+            });
+            // Lưu tên của người dùng vào đối tượng userData
+            userData[id] = `${response.data.payload.firstName} ${response.data.payload.lastName}`;
+        }));
+
+        // Cập nhật state users với dữ liệu vừa lấy được
+        setUsers(userData);
+    } catch (error) {
+        console.error("Error fetching user names:", error);
+    }
+};
+
+
+const viewOrderDetail = async (orderId) => {
+  try {
       // Lấy chi tiết đơn hàng từ API /OrderDetails
-      const orderDetailResponse = await axios.get(
-        `https://206.189.95.158/api/OrderDetails`,
-        {
+      const orderDetailResponse = await axios.get(`https://localhost:44388/api/OrderDetails`, {
           headers: {
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-        }
-      );
+              Authorization: `Bearer ${getCookie("token")}`
+          }
+      });
 
       // Lọc chi tiết đơn hàng theo orderId
-      const userOrdersDetail = orderDetailResponse.data.payload.filter(
-        (order) => order.orderId === orderId
-      );
+      const userOrdersDetail = orderDetailResponse.data.payload.filter(order => order.orderId === orderId);
 
       // Lấy thông tin status từ đơn hàng chính từ API /Orders
-      const orderResponse = await axios.get(
-        `https://206.189.95.158/api/Orders/${orderId}`,
-        {
+      const orderResponse = await axios.get(`https://localhost:44388/api/Orders/${orderId}`, {
           headers: {
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-        }
-      );
+              Authorization: `Bearer ${getCookie("token")}`
+          }
+      });
 
       // Lấy thông tin status từ đơn hàng chính
       const orderStatus = orderResponse.data.payload.status;
@@ -243,41 +226,38 @@ const Order = () => {
       // Lấy danh sách món ăn theo chefId
       const chefId = getCookie("username");
       if (!chefId) {
-        navigate("/");
-        return;
+          navigate("/");
+          return;
       }
 
       // Lấy danh sách món ăn từ API /Foods/by-chef
-      const foodsResponse = await axios.get(
-        `https://206.189.95.158/api/Foods/?chefId=${chefId}`,
-        {
+      const foodsResponse = await axios.get(`https://localhost:44388/api/Foods/by-chef?chefId=${chefId}`, {
           headers: {
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-        }
-      );
+              Authorization: `Bearer ${getCookie("token")}`
+          }
+      });
 
       // Tạo một map để truy cập nhanh tên món ăn bằng foodId
       const foodMap = {};
-      foodsResponse.data.payload.forEach((food) => {
-        foodMap[food.id] = food.name;
+      foodsResponse.data.payload.forEach(food => {
+          foodMap[food.id] = food.name;
       });
 
       // Cập nhật foodName và status vào userOrdersDetail
-      const ordersWithFoodNamesAndStatus = userOrdersDetail.map((order) => ({
-        ...order,
+      const ordersWithFoodNamesAndStatus = userOrdersDetail.map(order => ({
+          ...order,
 
-        foodName: foodMap[order.foodId] || "Unknown Food", // Tên món ăn, mặc định nếu không tìm thấy
-        status: orderStatus, // Status từ đơn hàng chính
+          foodName: foodMap[order.foodId] || "Unknown Food", // Tên món ăn, mặc định nếu không tìm thấy
+          status: orderStatus // Status từ đơn hàng chính
       }));
 
       // Cập nhật state để hiển thị chi tiết đơn hàng với tên món ăn và status
       setSelectedOrderDetails(ordersWithFoodNamesAndStatus);
       setOrderDetailVisible(true); // Hiển thị modal chi tiết đơn hàng
-    } catch (error) {
+  } catch (error) {
       console.error("Error fetching order details:", error);
-    }
-  };
+  }
+};
 
   const handleLogIn = () => navigate("/login");
   const handleRegister = () => navigate("/register");
@@ -406,7 +386,7 @@ const Order = () => {
               onClick={toggleCart}
             >
               <svg
-                xmlns="https://www.w3.org/2000/svg"
+                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
@@ -491,10 +471,10 @@ const Order = () => {
             <tbody>
               {orders.map((order) => (
                 <tr key={order.id}>
-                  <td className="py-2 px-4 border">{order.id}</td>
-                  <td className="py-2 px-4 border-b text-center">
-                    {chefs[order.chefId] || "Loading..."}
-                  </td>
+
+                
+                  <td className="py-2 px-4 border-b text-center">{chefs[order.chefId] || "Loading..."}</td>
+
                   <td className="py-2 px-4 border">{order.deliveryAddress}</td>
                   <td className="py-2 px-4 border">{order.orderPrice}</td>
                   <td className="py-2 px-4 border">{order.quantity}</td>
@@ -513,48 +493,42 @@ const Order = () => {
                   {/* Modal for Order Details */}
                   {orderDetailVisible && (
                     <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-40">
-                      <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:max-w-[80%]">
-                        <h1 className="text-2xl font-semibold mb-4">
-                          Order Details
-                        </h1>
-                        <table className="min-w-full">
-                          <thead>
-                            <tr>
-                              <th className="py-2 px-4 border">Food Name</th>
-                              <th className="py-2 px-4 border">Price</th>
-                              <th className="py-2 px-4 border">Quantity</th>
-                              <th className="py-2 px-4 border">Status</th>
+
+                    <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:max-w-[80%]">
+                      <h1 className="text-2xl font-semibold mb-4">Order Details</h1>
+                      <table className="min-w-full">
+                        <thead>
+                          <tr>
+                            <th className="py-2 px-4 border">Tên món ăn</th>
+                            <th className="py-2 px-4 border">Giá</th>
+                            <th className="py-2 px-4 border">Số lượng</th>
+                            <th className="py-2 px-4 border">Trạng thái</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {selectedOrderDetails.map((detail, index) => (
+                            <tr key={index}>
+                              <td className="py-2 px-4 border">{detail.foodName}</td>
+                              <td className="py-2 px-4 border">{detail.price}</td>
+                              <td className="py-2 px-4 border">{detail.quantity}</td>
+                              <td className="py-2 px-4 border">{detail.status}</td>
+
                             </tr>
-                          </thead>
-                          <tbody>
-                            {selectedOrderDetails.map((detail, index) => (
-                              <tr key={index}>
-                                <td className="py-2 px-4 border">
-                                  {detail.foodName}
-                                </td>
-                                <td className="py-2 px-4 border">
-                                  {detail.price}
-                                </td>
-                                <td className="py-2 px-4 border">
-                                  {detail.quantity}
-                                </td>
-                                <td className="py-2 px-4 border">
-                                  {detail.status}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                        <div className="flex justify-end mt-4">
-                          <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-                            onClick={() => setOrderDetailVisible(false)}
-                          >
-                            Close
-                          </button>
-                        </div>
+                          ))}
+                        </tbody>
+                      </table>
+                      <div className="flex justify-end mt-4">
+                        <button
+                          className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                          onClick={() => setOrderDetailVisible(false)}
+                        >
+                          Close
+                        </button>
                       </div>
                     </div>
+                  </div>
+
+
                   )}
                 </tr>
               ))}

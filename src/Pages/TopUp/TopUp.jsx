@@ -83,14 +83,14 @@ const TopUp = () => {
   };
 
   const apiUser = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "https://localhost:44388/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiTopup = axios.create({
-    baseURL: "https://206.189.95.158/api/TopUpRequest",
+    baseURL: "https://localhost:44388/api/TopUpRequest",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -256,6 +256,7 @@ const TopUp = () => {
     }
   };
 
+
   return (
     <div className="container mx-auto p-8">
       <div className="flex items-center justify-center mb-8">
@@ -387,6 +388,10 @@ const TopUp = () => {
           </div>
         </form>
       </div>
+
+
+      <Footer />
+
     </div>
   );
 };

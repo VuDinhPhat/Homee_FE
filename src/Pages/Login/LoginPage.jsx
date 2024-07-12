@@ -68,7 +68,7 @@ const LoginPage = () => {
   const handleLoginUser = async () => {
     try {
       const response = await axios.post(
-        "https://206.189.95.158/api/Users/Login",
+        "https://localhost:44388/api/Users/Login",
         {
           id: 0,
           email: username,
@@ -95,7 +95,7 @@ const LoginPage = () => {
         const userId = response.data.userResponse.id;
 
         const userResponse = await axios.get(
-          `https://206.189.95.158/api/Users/${userId}`,
+          `https://localhost:44388/api/Users/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${response.data.token}`,
@@ -132,7 +132,7 @@ const LoginPage = () => {
   const handleLoginChef = async () => {
     try {
       const response = await axios.post(
-        "https://206.189.95.158/api/Chefs/login",
+        "https://localhost:44388/api/Chefs/login",
         {
           id: 0,
           name: "string",
@@ -158,7 +158,7 @@ const LoginPage = () => {
         const chefId = response.data.chefResponse.id;
 
         const chefResponse = await axios.get(
-          `https://206.189.95.158/api/Chefs/${chefId}`,
+          `https://localhost:44388/api/Chefs/${chefId}`,
           {
             headers: {
               Authorization: `Bearer ${response.data.token}`,

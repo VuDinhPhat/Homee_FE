@@ -12,6 +12,7 @@ import { BorderBottom, BorderColor } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import "./UserMainPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Footer from "../Footer/Footer";
 import axios from "axios";
 import Cookies from "js-cookie";
 const UserMainPage = () => {
@@ -62,14 +63,14 @@ const UserMainPage = () => {
   };
 
   const api = axios.create({
-    baseURL: "https://206.189.95.158/api/Chefs",
+    baseURL: "https://localhost:44388/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiUser = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "https://localhost:44388/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -179,13 +180,19 @@ const UserMainPage = () => {
             </div>
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
               Money : {user.money}
-            </div>
 
+            </div>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] mt-[15px]">
+            <p>{username}</p>
+
+            </div>
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-              <p>{username}</p>
+
+             
+
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
@@ -279,7 +286,9 @@ const UserMainPage = () => {
   ];
 
   return (
-    <div className="relative pb-[100px]">
+
+    <div className="relative">
+
       {" "}
       {/* Adjust padding-bottom */}
       <div className="flex items-center justify-center">{renderData()}</div>
@@ -381,7 +390,7 @@ const UserMainPage = () => {
           </button>
         </form>
         <h2>
-          Ưu đãi GrabFood tại 182 Lã Xuân Oai, P.Tăng Nhơn Phú A, Tp. Thủ Đức
+          Ưu đãi Hoome tại 182 Lã Xuân Oai, P.Tăng Nhơn Phú A, Tp. Thủ Đức
         </h2>
         <div className="row">
           {listFood.map((promo, index) => (
@@ -390,9 +399,9 @@ const UserMainPage = () => {
               key={index}
               onClick={() => handleDetail(promo.id)}
             >
-              <div className="card mb-4">
+              <div className="card mb-4 w-[300px] h-[300px]">
                 <span className="promo-badge">Promo</span>
-                <img className="card-img-top" src={Pizza} />
+                <img className="card-img-top w-[150px] h-[200px]" src={promo.profilePicture} />
                 <div className="card-body">
                   <h5 className="card-title">Bếp nhà: {promo.name}</h5>
                   <p className="card-text">
@@ -457,6 +466,9 @@ const UserMainPage = () => {
           Read More
         </button>
       </div>
+
+      <Footer />
+
     </div>
   );
 };

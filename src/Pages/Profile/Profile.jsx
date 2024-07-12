@@ -5,10 +5,12 @@ import Logo from "../../assets/logo.png";
 import axios from "axios";
 import Cookies from "js-cookie";
 
+import Footer from "../Footer/Footer";
+
 const Profile = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -46,7 +48,7 @@ const Profile = () => {
   };
 
   const api = axios.create({
-    baseURL: "https://206.189.95.158/api/Users",
+    baseURL: "https://localhost:44388/api/Users",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -59,6 +61,7 @@ const Profile = () => {
     }
     api.get("/" + getCookie("username")).then((response) => {
       setUser(response.data.payload);
+      console.log(response.data.payload)
       setFormData({
         email: response.data.payload.email,
         firstName: response.data.payload.firstName,
@@ -68,6 +71,9 @@ const Profile = () => {
         dob: response.data.payload.dob,
         gender: response.data.payload.gender,
         password: response.data.payload.password || "",
+
+        money: response.data.payload.money
+
       });
     });
   }, []);
@@ -133,8 +139,16 @@ const Profile = () => {
     navigate("/");
     setUsername("");
   };
+  const handleOrder = async (data) => {
+    navigate("/order");
+  };
 
-  const renderData = () => {
+
+  const handleTopup = async (data) => {
+    navigate("/topup");
+  };
+  let renderData = () => {
+
     if (getCookie("username") !== "") {
       return (
         <div className="flex items-center justify-between h-[150px] w-[2000%] shadow-lg px-[25px]">
@@ -148,21 +162,49 @@ const Profile = () => {
             >
               <BsBagHeart height={150} width={150} />
             </div>
+
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+              Tiền : {user.money}
+            </div>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            {username}
+            </div>
+
+
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-              <p>{username}</p>
+
+              {/* <p>{username}</p> */}
+
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
               {open && (
-                <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+
+                <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleTopup}
+                  >
+                    Nạp Tiền
+                  </p>
+
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleProfile}
                   >
-                    Profile
+
+                    Thông tin Người dùng
+                  </p>
+
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleOrder}
+                  >
+                    Lịch sử mua hàng
+
                   </p>
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
@@ -178,9 +220,11 @@ const Profile = () => {
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
-          <div>
-            <img src={Logo} alt="Logo" width={150} height={150} />
+
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
+          <div className="cursor-pointer" onClick={BackMainPage}>
+            <img src={Logo} alt="" width={150} height={150} />
+
           </div>
           <div className="flex items-center gap-[15px] relative">
             <div
@@ -214,7 +258,9 @@ const Profile = () => {
   };
 
   return (
-    <div className="container mx-auto p-8">
+
+    <div className="">
+
       <div className="flex items-center justify-center mb-8">
         {renderData()}
       </div>
@@ -471,6 +517,9 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      <Footer />
+
     </div>
   );
 };
