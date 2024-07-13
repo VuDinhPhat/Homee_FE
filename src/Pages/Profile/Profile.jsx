@@ -323,7 +323,7 @@ const Profile = () => {
           </div>
         </div>
       )}
-      <div className="flex justify-center mt-20">
+      <div className="flex justify-center mt-20 mb-10">
         <div className="w-[80%]">
           <div className="bg-white rounded-lg shadow-lg p-8">
             {isEditing ? (
@@ -350,7 +350,7 @@ const Profile = () => {
                     htmlFor="firstName"
                     className="block text-lg font-medium mb-2"
                   >
-                    First Name:
+                    Họ:
                   </label>
                   <input
                     type="text"
@@ -367,7 +367,7 @@ const Profile = () => {
                     htmlFor="lastName"
                     className="block text-lg font-medium mb-2"
                   >
-                    Last Name:
+                   Tên:
                   </label>
                   <input
                     type="text"
@@ -384,7 +384,7 @@ const Profile = () => {
                     htmlFor="phone"
                     className="block text-lg font-medium mb-2"
                   >
-                    Phone:
+                    Số điện thoại:
                   </label>
                   <input
                     type="text"
@@ -401,7 +401,7 @@ const Profile = () => {
                     htmlFor="address"
                     className="block text-lg font-medium mb-2"
                   >
-                    Address:
+                    Địa chỉ:
                   </label>
                   <input
                     type="text"
@@ -418,7 +418,7 @@ const Profile = () => {
                     htmlFor="dob"
                     className="block text-lg font-medium mb-2"
                   >
-                    Date of Birth:
+                    Ngày sinh:
                   </label>
                   <input
                     type="date"
@@ -435,7 +435,7 @@ const Profile = () => {
                     htmlFor="gender"
                     className="block text-lg font-medium mb-2"
                   >
-                    Gender:
+                    Giới tính:
                   </label>
                   <select
                     className="form-control block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -445,9 +445,9 @@ const Profile = () => {
                     onChange={handleChange}
                     required
                   >
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
+                    <option value="male">Nam</option>
+                    <option value="female">Nữ</option>
+                    <option value="other">Khác</option>
                   </select>
                 </div>
                 <div className="flex justify-center mt-6">
@@ -455,49 +455,49 @@ const Profile = () => {
                     type="submit"
                     className="btn btn-primary bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
                   >
-                    Save
+                   Lưu
                   </button>
                   <button
                     type="button"
                     className="btn btn-secondary ml-4"
                     onClick={() => setIsEditing(false)}
                   >
-                    Cancel
+                    Huỷ
                   </button>
                 </div>
               </form>
             ) : (
               <div>
-                <h1 className="text-3xl font-semibold mb-16">
-                  Profile Information
+                <h1 className="text-3xl font-semibold mb-2">
+                 Thông tin người dùng
                 </h1>
                 <p>
                   <strong>Email:</strong> {formData.email}
                 </p>
                 <p>
-                  <strong>First Name:</strong> {formData.firstName}
+                  <strong>Họ:</strong> {formData.firstName}
                 </p>
                 <p>
-                  <strong>Last Name:</strong> {formData.lastName}
+                  <strong>Tên:</strong> {formData.lastName}
                 </p>
                 <p>
-                  <strong>Phone:</strong> {formData.phone}
+                  <strong>Số điện thoại:</strong> {formData.phone}
                 </p>
                 <p>
-                  <strong>Address:</strong> {formData.address}
+                  <strong>Địa chỉ:</strong> {formData.address}
                 </p>
                 <p>
-                  <strong>Date of Birth:</strong> {formData.dob}
+                  <strong>Ngày sinh:</strong> {formData.dob}
                 </p>
                 <p>
-                  <strong>Gender:</strong> {formData.gender}
+                  <strong>Giới tính:</strong> {formData.gender}
                 </p>
                 <div className="flex justify-center mt-6">
                   <button
                     className="btn btn-primary bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
                     onClick={handleEdit}
                   >
-                    Edit
+                    Chỉnh sửa
                   </button>
                 </div>
               </div>

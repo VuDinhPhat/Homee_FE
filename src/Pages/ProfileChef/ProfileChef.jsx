@@ -338,7 +338,7 @@ const ProfileChef = () => {
           </div>
         </div>
       )}
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-8 mb-10">
         <div className="w-[80%]">
           <div className="bg-white rounded-lg shadow-lg p-8">
             {isEditing ? (

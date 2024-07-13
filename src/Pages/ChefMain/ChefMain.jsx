@@ -407,7 +407,7 @@ const ChefMain = () => {
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Name
+                  Tên món ăn
                 </label>
                 <input
                   type="text"
@@ -424,7 +424,7 @@ const ChefMain = () => {
                   htmlFor="image"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Image URL
+                  Hình ảnh
                 </label>
                 <input
                   type="text"
@@ -441,7 +441,7 @@ const ChefMain = () => {
                   htmlFor="foodType"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Food Type
+                  Thể loại
                 </label>
                 <input
                   type="text"
@@ -458,7 +458,7 @@ const ChefMain = () => {
                   htmlFor="price"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Price
+                  Giá
                 </label>
                 <input
                   type="number"
@@ -475,7 +475,7 @@ const ChefMain = () => {
                   htmlFor="sellPrice"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Sell Price
+                  Giá thực
                 </label>
                 <input
                   type="number"
@@ -492,7 +492,7 @@ const ChefMain = () => {
                   htmlFor="sellCount"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Sell Count
+                  Giá giảm
                 </label>
                 <input
                   type="number"
@@ -526,7 +526,7 @@ const ChefMain = () => {
                   htmlFor="categoryId"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Category
+                  Phân loại
                 </label>
                 <select
                   id="categoryId"
@@ -535,7 +535,7 @@ const ChefMain = () => {
                   onChange={handleInputChange}
                   className="border p-2 w-full mb-2"
                 >
-                  <option value="">Select category...</option>
+                  <option value="">Chọn kiểu thức ăn</option>
                   {categories.map((category) => (
                     <option
                       key={category.categoryId}
@@ -685,7 +685,7 @@ const ChefMain = () => {
                   htmlFor="categoryId"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Category
+                  Phân loại
                 </label>
                 <select
                   id="categoryId"
@@ -694,7 +694,7 @@ const ChefMain = () => {
                   onChange={handleInputChange}
                   className="border p-2 w-full mb-2"
                 >
-                  <option value="">Select category...</option>
+                  <option value="">Chọn kiểu thức ăn</option>
                   {categories.map((category) => (
                     <option
                       key={category.categoryId}
@@ -736,22 +736,22 @@ const ChefMain = () => {
                 </div>
                 <div className="mt-4 text-left">
                   <p>
-                    <strong>Name:</strong> {food.name}
+                    <strong>Tên thức ăn:</strong> {food.name}
                   </p>
                   <p>
-                    <strong>Type:</strong> {food.foodType}
+                    <strong>Thể loại:</strong> {food.foodType}
                   </p>
                   <p>
-                    <strong>Price:</strong> {food.price}
+                    <strong>Giá:</strong> {food.price}
                   </p>
                   <p>
-                    <strong>Sell Price:</strong> {food.sellPrice}
+                    <strong>Giá thực tế:</strong> {food.sellPrice}
                   </p>
                   <p>
-                    <strong>Sell Count:</strong> {food.sellCount}
+                    <strong>Giá giảm:</strong> {food.sellCount}
                   </p>
                   <p>
-                    <strong>Status:</strong> {food.status}
+                    <strong>Trạng thái:</strong> {food.status}
                   </p>
                 </div>
                 <div className="absolute bottom-0 left-0 w-full text-center mb-1">
