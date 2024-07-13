@@ -84,14 +84,14 @@ const TopUpChef = () => {
   };
 
   const apiUser = axios.create({
-    baseURL: "https://localhost:44388/api/Chefs",
+    baseURL: "https://api.homee.id.vn/api/Chefs",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
 
   const apiTopup = axios.create({
-    baseURL: "https://localhost:44388/api/TopUpRequest",
+    baseURL: "https://api.homee.id.vn/api/TopUpRequest",
     headers: {
       Authorization: `Bearer ${getCookie("token")}`,
     },
@@ -116,6 +116,7 @@ const TopUpChef = () => {
     if (getCookie("usernamereal") !== "") {
       apiUser.get("/" + getCookie("username")).then((response) => {
         setUser(response.data.payload);
+        console.log(response.data.payload)
       });
     }
   }, []);
@@ -166,10 +167,10 @@ const TopUpChef = () => {
           <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
           
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
               Tiền : {user.money}
             </div>
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
             {username}
             </div>
 

@@ -247,7 +247,7 @@ const LoginPage = () => {
               }}
             />
           </div>
-          <div className="mb-4 w-full">
+          <div className="mb-2 w-full">
             <label className="block text-gray-600">Vai trò</label>
             <div className="flex items-center">
               <input
@@ -275,7 +275,7 @@ const LoginPage = () => {
             </div>
           </div>
 
-          <div className="flex justify-center items-center mt-4">
+          <div className="flex justify-center items-center">
             <p className="text-gray-600">
               Chưa có tài khoản?{" "}
               <span
@@ -287,7 +287,7 @@ const LoginPage = () => {
             </p>
           </div>
 
-          <div className="flex justify-center items-center mt-4">
+          <div className="flex justify-center items-center">
             <p className="text-gray-600">
               Đăng ký làm người bán hàng?{" "}
               <span

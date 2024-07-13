@@ -7,7 +7,7 @@ import hutieumuc from "../assets/hutieumuc.jpg";
 import garan from "../assets/garan.jpg";
 import Pizza from "../assets/pizza.jpg";
 import comboxao from "../assets/comboxao.jpg";
-import Giohang from"../assets/giohang.jpg";
+import Giohang from"../assets/giohang.png";
 import Footer from "../Pages/Footer/Footer";
 import Detail from "../Pages/Detail/Detail";
 import { Text } from "recharts";
@@ -221,6 +221,7 @@ const Dashboardview = () => {
     } else {
       return (
         <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
+          <title> </title>
           <div className="cursor-pointer">
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -230,7 +231,7 @@ const Dashboardview = () => {
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
               onClick={toggleCart}
             >
-              <img src={Giohang} alt="Logo" width={35} height={35} />
+              <img src={Giohang} alt="Logo" width={40} height={40} />
             </div>
             <div
               className="flex items-center gap-[10px] relative"
@@ -239,16 +240,16 @@ const Dashboardview = () => {
               <p>{username}</p>
               <div
                 onClick={handleLogIn}
-                className="cursor-pointer flex items-center justify-center relative"
+                className="cursor-pointer flex items-center justify-center relative font-bold text-lg  "
               >
                 Đăng nhập
                 <img src="" alt="" />
               </div>
               <div
                 onClick={handleRegister}
-                className="cursor-pointer flex items-center justify-center relative"
+                className="cursor-pointer flex items-center justify-center relative font-bold text-lg "
               >
-                /Đăng ký
+                / Đăng ký
                 <img src="" alt="" />
               </div>
             </div>
@@ -393,7 +394,8 @@ const Dashboardview = () => {
                 <div className="card-body">
                   <h5 className="card-title">Bếp nhà: {promo.name}</h5>
                   <p className="card-text">
-                    <span>⭐ {promo.score}</span> • {} • địa chỉ :{" "}
+                    <span>⭐ {promo.score}</span> <br/>
+                     Địa chỉ :{" "}
                     {promo.address}
                     <br />
                     {}

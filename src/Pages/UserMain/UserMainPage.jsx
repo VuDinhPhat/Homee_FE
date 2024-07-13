@@ -15,6 +15,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "../Footer/Footer";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Giohang from"../../assets/giohang.png";
 const UserMainPage = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
@@ -171,17 +172,18 @@ const UserMainPage = () => {
             <img src={Logo} alt="Logo" width={150} height={150} />
           </div>
           <div className="flex items-center gap-[15px] relative">
-            <div
+          <div
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
               onClick={toggleCart}
             >
-              <BsBagHeart height={150} width={150} />
+        
+              <img src={Giohang} alt="Logo" width={35} height={35} />
             </div>
 
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
               Tiền : {user.money}
             </div>
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
               {username}
             </div>
 
@@ -220,7 +222,7 @@ const UserMainPage = () => {
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                  Thoát
+                    Log out
                   </p>
                 </div>
               )}
@@ -234,7 +236,6 @@ const UserMainPage = () => {
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
-          <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
             <div
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
@@ -252,14 +253,12 @@ const UserMainPage = () => {
                 className="cursor-pointer flex items-center justify-center relative"
               >
                 Đăng nhập
-                <img src="" alt="" />
               </div>
               <div
                 onClick={handleRegister}
                 className="cursor-pointer flex items-center justify-center relative"
               >
                 /Đăng ký
-                <img src="" alt="" />
               </div>
             </div>
           </div>
@@ -462,9 +461,7 @@ const UserMainPage = () => {
           Chấm Góc Đa – Vũ Thạnh cho bữa tối! Hãy để chúng tôi xua tan cơn đói
           của bạn nhờ một loạt đối tác bán đồ ăn ở Việt Nam.
         </p>
-        <button className="btn btn-outline-secondary btn-block">
-          Read More
-        </button>
+       
       </div>
       <Footer />
     </div>

@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 import Footer from "../Footer/Footer";
 import { FaStar, FaRegCalendarAlt } from "react-icons/fa";
 import { CiClock1 } from "react-icons/ci";
-
+import Giohang from"../../assets/giohang.png";
 const Detail = () => {
   const [username, setUsername] = useState("");
   const [products, setProducts] = useState([]);
@@ -210,17 +210,18 @@ const Detail = () => {
             <img src={Logo} alt="Logo" width={150} height={150} />
           </div>
           <div className="flex items-center gap-[15px] relative">
-            <div
+          <div
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
               onClick={toggleCart}
             >
-              <BsBagHeart height={150} width={150} />
+        
+              <img src={Giohang} alt="Logo" width={35} height={35} />
             </div>
 
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
               Tiền : {user.money}
             </div>
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
               {username}
             </div>
 
@@ -259,7 +260,7 @@ const Detail = () => {
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                    Log out
+                   Thoát
                   </p>
                 </div>
               )}
@@ -275,12 +276,13 @@ const Detail = () => {
         </div>
         <div className="flex items-center rounded-[5px]"></div>
         <div className="flex items-center gap-[15px] relative">
-          <div
-            className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
-            onClick={toggleCart}
-          >
-            <BsBagHeart height={150} width={150} />
-          </div>
+        <div
+              className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
+              onClick={toggleCart}
+            >
+        
+              <img src={Giohang} alt="Logo" width={35} height={35} />
+            </div>
           <div
             className="flex items-center gap-[10px] relative"
             onClick={showDropDown}
@@ -288,14 +290,14 @@ const Detail = () => {
             <p>{username}</p>
             <div
               onClick={handleLogIn}
-              className="cursor-pointer flex items-center justify-center relative"
+              className="cursor-pointer flex items-center justify-center relative font-bold text-lg"
             >
               Đăng nhập
               <img src="" alt="" />
             </div>
             <div
               onClick={handleRegister}
-              className="cursor-pointer flex items-center justify-center relative"
+              className="cursor-pointer flex items-center justify-center relative font-bold text-lg"
             >
               /Đăng ký
               <img src="" alt="" />

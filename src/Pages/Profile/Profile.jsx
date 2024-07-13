@@ -4,7 +4,7 @@ import { BsBagHeart } from "react-icons/bs";
 import Logo from "../../assets/logocochu.png";
 import axios from "axios";
 import Cookies from "js-cookie";
-
+import Giohang from"../../assets/giohang.png";
 import Footer from "../Footer/Footer";
 
 const Profile = () => {
@@ -153,17 +153,18 @@ const Profile = () => {
             <img src={Logo} alt="Logo" width={150} height={150} />
           </div>
           <div className="flex items-center gap-[15px] relative">
-            <div
+          <div
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
               onClick={toggleCart}
             >
-              <BsBagHeart height={150} width={150} />
+        
+              <img src={Giohang} alt="Logo" width={35} height={35} />
             </div>
 
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
               Tiền : {user.money}
             </div>
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
               {username}
             </div>
 
@@ -202,7 +203,7 @@ const Profile = () => {
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                    Log out
+                    Thoát
                   </p>
                 </div>
               )}

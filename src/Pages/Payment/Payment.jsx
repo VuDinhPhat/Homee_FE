@@ -2,9 +2,10 @@ import "./Payment.css"; // Import your CSS file for styling
 import apiUserInstance from "../../service/api-user";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState, useRef } from "react";
-
+import Giohang from"../../assets/giohang.png";
+import Footer from "../Footer/Footer";
 import Logo from "../../assets/logo.png";
-
+import { BsBagHeart } from "react-icons/bs";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -113,13 +114,23 @@ const Payment = () => {
     navigate("/register");
   };
 
-  const BackMainPage = async () => {
-    navigate("/");
+  const handleProfile = () => navigate("/profile");
+  const handleOrder = async (data) => {
+    navigate("/order");
+  };
+  const handleTopup = async (data) => {
+    navigate("/topup");
   };
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
+
+  const BackMainPage = () => navigate("/usermain");
+  const toggleCart = () => setIsOpen(!isOpen);
+
+
+
 
   const handleSubmit = async () => {
     if (formData.detailedAddress !== undefined) {
@@ -290,6 +301,13 @@ const Payment = () => {
     }
   };
 
+
+
+
+
+
+
+
   function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
@@ -373,36 +391,65 @@ const Payment = () => {
       });
   }, []); // Empty dependency array ensures this effect runs only once
 
-  const renderData = () => {
+  let renderData = () => {
     if (getCookie("username") !== "") {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
-            <img src={Logo} alt="" width={150} height={150} />
+            <img src={Logo} alt="Logo" width={150} height={150} />
           </div>
-          <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-              Money : {user.money}
+          <div
+              className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
+              onClick={toggleCart}
+            >
+        
+              <img src={Giohang} alt="Logo" width={35} height={35} />
             </div>
+
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
+              Tiền : {user.money}
+            </div>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
+              {username}
+            </div>
+
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-              <p>{username}</p>
+              {/* <p>{username}</p> */}
+
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
               {open && (
-                <div className="bg-white border h-[120px] w-[150px] absolute bottom-[-135px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
-                  <p className="cursor-pointer hover:text-[blue] font-semibold">
-                    Profile
+                <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleTopup}
+                  >
+                    Nạp Tiền
+                  </p>
+
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleProfile}
+                  >
+                    Thông tin Người dùng
+                  </p>
+
+                  <p
+                    className="cursor-pointer hover:text-[blue] font-semibold"
+                    onClick={handleOrder}
+                  >
+                    Lịch sử mua hàng
                   </p>
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                    Log out
+                    Thoát
                   </p>
                 </div>
               )}
@@ -412,14 +459,16 @@ const Payment = () => {
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
-          <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-              Money : {user.money}
+            <div
+              className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
+              onClick={toggleCart}
+            >
+              <BsBagHeart height={150} width={150} />
             </div>
             <div
               className="flex items-center gap-[10px] relative"
@@ -431,14 +480,12 @@ const Payment = () => {
                 className="cursor-pointer flex items-center justify-center relative"
               >
                 Đăng nhập
-                <img src="" alt="" />
               </div>
               <div
                 onClick={handleRegister}
                 className="cursor-pointer flex items-center justify-center relative"
               >
                 /Đăng ký
-                <img src="" alt="" />
               </div>
             </div>
           </div>
@@ -448,7 +495,7 @@ const Payment = () => {
   };
 
   return (
-    <div className="relative pb-[100px]">
+    <div className="relative ">
       <div className="flex items-center justify-center">{renderData()}</div>
 
       <div className="container">
@@ -458,7 +505,7 @@ const Payment = () => {
               <div className="card-body">
                 <h1 className="card-title">Giao đến</h1>
                 <form>
-                  <div className="form-group">
+                  {/* <div className="form-group">
                     <label htmlFor="deliveryTime">Delivery arrival time:</label>
                     <input
                       type="text"
@@ -469,15 +516,15 @@ const Payment = () => {
                       onChange={handleChange}
                       readOnly
                     />
-                  </div>
+                  </div> */}
                   <div className="row">
-                    <div className="col-md-6">
+                    {/* <div className="col-md-6">
                       <div className="form-group">
                         <label>Map:</label>
                         <div className="map-placeholder">[Map]</div>
                       </div>
-                    </div>
-                    <div className="col-md-6">
+                    </div> */}
+                    <div className="col">
                       <div className="form-group">
                         {listUser.id ? (
                           <div key={listUser.id}>
@@ -627,6 +674,7 @@ const Payment = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };

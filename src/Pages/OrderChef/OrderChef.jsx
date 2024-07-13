@@ -6,7 +6,7 @@ import Logo from "../../assets/logocochu.png";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Footer from "../Footer/Footer";
-
+import Giohang from"../../assets/giohang.png";
 const OrderChef = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -272,10 +272,10 @@ const OrderChef = () => {
           </div>
           <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
               Tiền : {user.money}
             </div>
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
               {username}
             </div>
 

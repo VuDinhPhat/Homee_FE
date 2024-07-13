@@ -165,7 +165,7 @@ const RegisterPage = () => {
         </div>
         <div className="mb-4 w-full">
           <label htmlFor="address" className="block text-gray-600">
-            địa chỉ
+            Địa chỉ
           </label>
           <input
             type="text"

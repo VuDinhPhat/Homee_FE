@@ -5,7 +5,7 @@ import Logo from "../../assets/logocochu.png";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Footer from "../Footer/Footer";
-
+import Giohang from"../../assets/giohang.png";
 const Order = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -284,7 +284,7 @@ const Order = () => {
 
   const handleLogIn = () => navigate("/login");
   const handleRegister = () => navigate("/register");
-  const BackMainPage = () => navigate("/");
+  const BackMainPage = () => navigate("/usermain");
   const showDropDown = () => setOpen(!open);
   const handleLogout = () => {
     setCookie("username", "", 0);
@@ -298,30 +298,32 @@ const Order = () => {
   let renderData = () => {
     if (getCookie("username") !== "") {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px] ">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
-            <img src={Logo} alt="" width={150} height={150} />
+            <img src={Logo} alt="Logo" width={150} height={150} />
           </div>
-          <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
-            <div
+          <div
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
               onClick={toggleCart}
             >
-              <BsBagHeart height={150} width={150} />
+        
+              <img src={Giohang} alt="Logo" width={35} height={35} />
             </div>
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-              Số dư : {user.money}
+
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
+              Tiền : {user.money}
             </div>
-            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] mt-3">
-            <p>{username}</p>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] font-bold text-lg">
+              {username}
             </div>
 
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-          
+              {/* <p>{username}</p> */}
+
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
@@ -331,27 +333,27 @@ const Order = () => {
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleTopup}
                   >
-                    Nạp tiền
+                    Nạp Tiền
                   </p>
+
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleProfile}
                   >
-                   Thông tin người dùng
+                    Thông tin Người dùng
                   </p>
 
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleOrder}
                   >
-                   Lịch sử mua hàng
+                    Lịch sử mua hàng
                   </p>
-
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                   Thoát
+                  Thoát
                   </p>
                 </div>
               )}
@@ -365,7 +367,6 @@ const Order = () => {
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
-          <div className="flex items-center rounded-[5px]"></div>
           <div className="flex items-center gap-[15px] relative">
             <div
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
@@ -383,14 +384,12 @@ const Order = () => {
                 className="cursor-pointer flex items-center justify-center relative"
               >
                 Đăng nhập
-                <img src="" alt="" />
               </div>
               <div
                 onClick={handleRegister}
                 className="cursor-pointer flex items-center justify-center relative"
               >
                 /Đăng ký
-                <img src="" alt="" />
               </div>
             </div>
           </div>
