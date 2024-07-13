@@ -174,7 +174,7 @@ const Detail = () => {
   useEffect(() => {
     setUsername(getCookie("usernamereal"));
 
-    apiFood.get("?pageIndex=1&pageSize=100").then(async (response) => {
+    apiFood.get("?pageIndex=1&pageSize=1000").then(async (response) => {
       console.log(response.data.payload);
       let tmp = [];
       response.data.payload.map((item, index) => {
@@ -398,7 +398,6 @@ const Detail = () => {
       <Container>
         <div className="flex items-center justify-between mt-5">
           <div>
-           
             <h1 className="font-bold">Bếp nhà: {chef.name}</h1>
 
             <div className="flex items-center">
@@ -413,7 +412,6 @@ const Detail = () => {
             <p>Hôm nay mở cửa: {chef.hours} tiếng</p>
             <p>Tận hưởng ưu đãi</p>
 
-      
             <div className="flex mt-5">
               <button
                 className="border border-green-500 h-[50px] w-[100%] flex items-center justify-center mr-4 bg-customColor "
@@ -421,20 +419,25 @@ const Detail = () => {
               >
                 <div className="flex items-center ">
                   <FaRegCalendarAlt />
-                  <p className="ml-2 mt-3 text-xl font-bold text-white ">Ưu đãi hôm nay</p>
+                  <p className="ml-2 mt-3 text-xl font-bold text-white ">
+                    Ưu đãi hôm nay
+                  </p>
                 </div>
               </button>
-          
             </div>
-            
+
             {/* Phần "Ưu đãi hôm nay" */}
             <div ref={todayPromotionRef}>
-            <h1 className="mt-4">Ưu đãi hôm nay</h1>
+              <h1 className="mt-4">Ưu đãi hôm nay</h1>
               <Row>
                 {foodList.map((product) => (
                   <Col key={product.id} sm={12} md={6} lg={4} className="mb-4">
                     <Card>
-                    <Card.Img variant="top" src={product.image} style={{ width: '250px', height: '250px' }} />
+                      <Card.Img
+                        variant="top"
+                        src={product.image}
+                        style={{ width: "250px", height: "250px" }}
+                      />
 
                       <Card.Body>
                         <Card.Title>{product.name}</Card.Title>
@@ -455,9 +458,8 @@ const Detail = () => {
           </div>
         </div>
       </Container>
-      <Footer/>
+      <Footer />
     </div>
-    
   );
 };
 

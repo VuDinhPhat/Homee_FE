@@ -58,7 +58,7 @@ const OrderChef = () => {
       setUser(response.data.payload);
       // Fetch orders for the logged-in user
       axios
-        .get("https://api.homee.id.vn/api/Orders", {
+        .get("https://api.homee.id.vn/api/Orders?pageIndex=1&pageSize=1000", {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
           },
@@ -77,7 +77,6 @@ const OrderChef = () => {
         .catch((error) => {
           console.error("Error fetching orders:", error);
         });
-       
     });
   }, []);
 
@@ -135,7 +134,7 @@ const OrderChef = () => {
     try {
       // Lấy chi tiết đơn hàng từ API /OrderDetails
       const orderDetailResponse = await axios.get(
-        `https://api.homee.id.vn/api/OrderDetails`,
+        `https://api.homee.id.vn/api/OrderDetails?pageIndex=1&pageSize=1000`,
         {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,

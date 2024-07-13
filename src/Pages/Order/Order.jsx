@@ -215,7 +215,7 @@ const Order = () => {
     try {
       // Lấy chi tiết đơn hàng từ API /OrderDetails
       const orderDetailResponse = await axios.get(
-        `https://api.homee.id.vn/api/OrderDetails`,
+        `https://api.homee.id.vn/api/OrderDetails?pageIndex=1&pageSize=1000`,
         {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
@@ -224,9 +224,10 @@ const Order = () => {
       );
 
       // Lọc chi tiết đơn hàng theo orderId
-      const userOrdersDetail = orderDetailResponse.data.payload.filter(
-        (order) => order.orderId === orderId
+      const userOrdersDetail = await orderDetailResponse.data.payload.filter(
+        (order) => order.orderId == orderId
       );
+      console.log(orderDetailResponse.data.payload);
 
       // Lấy thông tin status từ đơn hàng chính từ API /Orders
       const orderResponse = await axios.get(
@@ -259,6 +260,7 @@ const Order = () => {
       );
 
       // Tạo một map để truy cập nhanh tên món ăn bằng foodId
+
       const foodMap = {};
       foodsResponse.data.payload.forEach((food) => {
         foodMap[food.id] = food.name;
@@ -271,7 +273,7 @@ const Order = () => {
         foodName: foodMap[order.foodId] || "Unknown Food", // Tên món ăn, mặc định nếu không tìm thấy
         status: orderStatus, // Status từ đơn hàng chính
       }));
-
+      console.log(userOrdersDetail);
       // Cập nhật state để hiển thị chi tiết đơn hàng với tên món ăn và status
       setSelectedOrderDetails(ordersWithFoodNamesAndStatus);
       setOrderDetailVisible(true); // Hiển thị modal chi tiết đơn hàng
