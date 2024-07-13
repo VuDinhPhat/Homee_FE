@@ -220,7 +220,7 @@ const UserMainPage = () => {
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                    Log out
+                  Thoát
                   </p>
                 </div>
               )}
@@ -230,7 +230,7 @@ const UserMainPage = () => {
       );
     } else {
       return (
-        <div className="flex items-center justify-between h-[150px] w-[70%] shadow-lg px-[25px]">
+        <div className="flex items-center justify-between h-[150px] w-[100%] shadow-lg px-[150px]">
           <div className="cursor-pointer" onClick={BackMainPage}>
             <img src={Logo} alt="" width={150} height={150} />
           </div>
@@ -404,7 +404,8 @@ const UserMainPage = () => {
                 <div className="card-body">
                   <h5 className="card-title">Bếp nhà: {promo.name}</h5>
                   <p className="card-text">
-                    <span>⭐ {promo.score}</span> • {} • địa chỉ :{" "}
+                    <span>⭐ {promo.score}</span><br/> 
+                    {}Địa chỉ :{" "}
                     {promo.address}
                     <br />
                     {}

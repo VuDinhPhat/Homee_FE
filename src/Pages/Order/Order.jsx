@@ -311,44 +311,47 @@ const Order = () => {
               <BsBagHeart height={150} width={150} />
             </div>
             <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]">
-              Money : {user.money}
+              Số dư : {user.money}
+            </div>
+            <div className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px] mt-3">
+            <p>{username}</p>
             </div>
 
             <div
               className="flex items-center gap-[10px] relative"
               onClick={showDropDown}
             >
-              <p>{username}</p>
+          
               <div className="w-[40px] h-[40px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative">
                 <img src="" alt="" />
               </div>
               {open && (
-                <div className="bg-white border h-[160px] w-[150px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
+                <div className="bg-white border h-[160px] w-[200px] absolute bottom-[-165px] z-20 right-0 pt-[15px] pl-[15px] space-y-[10px]">
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleTopup}
                   >
-                    Top up money
+                    Nạp tiền
                   </p>
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleProfile}
                   >
-                    Profile
+                   Thông tin người dùng
                   </p>
 
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleOrder}
                   >
-                    View Order
+                   Lịch sử mua hàng
                   </p>
 
                   <p
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                    Log out
+                   Thoát
                   </p>
                 </div>
               )}
@@ -475,18 +478,18 @@ const Order = () => {
 
       <div className="flex items-center justify-center mb-10">
         <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-[80%]">
-          <h1 className="text-2xl font-semibold mb-4">Orders</h1>
+          <h1 className="text-2xl font-semibold mb-4">Lịch sử mua hàng</h1>
           <table className="min-w-full">
             <thead>
               <tr>
-                <th className="py-2 px-4 border">Chef Name</th>
-                <th className="py-2 px-4 border">Delivery Address</th>
-                <th className="py-2 px-4 border">Order Price</th>
-                <th className="py-2 px-4 border">Quantity</th>
-                <th className="py-2 px-4 border">User Name</th>
-                <th className="py-2 px-4 border">Status</th>
-                <th className="py-2 px-4 border">Order Date</th>
-                <th className="py-2 px-4 border">Actions</th>{" "}
+                <th className="py-2 px-4 border">Tên đầu bếp</th>
+                <th className="py-2 px-4 border">Địa chỉ giao hàng</th>
+                <th className="py-2 px-4 border">Giá</th>
+                <th className="py-2 px-4 border">Số lượng</th>
+                <th className="py-2 px-4 border">Người đặt</th>
+                <th className="py-2 px-4 border">Trạng thái</th>
+                <th className="py-2 px-4 border">Ngày đặt</th>
+                <th className="py-2 px-4 border">Hành động</th>
                 {/* Added Actions column */}
               </tr>
             </thead>
@@ -496,7 +499,6 @@ const Order = () => {
                   <td className="py-2 px-4 border-b text-center">
                     {chefs[order.chefId] || "Loading..."}
                   </td>
-
                   <td className="py-2 px-4 border">{order.deliveryAddress}</td>
                   <td className="py-2 px-4 border">{order.orderPrice}</td>
                   <td className="py-2 px-4 border">{order.quantity}</td>
@@ -508,7 +510,7 @@ const Order = () => {
                       className="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-md text-xs"
                       onClick={() => viewOrderDetail(order.id)}
                     >
-                      View Detail
+                     Xem chi tiết
                     </button>
                   </td>
 
@@ -517,7 +519,7 @@ const Order = () => {
                     <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-40">
                       <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:max-w-[80%]">
                         <h1 className="text-2xl font-semibold mb-4">
-                          Order Details
+                         Chi tiết đơn hàng
                         </h1>
                         <table className="min-w-full">
                           <thead>
@@ -552,7 +554,7 @@ const Order = () => {
                             className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
                             onClick={() => setOrderDetailVisible(false)}
                           >
-                            Close
+                           Đóng
                           </button>
                         </div>
                       </div>
