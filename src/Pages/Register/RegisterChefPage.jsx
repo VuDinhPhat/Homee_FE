@@ -41,41 +41,52 @@ const RegisterChefPage = () => {
   });
 
   const handleRegister = async () => {
-    if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match!");
-      return;
-    }
-
-    try {
-      const response = await apiChef.post("/register", {
-        id: 0,
-        name: firstname,
-        address: address,
-        creatorId: 0,
-        profilePicture: "string",
-        score: 0,
-        hours: 0,
-        status: "true",
-        email: email,
-        password: password,
-        phone: phone,
-        money: 0,
-        banking: bankingId,
-      });
-
-      if (response.data.status) {
-        // Đăng ký thành công, điều hướng tới trang đăng nhập
-        alert("Bạn đã đăng ký thành công");
-        navigate("/login");
+    if (
+      firstname.trim() !== "" &&
+      email.trim() !== "" &&
+      password.trim() !== "" &&
+      phone.trim() !== "" &&
+      address.trim() !== "" &&
+      bankingId.trim() !== "" &&
+      confirmPassword.trim() !== ""
+    ) {
+      if (password !== confirmPassword) {
+        setErrorMessage("Passwords do not match!");
       } else {
-        // Xử lý lỗi đăng ký không thành công
-        setErrorMessage(
-          response.data.message || "Registration failed. Please try again."
-        );
+        try {
+          const response = await apiChef.post("/register", {
+            id: 0,
+            name: firstname,
+            address: address,
+            creatorId: 0,
+            profilePicture: "string",
+            score: 0,
+            hours: 0,
+            status: "true",
+            email: email,
+            password: password,
+            phone: phone,
+            money: 0,
+            banking: bankingId,
+          });
+
+          if (response.data.status) {
+            // Đăng ký thành công, điều hướng tới trang đăng nhập
+            alert("Bạn đã đăng ký thành công");
+            navigate("/login");
+          } else {
+            // Xử lý lỗi đăng ký không thành công
+            setErrorMessage(
+              response.data.message || "Registration failed. Please try again."
+            );
+          }
+        } catch (error) {
+          console.error("Registration failed", error);
+          setErrorMessage("Registration failed. Please try again.");
+        }
       }
-    } catch (error) {
-      console.error("Registration failed", error);
-      setErrorMessage("Registration failed. Please try again.");
+    } else {
+      setErrorMessage("Bạn điền thiếu thông tin!");
     }
   };
 

@@ -47,64 +47,55 @@ const RegisterPage = () => {
   });
 
   const handleRegister = async () => {
-    if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match!");
-      return;
-    }
-
-    try {
-      // const formData = new FormData();
-      // formData.append("id", "0"); // Assuming 'id' is a string field in your backend
-      // formData.append("email", email);
-      // formData.append("firstName", firstname);
-      // formData.append("lastName", lastname);
-      // formData.append("password", password);
-      // formData.append("phone", phone);
-      // formData.append("address", address);
-      // formData.append("dob", dob);
-      // formData.append("gender", gender);
-
-      // formData.append("avatar", "string"); // Assuming 'avatar' is a string field
-      // formData.append("roleId", "1"); // Assuming 'roleId' is a string field
-      // formData.append("status", "true"); // Assuming 'status' is a string field
-      // formData.append("money", "0"); // Assuming 'money' is a string field
-      // formData.append("discount", "0"); // Assuming 'discount' is a string field
-
-      // const response = await axios.post(
-      //   "https://206.189.95.158/api/Users",
-      //   formData
-      // );
-
-      const response = await apiUser.post("/Register", {
-        id: 0,
-        email: email,
-        firstName: firstname,
-        lastName: lastname,
-        password: password,
-        phone: phone,
-        address: address,
-        dob: dob,
-        gender: gender,
-        avatar: "string",
-        roleId: 1,
-        status: "true",
-        money: 0,
-        discount: 0,
-      });
-
-      if (response.data.status) {
-        // Đăng ký thành công, điều hướng tới trang đăng nhập
-        alert("Bạn đã đăng ký thành công");
-        navigate("/login");
+    if (
+      firstname.trim() !== "" &&
+      lastname.trim() !== "" &&
+      email.trim() !== "" &&
+      password.trim() !== "" &&
+      phone.trim() !== "" &&
+      address.trim() !== "" &&
+      dob.trim() !== "" &&
+      gender.trim() !== "" &&
+      confirmPassword.trim() !== ""
+    ) {
+      if (password !== confirmPassword) {
+        setErrorMessage("Mật khẩu không trùng với mật khẩu xác nhận !");
       } else {
-        // Xử lý lỗi đăng ký không thành công
-        setErrorMessage(
-          response.data.message || "Registration failed. Please try again."
-        );
+        try {
+          const response = await apiUser.post("/Register", {
+            id: 0,
+            email: email,
+            firstName: firstname,
+            lastName: lastname,
+            password: password,
+            phone: phone,
+            address: address,
+            dob: dob,
+            gender: gender,
+            avatar: "string",
+            roleId: 1,
+            status: "true",
+            money: 0,
+            discount: 0,
+          });
+
+          if (response.data.status) {
+            // Đăng ký thành công, điều hướng tới trang đăng nhập
+            alert("Bạn đã đăng ký thành công");
+            navigate("/login");
+          } else {
+            // Xử lý lỗi đăng ký không thành công
+            setErrorMessage(
+              response.data.message || "Registration failed. Please try again."
+            );
+          }
+        } catch (error) {
+          console.error("Registration failed", error);
+          setErrorMessage("Registration failed. Please try again.");
+        }
       }
-    } catch (error) {
-      console.error("Registration failed", error);
-      setErrorMessage("Registration failed. Please try again.");
+    } else {
+      setErrorMessage("Bạn điền thiếu thông tin!");
     }
   };
 
