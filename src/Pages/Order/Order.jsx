@@ -5,7 +5,7 @@ import Logo from "../../assets/logocochu.png";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Footer from "../Footer/Footer";
-import Giohang from"../../assets/giohang.png";
+import Giohang from "../../assets/giohang.png";
 const Order = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -303,11 +303,10 @@ const Order = () => {
             <img src={Logo} alt="Logo" width={150} height={150} />
           </div>
           <div className="flex items-center gap-[15px] relative">
-          <div
+            <div
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
               onClick={toggleCart}
             >
-        
               <img src={Giohang} alt="Logo" width={35} height={35} />
             </div>
 
@@ -353,7 +352,7 @@ const Order = () => {
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                  Thoát
+                    Thoát
                   </p>
                 </div>
               )}
@@ -509,7 +508,7 @@ const Order = () => {
                       className="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-md text-xs"
                       onClick={() => viewOrderDetail(order.id)}
                     >
-                     Xem chi tiết
+                      Xem chi tiết
                     </button>
                   </td>
 
@@ -518,7 +517,7 @@ const Order = () => {
                     <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-40">
                       <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:max-w-[80%]">
                         <h1 className="text-2xl font-semibold mb-4">
-                         Chi tiết đơn hàng
+                          Chi tiết đơn hàng
                         </h1>
                         <table className="min-w-full">
                           <thead>
@@ -553,7 +552,7 @@ const Order = () => {
                             className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
                             onClick={() => setOrderDetailVisible(false)}
                           >
-                           Đóng
+                            Đóng
                           </button>
                         </div>
                       </div>
