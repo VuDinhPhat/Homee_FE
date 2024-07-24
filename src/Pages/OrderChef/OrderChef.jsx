@@ -362,7 +362,7 @@ const OrderChef = () => {
   };
   const renderOrderTable = (orders, status) => (
     <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-[70%] mb-8  pb-[20px] mt-[20px]">
-      <h1 className="text-2xl font-semibold mb-4">{status} Trạng thái</h1>
+      <h1 className="text-2xl font-semibold mb-4">Trạng thái: {status} </h1>
       <table className="min-w-full">
         <thead>
           <tr>
@@ -377,61 +377,78 @@ const OrderChef = () => {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => (
-            <tr key={order.id}>
-              <td className="py-2 px-4 border-b text-center">
-                {chefs[order.chefId] || "Loading..."}
-              </td>
-              <td className="py-2 px-4 border">{order.deliveryAddress}</td>
-              <td className="py-2 px-4 border">{order.orderPrice}</td>
-              <td className="py-2 px-4 border">{order.quantity}</td>
-              <td className="py-2 px-4 border">{users[order.userId]}</td>
-              <td className="py-2 px-4 border">{order.status}</td>
-              <td className="py-2 px-4 border">{order.orderDate}</td>
-              <td className="py-2 px-4 border">
-                {status === "Đang chờ" ? (
-                  <>
-                    <button
-                      className="bg-green-500 hover:bg-green-700 text-white px-2 py-1 rounded-md text-xs mr-2"
-                      onClick={() =>
-                        updateOrderStatus(order.id, "Đang chuẩn bị")
-                      }
-                    >
-                      Đang chuẩn bị
-                    </button>
-                    <button
-                      className="bg-yellow-500 hover:bg-red-700 text-white px-2 py-1 rounded-md text-xs mr-2"
-                      onClick={() => updateOrderStatus(order.id, "Đã giao")}
-                    >
-                      Đã giao
-                    </button>
-
-                    <button
-                      className="bg-red-500 hover:bg--700 text-white px-2 py-1 rounded-md text-xs mr-2"
-                      onClick={() => updateOrderStatus(order.id, "Đã huỷ")}
-                    >
-                      Đã huỷ
-                    </button>
-
-                    <button
-                      className="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-md text-xs"
-                      onClick={() => viewOrderDetail(order.id)}
-                    >
-                      Xem chi tiết
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-md text-xs"
-                    onClick={() => viewOrderDetail(order.id)}
-                  >
-                    Xem chi tiết
-                  </button>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
+  {orders.map((order) => (
+    <tr key={order.id}>
+      <td className="py-2 px-4 border-b text-center">
+        {chefs[order.chefId] || "Loading..."}
+      </td>
+      <td className="py-2 px-4 border">{order.deliveryAddress}</td>
+      <td className="py-2 px-4 border">{order.orderPrice}</td>
+      <td className="py-2 px-4 border">{order.quantity}</td>
+      <td className="py-2 px-4 border">{users[order.userId]}</td>
+      <td className="py-2 px-4 border">{order.status}</td>
+      <td className="py-2 px-4 border">{order.orderDate}</td>
+      <td className="py-2 px-4 border">
+        {status === "Đang chờ" ? (
+          <>
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white px-2 py-1 rounded-md text-xs mr-2"
+              onClick={() => updateOrderStatus(order.id, "Đang chuẩn bị")}
+            >
+              Đang chuẩn bị
+            </button>
+            <button
+              className="bg-yellow-500 hover:bg-yellow-700 text-white px-2 py-1 rounded-md text-xs mr-2"
+              onClick={() => updateOrderStatus(order.id, "Đã giao")}
+            >
+              Đã giao
+            </button>
+            <button
+              className="bg-red-500 hover:bg-red-700 text-white px-2 py-1 rounded-md text-xs mr-2"
+              onClick={() => updateOrderStatus(order.id, "Đã huỷ")}
+            >
+              Đã huỷ
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-md text-xs"
+              onClick={() => viewOrderDetail(order.id)}
+            >
+              Xem chi tiết
+            </button>
+          </>
+        ) : status === "Đang chuẩn bị" ? (
+          <>
+            <button
+              className="bg-yellow-500 hover:bg-yellow-700 text-white px-2 py-1 rounded-md text-xs mr-2"
+              onClick={() => updateOrderStatus(order.id, "Đã giao")}
+            >
+              Đã giao
+            </button>
+            <button
+              className="bg-red-500 hover:bg-red-700 text-white px-2 py-1 rounded-md text-xs mr-2"
+              onClick={() => updateOrderStatus(order.id, "Đã huỷ")}
+            >
+              Đã huỷ
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-md text-xs"
+              onClick={() => viewOrderDetail(order.id)}
+            >
+              Xem chi tiết
+            </button>
+          </>
+        ) : (
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-md text-xs"
+            onClick={() => viewOrderDetail(order.id)}
+          >
+            Xem chi tiết
+          </button>
+        )}
+      </td>
+    </tr>
+  ))}
+</tbody>
       </table>
 
       {/* Modal for Order Details */}
