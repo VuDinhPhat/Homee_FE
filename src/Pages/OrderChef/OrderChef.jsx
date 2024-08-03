@@ -66,10 +66,9 @@ const OrderChef = () => {
         .then((orderResponse) => {
           // Filter orders based on user ID
           const userOrders = orderResponse.data.payload.filter(
-            (order) => order.chefIdId === response.data.payload.chefId
+            (order) => order.chefId === response.data.payload.id
           );
           setOrders(userOrders);
-          console.log(userOrders);
           // Fetch chef names for orders
           fetchChefNames(userOrders);
           fetchUserNames(userOrders);
@@ -397,12 +396,7 @@ const OrderChef = () => {
             >
               Đang chuẩn bị
             </button>
-            <button
-              className="bg-yellow-500 hover:bg-yellow-700 text-white px-2 py-1 rounded-md text-xs mr-2"
-              onClick={() => updateOrderStatus(order.id, "Đã giao")}
-            >
-              Đã giao
-            </button>
+      
             <button
               className="bg-red-500 hover:bg-red-700 text-white px-2 py-1 rounded-md text-xs mr-2"
               onClick={() => updateOrderStatus(order.id, "Đã huỷ")}

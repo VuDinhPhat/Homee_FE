@@ -41,7 +41,7 @@ const LoginPage = () => {
       if (userrole !== "" && userrole == 1) {
         navigate("/usermain");
       } else if (userrole !== "" && userrole == 2) {
-        navigate("/adminmain");
+        navigate("/dashboard");
       }
       navigate("/chefmain");
     }
