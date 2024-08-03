@@ -83,6 +83,7 @@ const ProfileChef = () => {
         banking: response.data.payload.banking,
         password: response.data.payload.password,
         status: response.data.payload.status,
+        profilePicture: response.data.payload.profilePicture
       });
     });
   }, []);
@@ -200,7 +201,7 @@ const ProfileChef = () => {
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleOrder}
                   >
-                    Lịch sử mua hàng
+                    Quản lý đơn hàng
                   </p>
 
                   <p
@@ -369,6 +370,24 @@ const ProfileChef = () => {
                     required
                   />
                 </div>
+
+                <div className="form-group">
+                  <label
+                    htmlFor="gender"
+                    className="block text-lg font-medium mb-2"
+                  >
+                    Ảnh:
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    id="profilePicture"
+                    name="profilePicture"
+                    value={formData.profilePicture}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
                 <div className="form-group">
                   <label
                     htmlFor="gender"
@@ -425,8 +444,12 @@ const ProfileChef = () => {
                 <p>
                   <strong>Tiền:</strong> {formData.money}
                 </p>
+               
                 <p>
                   <strong>Ngân hàng:</strong> {formData.banking}
+                </p>
+                <p>
+                  <strong>Ảnh:</strong> {formData.profilePicture}
                 </p>
                 <p>
                   <strong>Trạng thái:</strong> {formData.status}

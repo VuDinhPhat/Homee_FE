@@ -254,7 +254,7 @@ const ChefMain = () => {
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleOrder}
                   >
-                    Lịch sử mua hàng
+                    Quản lý đơn hàng
                   </p>
 
                   <p

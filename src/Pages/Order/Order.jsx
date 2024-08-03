@@ -82,7 +82,7 @@ const Order = () => {
 
       // Fetch orders for the logged-in user
       axios
-        .get("https://api.homee.id.vn/api/Orders", {
+        .get("https://api.homee.id.vn/api/Orders?pageIndex=1&pageSize=1000", {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
           },
@@ -251,7 +251,7 @@ const Order = () => {
 
       // Lấy danh sách món ăn từ API /Foods/by-chef
       const foodsResponse = await axios.get(
-        `https://api.homee.id.vn/api/Foods/by-chef?chefId=${chefId}`,
+        `https://api.homee.id.vn/api/Foods?pageIndex=1&pageSize=1000`,
         {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
