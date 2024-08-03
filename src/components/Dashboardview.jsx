@@ -7,7 +7,7 @@ import hutieumuc from "../assets/hutieumuc.jpg";
 import garan from "../assets/garan.jpg";
 import Pizza from "../assets/pizza.jpg";
 import comboxao from "../assets/comboxao.jpg";
-import Giohang from"../assets/giohang.png";
+import Giohang from "../assets/giohang.png";
 import Footer from "../Pages/Footer/Footer";
 import Detail from "../Pages/Detail/Detail";
 import { Text } from "recharts";
@@ -164,7 +164,6 @@ const Dashboardview = () => {
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
               onClick={toggleCart}
             >
-        
               <img src={Giohang} alt="Logo" width={35} height={35} />
             </div>
 
@@ -210,7 +209,7 @@ const Dashboardview = () => {
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleLogout}
                   >
-                  Thoát
+                    Thoát
                   </p>
                 </div>
               )}
@@ -394,9 +393,8 @@ const Dashboardview = () => {
                 <div className="card-body">
                   <h5 className="card-title">Bếp nhà: {promo.name}</h5>
                   <p className="card-text">
-                    <span>⭐ {promo.score}</span> <br/>
-                     Địa chỉ :{" "}
-                    {promo.address}
+                    <span>⭐ {promo.score}</span> <br />
+                    Địa chỉ : {promo.address}
                     <br />
                     {}
                   </p>
@@ -452,7 +450,6 @@ const Dashboardview = () => {
           Chấm Góc Đa – Vũ Thạnh cho bữa tối! Hãy để chúng tôi xua tan cơn đói
           của bạn nhờ một loạt đối tác bán đồ ăn ở Việt Nam.
         </p>
-
       </div>
       <Footer />
     </div>
