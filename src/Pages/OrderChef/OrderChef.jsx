@@ -168,7 +168,7 @@ const OrderChef = () => {
 
       // Lấy danh sách món ăn từ API /Foods/by-chef
       const foodsResponse = await axios.get(
-        `https://api.homee.id.vn/api/Foods/by-chef?chefId=${chefId}`,
+        `https://api.homee.id.vn/api/Foods?pageIndex=1&pageSize=1000`,
         {
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
@@ -305,7 +305,7 @@ const OrderChef = () => {
                     className="cursor-pointer hover:text-[blue] font-semibold"
                     onClick={handleOrder}
                   >
-                    Lịch sử mua hàng
+                    Quản lý đơn hàng
                   </p>
 
                   <p
