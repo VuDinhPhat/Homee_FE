@@ -15,7 +15,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "../Footer/Footer";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Giohang from"../../assets/giohang.png";
+import Giohang from "../../assets/giohang.png";
 const UserMainPage = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
@@ -153,7 +153,7 @@ const UserMainPage = () => {
       });
       setTotal(tmp);
     }
-    api.get("?pageIndex=1&pageSize=8").then((response) => {
+    api.get("?pageIndex=1&pageSize=100").then((response) => {
       setListFood(response.data.payload);
     });
 
@@ -172,11 +172,10 @@ const UserMainPage = () => {
             <img src={Logo} alt="Logo" width={150} height={150} />
           </div>
           <div className="flex items-center gap-[15px] relative">
-          <div
+            <div
               className="cursor-pointer flex items-center gap-[25px] border-r-[1px] pr-[25px]"
               onClick={toggleCart}
             >
-        
               <img src={Giohang} alt="Logo" width={35} height={35} />
             </div>
 
@@ -403,9 +402,9 @@ const UserMainPage = () => {
                 <div className="card-body">
                   <h5 className="card-title">Bếp nhà: {promo.name}</h5>
                   <p className="card-text">
-                    <span>⭐ {promo.score}</span><br/> 
-                    {}Địa chỉ :{" "}
-                    {promo.address}
+                    <span>⭐ {promo.score}</span>
+                    <br />
+                    {}Địa chỉ : {promo.address}
                     <br />
                     {}
                   </p>
@@ -461,7 +460,6 @@ const UserMainPage = () => {
           Chấm Góc Đa – Vũ Thạnh cho bữa tối! Hãy để chúng tôi xua tan cơn đói
           của bạn nhờ một loạt đối tác bán đồ ăn ở Việt Nam.
         </p>
-       
       </div>
       <Footer />
     </div>
